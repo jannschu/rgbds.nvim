@@ -1,0 +1,776 @@
+================================================================================
+Test Name: RGBDS import: standalone ALIGN directive
+================================================================================
+
+align 4, 2
+
+---
+
+(source_file
+  (directive
+    (align_directive
+      keyword: (directive_keyword)
+      align: (primary_expression
+        (number_literal))
+      offset: (primary_expression
+        (number_literal)))))
+
+================================================================================
+Test Name: RGBDS import: PRINTLN current address symbol
+================================================================================
+
+println @
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (identifier))))))
+
+================================================================================
+Test Name: RGBDS import: DS ALIGN helper call
+================================================================================
+
+ds align [8, $C2]
+
+---
+
+(source_file
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (primary_expression
+          (number_literal))
+        offset: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Test Name: RGBDS import: SECTION UNION with ALIGN option
+================================================================================
+
+SECTION UNION "X", WRAM0, ALIGN[16]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      union: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Test Name: RGBDS import: macro call with free-form args
+================================================================================
+
+print_all This test, probably, passes\,, but who knows, ?
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list
+        argument: (macro_call_argument
+          (macro_argument_raw))
+        argument: (macro_call_argument
+          (macro_argument_raw))
+        argument: (macro_call_argument
+          (macro_argument_raw))
+        argument: (macro_call_argument
+          (macro_argument_raw))
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Test Name: RGBDS import: anonymous label in EXPORT/PURGE
+================================================================================
+
+SECTION "Example", ROM0
+EXPORT :-
+PURGE :-
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (export_directive
+      keyword: (directive_keyword)
+      (anonymous_label_ref)))
+  (directive
+    (purge_directive
+      keyword: (directive_keyword)
+      (anonymous_label_ref))))
+
+================================================================================
+Test Name: RGBDS import: character literals in CHARMAP/CHAR
+================================================================================
+
+charmap 'c{s}e', 3
+char 'c{s}e', 3
+
+---
+
+(source_file
+  (directive
+    (charmap_directive
+      keyword: (directive_keyword)
+      key: (char_literal)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (char_literal))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Test Name: RGBDS import: CHARMAP with empty value list
+================================================================================
+
+charmap "nonempty",
+
+---
+
+(source_file
+  (directive
+    (charmap_directive
+      keyword: (directive_keyword)
+      key: (string_literal))))
+
+================================================================================
+Test Name: RGBDS import: CHARMAP with macro argument key
+================================================================================
+
+MACRO test
+    charmap \1, 42
+ENDM
+test "デ"
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (charmap_directive
+        keyword: (directive_keyword)
+        key: (macro_argument)
+        value: (primary_expression
+          (number_literal))))
+    end: (directive_keyword))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Test Name: RGBDS import: code after ENDM/ENDR/ENDC
+================================================================================
+
+MACRO mac
+  println \1
+ENDM println "<_<"
+
+REPT 1
+  println "hey!"
+ENDR println "<_<"
+
+IF 0
+  println "skipped"
+ELSE println "<_<"
+  println "else clause"
+ENDC println "<_<"
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_argument)))))
+    end: (directive_keyword))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal)))))
+  (rept_block
+    keyword: (directive_keyword)
+    count: (primary_expression
+      (number_literal))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal)))))
+    end: (directive_keyword))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal)))))
+  (if_block
+    keyword: (directive_keyword)
+    condition: (primary_expression
+      (number_literal))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal)))))
+    (else_clause
+      (directive_keyword)
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (string_literal)))))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (string_literal))))))
+    end: (directive_keyword))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal))))))
+
+================================================================================
+Test Name: RGBDS import: compound assignments with interpolated names
+================================================================================
+
+MACRO try
+  DEF prefix EQUS \1
+  {prefix}q = 10
+ENDM
+try "def "
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      name: (identifier)
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (identifier)
+          assign_type: (directive_keyword)
+          value: (string_literal)))
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (interpolatable_identifier
+            (interpolation
+              symbol: (identifier))
+            (identifier_fragment))
+          assign_type: 
+            value: (primary_expression
+              (number_literal))))
+        end: (directive_keyword)))
+    (instruction_line
+      (instruction_list
+        (instruction
+          opcode: (identifier)
+          (operand_list
+            (operand
+              (primary_expression
+                (string_literal)))))))))
+
+================================================================================
+Test Name: RGBDS import: DEF inside scoped label
+================================================================================
+
+label:
+  DEF scoped = 1
+  db scoped
+
+---
+
+(source_file
+  (label_definition
+    (global_label
+      name: (identifier)))
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (identifier))))))
+
+================================================================================
+Test Name: RGBDS import: deprecated functions
+================================================================================
+
+println CHARS, CHARSUB("abc", 1), CHR("a"), STRCMP("a", "b")
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (string_literal))
+            (primary_expression
+              (number_literal))))
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (string_literal))))
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (string_literal))
+            (primary_expression
+              (string_literal))))))))
+
+================================================================================
+Test Name: RGBDS import: destination A optional
+================================================================================
+
+MACRO both
+  REDEF op EQUS "\1"
+  SHIFT
+  {op} \#
+  {op} a, \#
+ENDM
+both cpl
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (redef_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        assign_type: (directive_keyword)
+        value: (string_literal)))
+    (directive
+      (shift_directive
+        keyword: (directive_keyword)))
+    (instruction_line
+      (instruction_list
+        (instruction
+          opcode: (interpolatable_identifier
+            (interpolation
+              symbol: (identifier)))
+          (operand_list
+            (operand
+              (primary_expression
+                (macro_arguments_spread)))))))
+    (instruction_line
+      (instruction_list
+        (instruction
+          opcode: (interpolatable_identifier
+            (interpolation
+              symbol: (identifier)))
+          (operand_list
+            (operand
+              (primary_expression
+                (register)))
+            (operand
+              (primary_expression
+                (macro_arguments_spread)))))))
+    end: (directive_keyword))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Test Name: RGBDS import: diagnostic parameter caps
+================================================================================
+
+OPT Wtruncation=256
+db 999
+
+---
+
+(source_file
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg
+        (raw_string))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Test Name: RGBDS import: disable warnings
+================================================================================
+
+MACRO test
+    assert warn, 0
+    warn "-Wuser is on by default"
+ENDM
+
+test
+OPT -Weverything
+test
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (assert_directive
+        keyword: (directive_keyword)
+        severity: (identifier)
+        condition: (primary_expression
+          (number_literal))))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal)))))
+    end: (directive_keyword))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier))))
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg
+        (raw_string))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)))))
+
+================================================================================
+Test Name: RGBDS import: div/mod macro arithmetic
+================================================================================
+
+MACRO test_mod
+  def x = \1
+  def y = \2
+ENDM
+test_mod 3, 2
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        value: (primary_expression
+          (macro_argument))))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        value: (primary_expression
+          (macro_argument))))
+    end: (directive_keyword))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list
+        argument: (macro_call_argument
+          (macro_argument_raw))
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Test Name: RGBDS import: ds align inline forms
+================================================================================
+
+SECTION "aligned", ROM0, ALIGN[8]
+ds align[8, $ff], 6
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal)))))))
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (primary_expression
+          (number_literal))
+        offset: (primary_expression
+          (number_literal)))
+      (argument_list
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Test Name: RGBDS import: ASSERT with lowercase severity
+================================================================================
+
+assert fatal, 2 + 2 == 5, "there are four lights"
+
+---
+
+(source_file
+  (directive
+    (assert_directive
+      keyword: (directive_keyword)
+      severity: (identifier)
+      condition: (binary_expression
+        left: (binary_expression
+          left: (primary_expression
+            (number_literal))
+          right: (primary_expression
+            (number_literal)))
+        right: (primary_expression
+          (number_literal)))
+      message: (string_literal))))
+
+================================================================================
+Test Name: RGBDS import: PURGE with macro argument
+================================================================================
+
+MACRO test
+PURGE \1
+ENDM
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (purge_directive
+        keyword: (directive_keyword)
+        (macro_argument)))
+    end: (directive_keyword)))
+
+================================================================================
+Test Name: RGBDS import: PURGE builtin symbol _NARG
+================================================================================
+
+PURGE _NARG
+
+---
+
+(source_file
+  (directive
+    (purge_directive
+      keyword: (directive_keyword)
+      (identifier))))
+
+================================================================================
+Test Name: RGBDS import: DEF with dot as symbol name
+================================================================================
+
+DEF . EQU 12
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal)))))
+
+================================================================================
+Test Name: RGBDS import: macro argument with escaped comma
+================================================================================
+
+MACRO print
+PRINTLN "\1"
+ENDM
+print passes\,
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      name: (identifier)
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (string_literal
+                (interpolation
+                  symbol: (identifier)))))))
+      end: (directive_keyword)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (identifier))))))))
+
+================================================================================
+Test Name: RGBDS import: SHIFT with macro argument expression
+================================================================================
+
+MACRO test
+shift _NARG - 1
+ENDM
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (shift_directive
+        keyword: (directive_keyword)
+        count: (binary_expression
+          left: (primary_expression
+            (identifier))
+          right: (primary_expression
+            (number_literal)))))
+    end: (directive_keyword)))
+
+================================================================================
+Test Name: RGBDS import: interpolatable identifier in DEF
+================================================================================
+
+DEF open EQUS "\{"
+{open}statement
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (string_literal)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (interpolatable_identifier
+          (interpolation
+            symbol: (identifier))
+          (identifier_fragment))))))
+
+================================================================================
+Test Name: RGBDS import: format specifiers in interpolation
+================================================================================
+
+DEF X = 42
+PRINTLN "{X}"
+PRINTLN "{x:X}"
+PRINTLN "{d:X}"
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              symbol: (identifier)))))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              format: (format_spec)
+              symbol: (identifier)))))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              format: (format_spec)
+              symbol: (identifier))))))))

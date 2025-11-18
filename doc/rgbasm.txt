@@ -1,0 +1,158 @@
+*rgbasm.txt*  Tree-sitter parser for RGBASM (Game Boy assembly)
+
+==============================================================================
+CONTENTS                                                      *rgbasm-contents*
+
+    1. Introduction .......................... |rgbasm-introduction|
+    2. Installation .......................... |rgbasm-installation|
+    3. Features .............................. |rgbasm-features|
+    4. Filetype Detection .................... |rgbasm-filetype|
+    5. Configuration ......................... |rgbasm-configuration|
+    6. Known Limitations ..................... |rgbasm-limitations|
+    7. About ................................. |rgbasm-about|
+
+==============================================================================
+1. INTRODUCTION                                           *rgbasm-introduction*
+
+Tree-sitter-rgbasm is a Tree-sitter parser for RGBASM, the assembler for the
+Game Boy/Game Boy Color used in the RGBDS toolchain.
+
+This plugin provides:
+- Syntax highlighting via Tree-sitter
+- Code folding for blocks (IF/MACRO/REPT/FOR/UNION)
+- Smart indentation
+- Filetype detection for .asm/.inc/.z80/.gbz80 files
+
+==============================================================================
+2. INSTALLATION                                           *rgbasm-installation*
+
+LOCAL INSTALLATION (Development)~
+
+Add to your LazyVim config (lua/plugins/rgbasm.lua):
+>lua
+    return {
+      {
+        dir = "/path/to/tree-sitter-rgbasm",
+        ft = { "rgbasm" },
+        build = ":TSUpdate rgbasm",
+      },
+      {
+        "nvim-treesitter/nvim-treesitter",
+        opts = function(_, opts)
+          vim.list_extend(opts.ensure_installed or {}, { "rgbasm" })
+        end,
+      },
+    }
+
+==============================================================================
+3. FEATURES                                                   *rgbasm-features*
+
+SYNTAX HIGHLIGHTING~
+
+Full syntax highlighting for:
+- All RGBASM directives (SECTION, DEF, IF, MACRO, etc.)
+- Z80/GB instructions and addressing modes
+- All literal types (decimal, hex, binary, octal, fixed-point, graphics)
+- String literals with interpolation
+- Comments (line and block)
+- Labels (global, local, anonymous)
+- All operators with correct precedence
+- Built-in functions (SIN, STRLEN, HIGH, etc.)
+
+CODE FOLDING~
+
+Automatic folding for block structures:
+- IF/ELIF/ELSE blocks
+- MACRO definitions
+- REPT loops
+- FOR loops
+- UNION blocks
+
+INDENTATION~
+
+Tree-sitter based smart indentation that understands RGBASM block structure.
+
+==============================================================================
+4. FILETYPE DETECTION                                       *rgbasm-filetype*
+
+Files are detected as RGBASM if they have:
+
+EXTENSIONS~
+- .asm (if contains RGBASM-specific syntax)
+- .inc (RGBASM include files)
+- .gbz80
+- .z80
+
+DETECTION HEURISTICS~
+
+For .asm files, the plugin checks the first line for RGBASM-specific keywords:
+- SECTION directive
+- DEF directive
+- Comments mentioning "rgbasm" or "rgbds"
+
+If these aren't found, the file defaults to generic "asm" filetype.
+
+==============================================================================
+5. CONFIGURATION                                       *rgbasm-configuration*
+
+BUFFER OPTIONS~
+
+The ftplugin sets the following buffer-local options:
+>lua
+    vim.bo.commentstring = "; %s"
+    vim.bo.expandtab = false  -- Use tabs
+    vim.bo.tabstop = 8
+    vim.bo.shiftwidth = 8
+<
+
+CUSTOMIZATION~
+
+Override these in your ftplugin/rgbasm.lua or via autocmd:
+>lua
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "rgbasm",
+      callback = function()
+        vim.bo.tabstop = 4  -- Use 4-space tabs instead
+        vim.bo.shiftwidth = 4
+      end,
+    })
+<
+
+==============================================================================
+6. KNOWN LIMITATIONS                                       *rgbasm-limitations*
+
+STRING INTERPOLATION~
+
+Interpolations work in strings and identifier positions, not in expression
+contexts. This is a fundamental difference between Tree-sitter's structural
+parsing and RGBASM's lexical expansion.
+>rgbasm
+    FOR i, 1, 10
+      DB {d:i}    ; Won't highlight correctly
+    ENDR
+<
+
+EQUS EXPANSION~
+
+The parser doesn't expand EQUS symbols:
+>rgbasm
+    DEF foo EQUS "bar"
+    foo    ; Parser sees 'foo', not expanded 'bar'
+<
+
+This is by design - Tree-sitter operates on raw text, not semantically
+expanded code.
+
+==============================================================================
+7. ABOUT                                                         *rgbasm-about*
+
+
+REFERENCE~
+- RGBASM specification: https://rgbds.gbdev.io/docs/rgbasm.5
+
+LICENSE~
+
+MIT License
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

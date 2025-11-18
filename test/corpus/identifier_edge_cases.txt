@@ -1,0 +1,74 @@
+================================================================================
+Identifier and interpolation edge cases
+================================================================================
+
+; Issue 1: interpolation prefix vs suffix
+DEF {foo}name = 1
+DEF foo{name} = 2  ; should be treated as identifier + interpolation expression, not one name
+
+; Issue 2: interpolation with raw identifier
+PRINTLN "{#if}"
+
+; Issue 3: raw identifier in DEF
+DEF #if = 100
+
+; Issue 4: #{...} outside strings should be invalid
+    ld a, #{name}
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (interpolatable_identifier
+        (interpolation
+          (identifier))
+        (identifier_fragment))
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (ERROR
+        (identifier))
+      (interpolatable_identifier
+        (interpolation
+          (identifier)))
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (raw_identifier)))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (raw_identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (ERROR
+    (identifier)
+    (operand
+      (register))
+    (UNEXPECTED '{'))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (interpolatable_identifier
+          (interpolation
+            (identifier)))))))

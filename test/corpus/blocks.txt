@@ -1,0 +1,524 @@
+================================================================================
+Blocks: if/rept/for/macro
+================================================================================
+
+; If / elif / else
+IF 1
+    ld a, 1
+ELIF 0
+    ld a, 2
+ELSE
+    ld a, 3
+ENDC
+
+; Nested REPT and FOR
+REPT 2
+    FOR i, 0, 3
+        db i
+    ENDR
+ENDR
+
+; Simple macro
+MACRO MYMACRO arg
+    ld a, arg
+ENDM
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (if_block
+    (directive_keyword)
+    (primary_expression
+      (number_literal))
+    (instruction_line
+      (instruction_list
+        (instruction
+          (identifier)
+          (operand_list
+            (operand
+              (primary_expression
+                (register)))
+            (operand
+              (primary_expression
+                (number_literal)))))))
+    (elif_clause
+      (directive_keyword)
+      (primary_expression
+        (number_literal))
+      (instruction_line
+        (instruction_list
+          (instruction
+            (identifier)
+            (operand_list
+              (operand
+                (primary_expression
+                  (register)))
+              (operand
+                (primary_expression
+                  (number_literal))))))))
+    (else_clause
+      (directive_keyword)
+      (instruction_line
+        (instruction_list
+          (instruction
+            (identifier)
+            (operand_list
+              (operand
+                (primary_expression
+                  (register)))
+              (operand
+                (primary_expression
+                  (number_literal))))))))
+    (directive_keyword))
+  (inline_comment
+    (comment))
+  (rept_block
+    (directive_keyword)
+    (primary_expression
+      (number_literal))
+    (for_block
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))
+      (primary_expression
+        (number_literal))
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (primary_expression
+              (identifier)))))
+      (directive_keyword))
+    (directive_keyword))
+  (inline_comment
+    (comment))
+  (macro_definition
+    (directive_keyword)
+    (identifier)
+    (macro_params
+      (identifier))
+    (instruction_line
+      (instruction_list
+        (instruction
+          (identifier)
+          (operand_list
+            (operand
+              (primary_expression
+                (register)))
+            (operand
+              (primary_expression
+                (identifier)))))))
+    (directive_keyword)))
+
+================================================================================
+Blocks: macro arguments and escapes
+================================================================================
+
+MACRO USE_ARGS
+    ld \1, (\2)
+    db \<10>, \<-1>
+    jr .loop\@
+    PRINTLN \#
+ENDM
+
+---
+
+(source_file
+  (macro_definition
+    (directive_keyword)
+    (identifier)
+    (instruction_line
+      (instruction_list
+        (instruction
+          (identifier)
+          (operand_list
+            (operand
+              (primary_expression
+                (macro_argument)))
+            (operand
+              (primary_expression
+                (primary_expression
+                  (macro_argument))))))))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_argument))
+          (primary_expression
+            (macro_argument)))))
+    (instruction_line
+      (instruction_list
+        (instruction
+          (identifier)
+          (operand_list
+            (operand
+              (local_identifier))))))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_arguments_spread)))))
+    (directive_keyword)))
+
+================================================================================
+Blocks: SHIFT directive in macros and REPT
+================================================================================
+
+MACRO SHIFTING
+    PRINTLN \1, \2, \3
+    SHIFT
+    PRINTLN \1, \2
+    SHIFT -1
+    PRINTLN \1
+ENDM
+
+REPT 2
+    SHIFT 2
+ENDR
+
+---
+
+(source_file
+  (macro_definition
+    (directive_keyword)
+    (identifier)
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_argument))
+          (primary_expression
+            (macro_argument))
+          (primary_expression
+            (macro_argument)))))
+    (directive
+      (shift_directive
+        (directive_keyword)))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_argument))
+          (primary_expression
+            (macro_argument)))))
+    (directive
+      (shift_directive
+        (directive_keyword)
+        (unary_expression
+          (primary_expression
+            (number_literal)))))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (macro_argument)))))
+    (directive_keyword))
+  (rept_block
+    (directive_keyword)
+    (primary_expression
+      (number_literal))
+    (directive
+      (shift_directive
+        (directive_keyword)
+        (primary_expression
+          (number_literal))))
+    (directive_keyword)))
+
+================================================================================
+Blocks: BREAK in FOR block
+================================================================================
+
+FOR V, 1, 100
+    PRINT "{d:V}"
+    IF V == 5
+        PRINT " stop! "
+        BREAK
+    ENDC
+    PRINT ", "
+ENDR
+
+---
+
+(source_file
+  (for_block
+    (directive_keyword)
+    (identifier)
+    (primary_expression
+      (number_literal))
+    (primary_expression
+      (number_literal))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal
+              (interpolation
+                (format_spec)
+                (identifier)))))))
+    (if_block
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal)))
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (primary_expression
+              (string_literal)))))
+      (directive
+        (break_directive
+          (directive_keyword)))
+      (directive_keyword))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal)))))
+    (directive_keyword)))
+
+================================================================================
+Blocks: BREAK in REPT block
+================================================================================
+
+REPT 10
+    db 1
+    IF _NARG > 5
+        BREAK
+    ENDC
+ENDR
+
+---
+
+(source_file
+  (rept_block
+    (directive_keyword)
+    (primary_expression
+      (number_literal))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal)))))
+    (if_block
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal)))
+      (directive
+        (break_directive
+          (directive_keyword)))
+      (directive_keyword))
+    (directive_keyword)))
+
+================================================================================
+Blocks: nested loops with BREAK
+================================================================================
+
+REPT 3
+    FOR i, 1, 10
+        IF i == 5
+            BREAK
+        ENDC
+    ENDR
+ENDR
+
+---
+
+(source_file
+  (rept_block
+    (directive_keyword)
+    (primary_expression
+      (number_literal))
+    (for_block
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))
+      (primary_expression
+        (number_literal))
+      (if_block
+        (directive_keyword)
+        (binary_expression
+          (primary_expression
+            (identifier))
+          (primary_expression
+            (number_literal)))
+        (directive
+          (break_directive
+            (directive_keyword)))
+        (directive_keyword))
+      (directive_keyword))
+    (directive_keyword)))
+
+================================================================================
+Blocks: UNION / NEXTU / ENDU
+================================================================================
+
+UNION
+    db 1
+NEXTU
+    db 2, 3
+ENDU
+
+---
+
+(source_file
+  (union_block
+    keyword: (directive_keyword)
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal)))))
+    separator: (directive_keyword)
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal)))))
+    end: (directive_keyword)))
+
+================================================================================
+Blocks: UNION nested inside REPT/IF
+================================================================================
+
+REPT 2
+    UNION
+        IF 1
+            db 9
+        ENDC
+    NEXTU
+        db 7
+    ENDU
+ENDR
+
+---
+
+(source_file
+  (rept_block
+    keyword: (directive_keyword)
+    count: (primary_expression
+      (number_literal))
+    (union_block
+      keyword: (directive_keyword)
+      (if_block
+        keyword: (directive_keyword)
+        condition: (primary_expression
+          (number_literal))
+        (directive
+          (simple_directive
+            keyword: (directive_keyword)
+            (argument_list
+              (primary_expression
+                (number_literal)))))
+        end: (directive_keyword))
+      separator: (directive_keyword)
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (number_literal)))))
+      end: (directive_keyword))
+    end: (directive_keyword)))
+
+================================================================================
+Blocks: LOAD / ENDL
+================================================================================
+
+SECTION "LOAD example", ROMX
+LOAD "RAM code", WRAM0
+RAMLocation:
+    ld hl, .string
+    ld de, $9864
+    jr [[ db 1 ]]
+.string
+    db "Hello"
+ENDL
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal))
+        (primary_expression
+          (identifier)))))
+  (label_definition
+    (global_label
+      name: (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (local_identifier))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (fragment_literal
+                (directive
+                  (simple_directive
+                    keyword: (directive_keyword)
+                    (argument_list
+                      (primary_expression
+                        (number_literal))))))))))))
+  (label_definition
+    (local_label
+      name: (local_identifier)))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword))))

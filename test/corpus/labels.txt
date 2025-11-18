@@ -1,0 +1,193 @@
+================================================================================
+Labels: global, local, anonymous
+================================================================================
+
+; Global labels
+Start:
+MainLoop::
+
+; Local labels (shorthand + explicit)
+Init:
+.loop:
+    jr .loop
+.done
+
+AnotherGlobal:
+AnotherGlobal.local:
+
+; Anonymous labels
+    jr :+
+:   nop
+    jr :-
+:   ret
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      (identifier)))
+  (label_definition
+    (global_label
+      (identifier)))
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      (identifier)))
+  (label_definition
+    (local_label
+      (local_identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (local_identifier))))))
+  (label_definition
+    (local_label
+      (local_identifier)))
+  (label_definition
+    (global_label
+      (identifier)))
+  (label_definition
+    (local_label
+      (local_identifier)))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (anonymous_label_ref))))))
+  (instruction_line
+    (label_definition
+      (anonymous_label))
+    (instruction_list
+      (instruction
+        (identifier))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (anonymous_label_ref))))))
+  (instruction_line
+    (label_definition
+      (anonymous_label))
+    (instruction_list
+      (instruction
+        (identifier)))))
+
+================================================================================
+Labels: whitespace sensitivity (no space vs space before colon)
+================================================================================
+
+; No space before colon = label definition
+Start:
+    nop
+
+Loop::
+    ret
+
+; Anonymous label on same line as previous instruction
+:   nop
+    ld a, 5
+
+; Multiple instructions on same line with ::
+    nop :: ret
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      name: (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier))))
+  (label_definition
+    (global_label
+      name: (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (label_definition
+      (anonymous_label))
+    (instruction_list
+      (instruction
+        opcode: (identifier))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier))
+      (instruction
+        opcode: (identifier)))))
+
+================================================================================
+Labels: raw identifiers with # prefix
+================================================================================
+
+; Raw identifiers allow using reserved keywords as symbols
+#load:
+#LOAD::
+#IF:
+#ELSE:
+
+; Can be used in expressions
+DEF x = #load + #LOAD
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      (raw_identifier)))
+  (label_definition
+    (global_label
+      (raw_identifier)))
+  (label_definition
+    (global_label
+      (raw_identifier)))
+  (label_definition
+    (global_label
+      (raw_identifier)))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (raw_identifier))
+        (primary_expression
+          (raw_identifier))))))
