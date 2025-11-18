@@ -53,9 +53,9 @@ static inline bool is_newline(int32_t c) {
 }
 
 static inline bool is_identifier_start(int32_t c) {
-  // Do NOT treat '.' as an identifier start here; local labels
-  // like `.loop` / `.string` are handled by the internal lexer
-  // via the `local_identifier` rule.
+  // Do NOT treat '.' or '#' as identifier starts here:
+  // - '.' is reserved for local identifiers (.loop, .string) handled by internal lexer
+  // - '#' is reserved for raw identifiers (#load, #IF, etc.) handled by internal lexer
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
@@ -217,13 +217,26 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return false;
   }
   
-  // Scan the identifier
+  // Peek ahead to see if this is a dotted identifier like "Global.local"
+  // If so, let the internal lexer handle it entirely
+  TSLexer saved = *lexer;
   size_t len = 0;
   char name[32];
-  while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
+  bool has_dot = false;
+  while ((is_identifier_char(lexer->lookahead) || lexer->lookahead == '.') && len < sizeof(name) - 1) {
+    if (lexer->lookahead == '.') {
+      has_dot = true;
+    }
     name[len++] = (char)lexer->lookahead;
     advance(lexer);
   }
+  
+  // If this identifier contains a dot, restore position and let internal lexer handle it
+  if (has_dot) {
+    *lexer = saved;
+    return false;
+  }
+  
   name[len] = '\0';
 
   // Reserved directive / block keywords are handled by the main grammar
@@ -231,6 +244,7 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   // produce the appropriate keyword tokens instead of emitting any
   // external identifier tokens for them.
   if (is_reserved_word(name, len)) {
+    *lexer = saved;
     return false;
   }
   
@@ -548,29 +562,21 @@ static bool scan_macro_arg(TSLexer *lexer, const bool *valid_symbols) {
 }
 
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
-                                                const bool *valid_symbols) {
-
-  // Skip leading spaces/tabs so identifier/register/label detection
-  // can see the first non-blank character (e.g. registers like `a`)
-  // before falling back to the internal scanner.
+                                               const bool *valid_symbols) {
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
 
-  // Try to scan identifier tokens with lookahead (labels, registers, opcodes, symbols)
+  // First, try label / register / opcode / symbol
   if (is_identifier_start(lexer->lookahead)) {
     if (scan_identifier_token(lexer, valid_symbols)) {
       return true;
     }
   }
 
-  // Macro-argument raw mode
+  // Only then: raw macro args, and only when requested
   if (valid_symbols[MACRO_ARG] || valid_symbols[MACRO_ARG_END]) {
-    // Raw macro call arguments (MACRO_ARG / MACRO_ARG_END) are a known
-    // missing feature and are currently disabled to avoid interfering
-    // with normal top-level parsing (instructions, labels, directives).
-    // Fall through and let the internal lexer handle tokens normally.
-    return false;
+    return scan_macro_arg(lexer, valid_symbols);
   }
 
   return false;
