@@ -7,6 +7,7 @@ module.exports = grammar({
   externals: $ => [
     $._macro_arg,              // Raw macro argument (RGBDS-style RAW lexer mode)
     $._macro_arg_end,          // Marks the end of macro-arg mode at EOL / EOF
+    $._raw_macro_mode,         // Zero-width token that toggles RAW mode on this line
     $._label_token,            // Identifier immediately followed by : (becomes label)
     $._register_token,         // CPU register token (A, B, C, D, E, H, L, AF, BC, DE, HL, SP, PC)
     $._symbol_token,           // Plain identifier (for macro calls, etc.)
@@ -520,19 +521,30 @@ module.exports = grammar({
       ),
 
     macro_invocation: $ =>
-      seq(
-        field('name', alias($._symbol_token, $.identifier)),
-        // Simplified arguments - just expressions for now
-        optional(seq(
-          field('argument', $.expression),
-          repeat(seq(',', field('argument', $.expression)))
-        ))
+      choice(
+        // Expression-style macro call (no RAW mode)
+        seq(
+          field('name', alias($._symbol_token, $.identifier)),
+          optional($.macro_arg_list_expr)
+        ),
+        // RAW-style macro call (explicitly marked)
+        seq(
+          field('name', alias($._symbol_token, $.identifier)),
+          $._raw_macro_mode,
+          $.macro_arg_list_raw
+        )
       ),
 
-    macro_arg_list: $ =>
+    macro_arg_list_raw: $ =>
       seq(
         field('argument', $.macro_call_argument),
         repeat(seq(',', field('argument', $.macro_call_argument)))
+      ),
+
+    macro_arg_list_expr: $ =>
+      seq(
+        field('argument', $.expression),
+        repeat(seq(',', field('argument', $.expression)))
       ),
 
     macro_call_argument: $ =>

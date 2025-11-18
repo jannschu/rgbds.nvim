@@ -2416,65 +2416,67 @@
       ]
     },
     "macro_invocation": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_symbol_token"
-            },
-            "named": true,
-            "value": "identifier"
-          }
-        },
-        {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "FIELD",
-                  "name": "argument",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "expression"
-                  }
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_symbol_token"
                 },
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": ","
-                      },
-                      {
-                        "type": "FIELD",
-                        "name": "argument",
-                        "content": {
-                          "type": "SYMBOL",
-                          "name": "expression"
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
+                "named": true,
+                "value": "identifier"
+              }
             },
             {
-              "type": "BLANK"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "macro_arg_list_expr"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_symbol_token"
+                },
+                "named": true,
+                "value": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_raw_macro_mode"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "macro_arg_list_raw"
             }
           ]
         }
       ]
     },
-    "macro_arg_list": {
+    "macro_arg_list_raw": {
       "type": "SEQ",
       "members": [
         {
@@ -2500,6 +2502,39 @@
                 "content": {
                   "type": "SYMBOL",
                   "name": "macro_call_argument"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "macro_arg_list_expr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "argument",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "FIELD",
+                "name": "argument",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "expression"
                 }
               }
             ]
@@ -4726,6 +4761,10 @@
     {
       "type": "SYMBOL",
       "name": "_macro_arg_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_raw_macro_mode"
     },
     {
       "type": "SYMBOL",
