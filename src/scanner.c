@@ -588,12 +588,12 @@ static bool scan_raw_macro_mode(ScannerState *state, TSLexer *lexer, const bool 
       advance(lexer);
       if (lexer->lookahead == '*') {
         skip_block_comment(lexer);
+        c = lexer->lookahead;
       } else {
-        // Not a block comment, back up - but this is complex, 
-        // so let's use a simpler approach
-        return false;  // Conservative: if we see '/' that's not '/*', assume no RAW mode
+        // Not a block comment - treat as regular content
+        // This indicates RAW mode should be enabled
+        break;
       }
-      c = lexer->lookahead;
     } else if (c == ' ' || c == '\t') {
       skip(lexer);
       c = lexer->lookahead;
@@ -605,6 +605,13 @@ static bool scan_raw_macro_mode(ScannerState *state, TSLexer *lexer, const bool 
   if (c == '\n' || c == '\r' || lexer->eof(lexer)) {
     // No trailing content: this macro call has no args → let the
     // expression/no-args variant handle it
+    return false;
+  }
+
+  // String-leading heuristic: If the first non-comment token is a string, 
+  // use expression-style arguments for more robust parsing
+  if (c == '"') {
+    // This looks like an expression-style string argument
     return false;
   }
 

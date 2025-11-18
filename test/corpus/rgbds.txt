@@ -183,9 +183,9 @@ test "デ"
   (macro_invocation_line
     (macro_invocation
       name: (identifier)
-      arguments: (macro_arg_list
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (string_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: code after ENDM/ENDR/ENDC
@@ -432,9 +432,9 @@ both cpl
   (macro_invocation_line
     (macro_invocation
       name: (identifier)
-      arguments: (macro_arg_list
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (identifier))))))
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps
@@ -534,7 +534,7 @@ test_mod 3, 2
   (macro_invocation_line
     (macro_invocation
       name: (identifier)
-      arguments: (macro_arg_list
+      (macro_arg_list_raw
         argument: (macro_call_argument
           (macro_argument_raw))
         argument: (macro_call_argument
