@@ -1,0 +1,320 @@
+================================================================================
+Instructions: operands and forms
+================================================================================
+
+; Simple arithmetic and logic
+    ld a, $12
+    ld hl, $C000
+    add a, b
+    sub a, [hl]
+    and a, %10101010
+
+; Addressing modes
+    ld [hl], a
+    ld [rDMA], a
+    ld a, [hl]
+    ld a, [rLCDC]
+
+; Conditional and relative jumps
+    jr nz, .loop
+.loop:
+    jr z, :+
+:   ret
+
+; Multiple instructions on one line
+    ld a, [hli] :: inc b :: nop
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (register)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (register))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (address
+              (primary_expression
+                (register))))
+          (operand
+            (primary_expression
+              (register)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (address
+              (primary_expression
+                (identifier))))
+          (operand
+            (primary_expression
+              (register)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (register))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (identifier))))))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (identifier)))
+          (operand
+            (local_identifier))))))
+  (label_definition
+    (local_label
+      (local_identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (identifier)))
+          (operand
+            (anonymous_label_ref))))))
+  (instruction_line
+    (label_definition
+      (anonymous_label))
+    (instruction_list
+      (instruction
+        (identifier))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (identifier))))))
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))))
+      (instruction
+        (identifier)))))
+
+================================================================================
+Instructions: HL auto-inc/dec and HIGH/LOW/negated conditions
+================================================================================
+
+; Auto-inc/dec HL addressing
+    ld a, [hl+]
+    ld a, [hli]
+    ld a, [hl-]
+    ld a, [hld]
+    ld [hl+], a
+
+; HIGH/LOW, negated condition
+    ld a, HIGH($C000)
+    ld a, LOW(MyLabel)
+    jr !nz, MyLabel
+MyLabel:
+    nop
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (hl_auto_address)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (identifier))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (hl_auto_address)))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (identifier))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (address
+              (hl_auto_address)))
+          (operand
+            (primary_expression
+              (register)))))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (function_call
+                (identifier)
+                (primary_expression
+                  (number_literal)))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (function_call
+                (identifier)
+                (primary_expression
+                  (identifier)))))))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (unary_expression
+              (primary_expression
+                (identifier))))
+          (operand
+            (primary_expression
+              (identifier)))))))
+  (label_definition
+    (global_label
+      (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)))))

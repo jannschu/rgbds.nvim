@@ -1,0 +1,378 @@
+================================================================================
+Literals: decimal and hexadecimal (working)
+================================================================================
+
+; Decimal numbers
+DEF DEC1 = 0
+DEF DEC2 = 123
+DEF DEC3 = 456789
+
+; Hexadecimal with $ prefix
+DEF HEX1 = $00
+DEF HEX2 = $FF
+DEF HEX3 = $1234
+DEF HEX4 = $ABCDEF
+
+; Hexadecimal with 0x prefix
+DEF HEX5 = 0x00
+DEF HEX6 = 0xFF
+DEF HEX7 = 0x1234
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Literals: binary and octal (working)
+================================================================================
+
+; Binary with % prefix
+DEF BIN1 = %0
+DEF BIN2 = %1
+DEF BIN3 = %10101010
+DEF BIN4 = %11111111
+
+; Binary with 0b prefix
+DEF BIN5 = 0b0
+DEF BIN6 = 0b1
+DEF BIN7 = 0b10101010
+
+; Octal with & prefix
+DEF OCT1 = &0
+DEF OCT2 = &7
+DEF OCT3 = &52
+DEF OCT4 = &377
+
+; Octal with 0o prefix
+DEF OCT5 = 0o0
+DEF OCT6 = 0o7
+DEF OCT7 = 0o52
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Literals: fixed-point numbers (working)
+================================================================================
+
+; Basic fixed-point (default 16-bit precision)
+DEF FP1 = 0.0
+DEF FP2 = 1.0
+DEF FP3 = 123.45
+DEF FP4 = 789.25
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Literals: graphics constants (working)
+================================================================================
+
+; Game Boy graphics literals (2-bit pixel values)
+DEF GFX1 = `00000000
+DEF GFX2 = `11111111
+DEF GFX3 = `01012323
+DEF GFX4 = `32103210
+
+; Shorter graphics (up to 8 digits)
+DEF GFX5 = `0123
+DEF GFX6 = `33221100
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (graphics_literal)))))
+
+================================================================================
+Literals: precise fixed-point with q notation (working)
+================================================================================
+
+; Precise fixed-point with q notation
+; Spec: rgbasm.5 line 312 - "12.34q8" format
+
+DEF FPQ1 = 1.0q8
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Literals: character constants (working)
+================================================================================
+
+; Single character constants
+; Spec: rgbasm.5 lines 313, 320-327 - 'A' yields ASCII/charmap value
+
+DEF CH1 = 'A'
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (char_literal)))))
+
+================================================================================
+Literals: numbers with underscores (working)
+================================================================================
+
+; Underscores for grouping digits
+; Spec: rgbasm.5 lines 317-319 - "123_456" or "%1100_1001"
+
+DEF NUM1 = 123_456
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))

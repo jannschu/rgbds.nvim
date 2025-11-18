@@ -1,0 +1,182 @@
+================================================================================
+Interpolation: basic symbol interpolation
+================================================================================
+
+DEF name = 42
+PRINTLN "Value is {name}"
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (identifier))))))))
+
+================================================================================
+Interpolation: nested interpolation
+================================================================================
+
+DEF topic EQUS "answer"
+DEF answer = 42
+PRINTLN "The {{topic}} is {answer}"
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (string_literal)))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (interpolation
+                (identifier)))
+            (interpolation
+              (identifier))))))))
+
+================================================================================
+Interpolation: format specifier
+================================================================================
+
+DEF X = 10
+PRINTLN "Hex {X:X} dec {d:X} bin {b:X}"
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (format_spec)
+              (identifier))
+            (interpolation
+              (format_spec)
+              (identifier))
+            (interpolation
+              (format_spec)
+              (identifier))))))))
+
+================================================================================
+Interpolation in names: DEF/FOR/PURGE
+================================================================================
+
+DEF prefix EQUS "ITEM"
+DEF {prefix} = 1
+FOR {prefix}, 1, 3
+  PRINTLN "Loop"
+ENDR
+PURGE {prefix}
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (string_literal)))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (interpolatable_identifier
+        (interpolation
+          (identifier)))
+      (primary_expression
+        (number_literal))))
+  (for_block
+    (directive_keyword)
+    (interpolatable_identifier
+      (interpolation
+        (identifier)))
+    (primary_expression
+      (number_literal))
+    (primary_expression
+      (number_literal))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (string_literal)))))
+    (directive_keyword))
+  (directive
+    (purge_directive
+      (directive_keyword)
+      (interpolatable_identifier
+        (interpolation
+          (identifier))))))
+
+================================================================================
+Interpolation: raw identifier inside braces
+================================================================================
+
+PRINTLN "{#if}"
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (raw_identifier))))))))
+
+================================================================================
+Invalid: # followed by { outside string
+================================================================================
+
+    ld a, #{name}
+
+---
+
+(source_file
+  (instruction_line
+    (instruction_list
+      (instruction
+        opcode: (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))))))
+  (ERROR
+    (UNEXPECTED '{')
+    (ERROR)
+    (macro_argument_raw)))

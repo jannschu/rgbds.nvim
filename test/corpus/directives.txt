@@ -1,0 +1,1235 @@
+================================================================================
+Directives: sections and data
+================================================================================
+
+; Simple sections
+SECTION "Start", ROM0
+SECTION "Data", WRAM0
+
+; Data definitions
+DB 1, 2, 3
+DW $1234
+DS 4
+
+; Constants and RS offsets
+DEF CONST_X = 42
+RSRESET
+RSSET 10
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: compound assignment operators
+================================================================================
+
+; Compound assignments
+DEF x = 10
+DEF x += 5
+DEF x -= 2
+DEF x *= 3
+DEF x /= 2
+DEF x %= 7
+DEF x <<= 1
+DEF x >>= 2
+DEF x &= $0F
+DEF x |= $F0
+DEF x ^= $FF
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: EQU vs = (constants vs variables)
+================================================================================
+
+; Variables (mutable) - can be redefined with =
+DEF count = 0
+DEF count = 1
+DEF count += 10
+
+; Numeric constants (immutable) - use EQU
+DEF SCREEN_WIDTH EQU 160
+DEF SCREEN_HEIGHT EQU 144
+
+; String constants - use EQUS
+DEF MESSAGE EQUS "Hello, World!"
+
+; Offset constants - use RS group
+DEF str_offset RB 4
+DEF str_word RW 2
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: RL (reserve long)
+================================================================================
+
+; Reserve long (4 bytes per item)
+RSRESET
+DEF struct_ptr RW 1
+DEF struct_long RL 2
+DEF struct_byte RB 1
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: ASSERT and STATIC_ASSERT
+================================================================================
+
+; Assertions without message
+ASSERT LOW(MyByte) == 0
+STATIC_ASSERT BANK(Function) == 1
+
+; Assertions with message
+ASSERT x < 256, "Value too large"
+STATIC_ASSERT .end - .start < 100, "Section too big"
+
+; Assertions with severity (comma required after severity level)
+ASSERT WARN, x != 0
+ASSERT FAIL, y > 0, "Must be positive"
+STATIC_ASSERT FATAL, z == 42
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (function_call
+            (identifier)
+            (primary_expression
+              (identifier))))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (function_call
+            (identifier)
+            (primary_expression
+              (identifier))))
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal)))
+      (string_literal)))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (binary_expression
+          (primary_expression
+            (local_identifier))
+          (primary_expression
+            (local_identifier)))
+        (primary_expression
+          (number_literal)))
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal)))
+      (string_literal)))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (identifier))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: stack operations
+================================================================================
+
+; Option stack
+PUSHO
+OPT g.oOX
+POPO
+
+; Section stack
+PUSHS
+SECTION "temp", WRAM0
+POPS
+
+; Charmap stack
+PUSHC
+PUSHC mycharmap
+POPC
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (directive
+    (opt_directive
+      (directive_keyword)
+      (opt_arg
+        (raw_string))))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (directive
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (identifier)))))
+  (directive
+    (simple_directive
+      (directive_keyword))))
+
+================================================================================
+Directives: INCLUDE, INCBIN, EXPORT
+================================================================================
+
+; INCLUDE directive
+INCLUDE "utils.inc"
+INCLUDE "hardware.inc"
+
+; INCBIN directive - full file
+INCBIN "titlepic.bin"
+
+; INCBIN with offset only
+INCBIN "data.bin", 78
+
+; INCBIN with offset and length
+INCBIN "sprites/hero.bin", 0, 256
+
+; EXPORT directive
+EXPORT MyFunc, MyData
+EXPORT SingleSymbol
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (include_directive
+      (directive_keyword)
+      (string_literal)))
+  (directive
+    (include_directive
+      (directive_keyword)
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (incbin_directive
+      (directive_keyword)
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (incbin_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (incbin_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (export_directive
+      (directive_keyword)
+      (identifier)
+      (identifier)))
+  (directive
+    (export_directive
+      (directive_keyword)
+      (identifier))))
+
+================================================================================
+Directives: SECTION with BANK option
+================================================================================
+
+SECTION "Code", ROMX, BANK[7]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION with ALIGN option
+================================================================================
+
+SECTION "OAM Data", WRAM0, ALIGN[8]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION with ALIGN option and offset
+================================================================================
+
+SECTION "Data", ROMX, ALIGN[4, 2]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))
+            offset: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION with address (ROM0)
+================================================================================
+
+SECTION "Fixed", ROM0[$100]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: SECTION with address (ROMX)
+================================================================================
+
+SECTION "Data", ROMX[$4000]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: SECTION with address (WRAM0)
+================================================================================
+
+SECTION "Variables", WRAM0[$C000]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: SECTION with address (decimal)
+================================================================================
+
+SECTION "Test", ROM0[0]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: SECTION with address (expression)
+================================================================================
+
+SECTION "Computed", ROM0[$100 * 2]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (binary_expression
+          left: (primary_expression
+            (number_literal))
+          right: (primary_expression
+            (number_literal)))))))
+
+================================================================================
+Directives: SECTION with address and BANK option
+================================================================================
+
+SECTION "Cool Stuff", ROMX[$4567], BANK[3]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal)))
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION with multiple options
+================================================================================
+
+SECTION "VRAM Data", ROMX, BANK[2], ALIGN[4]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION with address and multiple options
+================================================================================
+
+SECTION "Complex", ROMX[$4000], BANK[5], ALIGN[8, 0]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        address: (primary_expression
+          (number_literal)))
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))
+            offset: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: SECTION FRAGMENT
+================================================================================
+
+SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      fragment: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: CHARMAP / NEWCHARMAP / SETCHARMAP
+================================================================================
+
+CHARMAP "A", 42
+CHARMAP ":)", 39
+CHARMAP "<br>", 13, 10
+CHARMAP "&euro;", $20ac
+CHARMAP 'Z', 90
+NEWCHARMAP mymap, main
+SETCHARMAP mymap
+PUSHC mymap
+POPC
+
+---
+
+(source_file
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (char_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (newcharmap_directive
+      (directive_keyword)
+      (identifier)
+      (identifier)))
+  (directive
+    (setcharmap_directive
+      (directive_keyword)
+      (identifier)))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (identifier)))))
+  (directive
+    (simple_directive
+      (directive_keyword))))
+
+================================================================================
+Directives: REDEF with EQU (redefine numeric constant)
+================================================================================
+
+DEF n EQU 0
+REDEF n EQU 1
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: REDEF with EQUS (redefine string constant)
+================================================================================
+
+DEF s EQUS "Hello, "
+REDEF s EQUS "{s}world!"
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (string_literal)))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (string_literal
+        (interpolation
+          symbol: (identifier))))))
+
+================================================================================
+Directives: REDEF with = (redefine variable)
+================================================================================
+
+DEF x = 10
+REDEF x = 20
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: REDEF with compound assignment
+================================================================================
+
+DEF counter = 0
+REDEF counter += 1
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal)))))
+
+================================================================================
+Directives: REDEF in macro (typical use case)
+================================================================================
+
+MACRO add_item
+    REDEF NUM_ITEMS EQU NUM_ITEMS + 1
+    DEF CURRENT_ITEM EQU \1
+ENDM
+
+---
+
+(source_file
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    (directive
+      (redef_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        assign_type: (directive_keyword)
+        value: (binary_expression
+          left: (primary_expression
+            (identifier))
+          right: (primary_expression
+            (number_literal)))))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        assign_type: (directive_keyword)
+        value: (primary_expression
+          (macro_argument))))
+    end: (directive_keyword)))
+
+================================================================================
+Directives: REDEF with RS offset constants
+================================================================================
+
+DEF struct_a RB 2
+REDEF struct_b RW
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier))))
+
+================================================================================
+Directives: REDEF with interpolatable identifier
+================================================================================
+
+DEF LIST_NAME EQUS "FOO"
+REDEF {LIST_NAME} EQUS "["
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (string_literal)))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (interpolatable_identifier
+        (interpolation
+          symbol: (identifier)))
+      assign_type: (directive_keyword)
+      value: (string_literal))))
+
+================================================================================
+Directives: REDEF with expression
+================================================================================
+
+DEF MAX_SIZE EQU 256
+REDEF MAX_SIZE EQU MAX_SIZE * 2
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (redef_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (binary_expression
+        left: (primary_expression
+          (identifier))
+        right: (primary_expression
+          (number_literal))))))
+
+================================================================================
+Directives: SECTION FRAGMENT
+================================================================================
+
+SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
+
+---
+
+(source_file
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      fragment: (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (bank_option
+            bank: (primary_expression
+              (number_literal))))
+        (section_option
+          (align_option
+            align: (primary_expression
+              (number_literal))))))))
+
+================================================================================
+Directives: Fragment literals
+================================================================================
+
+[[
+    db 1
+    jp End
+]]
+
+DW [[ db 2 ]]
+
+[[
+    db 3
+    [[
+        db 4
+    ]]
+]]
+
+---
+
+(source_file
+  (directive
+    (fragment_literal
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (number_literal)))))
+      (instruction_line
+        (instruction_list
+          (instruction
+            opcode: (identifier)
+            (operand_list
+              (operand
+                (primary_expression
+                  (identifier)))))))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (fragment_literal
+            (directive
+              (simple_directive
+                keyword: (directive_keyword)
+                (argument_list
+                  (primary_expression
+                    (number_literal))))))))))
+  (directive
+    (fragment_literal
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (primary_expression
+              (number_literal)))))
+      (directive
+        (fragment_literal
+          (directive
+            (simple_directive
+              keyword: (directive_keyword)
+              (argument_list
+                (primary_expression
+                  (number_literal))))))))))
+
+================================================================================
+Directives: Case-insensitivity (RGBASM spec compliance)
+================================================================================
+
+; All reserved keywords are case-insensitive (rgbasm.5:101-102)
+SECTION "test", ROM0
+Section "test2", Rom0
+section "test3", rom0
+
+DEF X EQU 1
+Def Y Equ 2
+def z equ 3
+
+MACRO Test
+EndM
+
+Macro Test2
+endm
+
+; Built-in functions are case-insensitive
+DB HIGH(100)
+DB high(100)
+DB HiGh(100)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type)))
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal))))
+  (directive
+    (def_directive
+      keyword: (directive_keyword)
+      name: (identifier)
+      assign_type: (directive_keyword)
+      value: (primary_expression
+        (number_literal))))
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    end: (directive_keyword))
+  (macro_definition
+    keyword: (directive_keyword)
+    name: (identifier)
+    end: (directive_keyword))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (number_literal)))))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (number_literal)))))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (primary_expression
+          (function_call
+            function: (identifier)
+            (primary_expression
+              (number_literal))))))))

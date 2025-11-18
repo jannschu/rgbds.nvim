@@ -1,0 +1,103 @@
+================================================================================
+Line continuation: simple case
+================================================================================
+
+DB 1, \
+   2, 3
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Line continuation: multiple lines
+================================================================================
+
+DB 1, 2, 3, \
+   4, 5, 6, \
+   7, 8, 9
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Line continuation: in expression
+================================================================================
+
+DEF X = 1 + 2 + \
+        3 + 4
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (primary_expression
+              (number_literal))
+            (primary_expression
+              (number_literal)))
+          (primary_expression
+            (number_literal)))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Line continuation: in instruction
+================================================================================
+
+    ld a, \
+       [hl]
+
+---
+
+(source_file
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (address
+              (primary_expression
+                (register)))))))))

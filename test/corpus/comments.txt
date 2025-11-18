@@ -1,0 +1,210 @@
+================================================================================
+Comments: line comments
+================================================================================
+
+; Full line comment
+Start:
+    nop     ; End of line comment
+    ld a, b ; Another comment
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (register)))))))
+  (inline_comment
+    (comment)))
+
+================================================================================
+Comments: single-line block comments
+================================================================================
+
+/* Single line block comment */
+Start:
+    ld a, 1 :: ld b, 2 /* inline block comment */
+
+---
+
+(source_file
+  (block_comment)
+  (label_definition
+    (global_label
+      (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (number_literal)))))))
+  (block_comment))
+
+================================================================================
+Comments: multi-line block comments
+================================================================================
+
+/*
+ * Multi-line
+ * block comment
+ */
+Start:
+    /* Comment before instruction */
+    nop
+    ld a, b, c
+
+---
+
+(source_file
+  (block_comment)
+  (label_definition
+    (global_label
+      (identifier)))
+  (block_comment)
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier))))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (register)))
+          (operand
+            (primary_expression
+              (register))))))))
+
+================================================================================
+Comments: block comments in expressions
+================================================================================
+
+DEF x = 1 /* comment */ + 2
+DEF y = /* before */ 3 * /* after */ 4
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (block_comment)
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (block_comment)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (block_comment)
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Comments: nested and complex cases
+================================================================================
+
+; Line comment at start
+Start: /* block after label */
+    /* Multiple
+       lines spanning
+       several rows */
+    pop /*wait for it*/ hl
+    ; Another line comment
+    ret
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (label_definition
+    (global_label
+      (identifier)))
+  (block_comment)
+  (block_comment)
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)
+        (block_comment)
+        (operand_list
+          (operand
+            (primary_expression
+              (register)))))))
+  (inline_comment
+    (comment))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier)))))
+
+================================================================================
+Comments: comments with special characters
+================================================================================
+
+; Comment with special chars: !@#$%^&*()
+/* Block comment with
+   special: !@#$%^&*() */
+Start:
+    nop ; End comment with / and *
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (block_comment)
+  (label_definition
+    (global_label
+      (identifier)))
+  (instruction_line
+    (instruction_list
+      (instruction
+        (identifier))))
+  (inline_comment
+    (comment)))

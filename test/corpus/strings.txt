@@ -1,0 +1,66 @@
+================================================================================
+Strings: escapes, multiline, raw, ops
+================================================================================
+
+; Escape sequences
+DEF STR_ESC EQUS "Line1\nLine2\tTabbed\\Backslash\"Quote\{Brace"
+
+; Multi-line strings (triple quotes)
+DEF STR_MULTI EQUS """First line
+Second line"""
+
+; Raw strings (no escape processing)
+DEF STR_RAW EQUS #"\n\t\{ literally"
+
+; String concatenation and comparison
+ASSERT "foo" ++ "bar" === "foobar"
+ASSERT "a" !== "b"
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (directive_keyword)
+      (raw_string_literal)))
+  (inline_comment
+    (comment))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (binary_expression
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal)))
+        (primary_expression
+          (string_literal)))))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (binary_expression
+        (primary_expression
+          (string_literal))
+        (primary_expression
+          (string_literal))))))

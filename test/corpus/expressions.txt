@@ -1,0 +1,1018 @@
+================================================================================
+Expressions: arithmetic and precedence
+================================================================================
+
+; Basic arithmetic
+DEF X = 1 + 2 * 3
+DEF Y = (1 + 2) * 3
+
+; Operator precedence with shift and bitwise
+DEF Z = 1 + 2 << 3 & 7
+
+; Logical and comparisons
+DEF A = 1 && 0 || 1
+DEF B = 1 == 2
+DEF C = 1 != 2
+
+; Interpolation (this is more about string parsing than full semantics)
+PRINTLN "The value is {X}"
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (binary_expression
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (binary_expression
+            (primary_expression
+              (number_literal))
+            (primary_expression
+              (number_literal))))
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (binary_expression
+          (binary_expression
+            (primary_expression
+              (number_literal))
+            (primary_expression
+              (number_literal)))
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (binary_expression
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal)))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (primary_expression
+          (string_literal
+            (interpolation
+              (identifier))))))))
+
+================================================================================
+Expressions: all operators
+================================================================================
+
+; Exponentiation
+DEF POW1 = 2 ** 3
+DEF POW2 = 2 ** 3 ** 2
+
+; Shift operators
+DEF SHL = 1 << 4
+DEF SHR = 16 >> 2
+DEF USHR = -16 >>> 2
+
+; Bitwise operators
+DEF BAND = $FF & $0F
+DEF BOR = $F0 | $0F
+DEF BXOR = $FF ^ $AA
+
+; Unary operators
+DEF NEG = -5
+DEF COMP = ~$FF
+DEF NOT = !0
+
+; Comparison operators
+DEF LT = 1 < 2
+DEF LE = 1 <= 2
+DEF GT = 2 > 1
+DEF GE = 2 >= 1
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (binary_expression
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (unary_expression
+        (binary_expression
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (unary_expression
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (unary_expression
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (unary_expression
+        (primary_expression
+          (number_literal)))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (binary_expression
+        (primary_expression
+          (number_literal))
+        (primary_expression
+          (number_literal))))))
+
+================================================================================
+Expressions: built-in functions
+================================================================================
+
+; Memory and type functions
+DEF HI = HIGH($1234)
+DEF LO = LOW($1234)
+DEF BNK = BANK(MySection)
+DEF SZ = SIZEOF(MyStruct)
+DEF BW = BITWIDTH(255)
+DEF TZ = TZCOUNT(8)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (identifier))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (identifier))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal)))))))
+
+================================================================================
+Expressions: fixed-point functions
+================================================================================
+
+; Fixed-point arithmetic
+DEF FP_DIV = DIV(6.0, 2.0)
+DEF FP_MUL = MUL(2.0, 3.0)
+DEF FP_MOD = FMOD(5.5, 2.0)
+DEF FP_POW = POW(2.0, 3.0)
+DEF FP_LOG = LOG(8.0, 2.0)
+
+; Fixed-point rounding
+DEF FP_ROUND = ROUND(3.7)
+DEF FP_CEIL = CEIL(3.2)
+DEF FP_FLOOR = FLOOR(3.9)
+
+; Fixed-point trigonometry
+DEF FP_SIN = SIN(0.5)
+DEF FP_COS = COS(0.5)
+DEF FP_TAN = TAN(0.5)
+DEF FP_ASIN = ASIN(0.5)
+DEF FP_ACOS = ACOS(0.5)
+DEF FP_ATAN = ATAN(0.5)
+DEF FP_ATAN2 = ATAN2(1.0, 1.0)
+
+; Nested function call
+DEF NESTED = MUL(64.0, SIN(ANGLE))
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (function_call
+              (identifier)
+              (primary_expression
+                (identifier)))))))))
+
+================================================================================
+Expressions: string functions
+================================================================================
+
+; String manipulation
+DEF STR1 = STRCAT("Hello", " ", "World")
+DEF STR2 = STRUPR("hello")
+DEF STR3 = STRLWR("WORLD")
+DEF STR4 = STRSLICE("Hello", 1, 4)
+DEF STR5 = STRRPL("foo bar", "bar", "baz")
+
+; String query functions
+DEF LEN = STRLEN("Hello")
+DEF CMP = STRCMP("abc", "xyz")
+DEF FIND = STRFIND("Hello World", "World")
+DEF RFIND = STRRFIND("abcabc", "bc")
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal)))))))
+
+================================================================================
+Expressions: byte/char functions
+================================================================================
+
+; String byte operations
+DEF LEN = BYTELEN("Hello")
+DEF BYTE1 = STRBYTE("ABC", 0)
+DEF BYTE2 = STRBYTE("ABC", 1)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal)))))))
+
+================================================================================
+Expressions: STRFMT function
+================================================================================
+
+; Format strings with arguments
+DEF MSG1 = STRFMT("Value: %d", 42)
+DEF MSG2 = STRFMT("Name = %s", 100)
+DEF MSG3 = STRFMT("Pi = %f", 3.14)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal)))))))
+
+================================================================================
+Expressions: symbol query functions
+================================================================================
+
+; Check symbol properties
+DEF IS_DEF = DEF(MySymbol)
+DEF IS_CONST = ISCONST(42)
+DEF SEC_NAME = SECTION(MyLabel)
+DEF SEC_START = STARTOF(ROM0)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (identifier))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (identifier))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (identifier)))))))
+
+================================================================================
+Expressions: charmap functions
+================================================================================
+
+; Set up a charmap for testing
+CHARMAP "A", 42
+CHARMAP ":)", 39
+CHARMAP "<br>", 13, 10
+
+; Test charmap functions
+DEF LEN1 = CHARLEN("A:)")
+DEF LEN2 = CHARLEN("<br>")
+DEF SIZE1 = CHARSIZE("A")
+DEF SIZE2 = CHARSIZE("<br>")
+DEF VAL1 = CHARVAL("A")
+DEF VAL2 = CHARVAL("<br>", 0)
+DEF VAL3 = CHARVAL("<br>", 1)
+DEF IN1 = INCHARMAP("A")
+DEF IN2 = INCHARMAP("Z")
+DEF REV1 = REVCHAR(42)
+DEF REV2 = REVCHAR(13, 10)
+DEF CMP1 = CHARCMP("A", ":)")
+DEF STR1 = STRCHAR("A:)", 0)
+DEF STR2 = STRCHAR("A:)", 1)
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))))
+  (directive
+    (charmap_directive
+      (directive_keyword)
+      (string_literal)
+      (primary_expression
+        (number_literal))
+      (primary_expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (identifier)
+      (primary_expression
+        (function_call
+          (identifier)
+          (primary_expression
+            (string_literal))
+          (primary_expression
+            (number_literal)))))))
