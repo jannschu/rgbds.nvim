@@ -8,26 +8,35 @@
 enum TokenType {
   MACRO_ARG,                 // Raw macro argument (lexed in a "raw" mode)
   MACRO_ARG_END,             // Marks end of macro-arg mode at EOL / EOF
+  RAW_MACRO_MODE,            // Zero-width token that toggles RAW mode on this line
   LABEL_TOKEN,               // Identifier immediately followed by : (no space)
   REGISTER_TOKEN,            // CPU register token (A, B, C, D, E, H, L, AF, BC, DE, HL, SP, PC)
   SYMBOL_TOKEN,              // Plain identifier (for macro calls, etc.)
   INSTRUCTION_TOKEN,         // Known Z80/GB instruction opcode
 };
 
+typedef struct {
+  bool in_raw_macro_mode;
+} ScannerState;
+
 void *tree_sitter_rgbasm_external_scanner_create() {
-  return NULL;
+  ScannerState *state = calloc(1, sizeof(ScannerState));
+  return state;
 }
 
 void tree_sitter_rgbasm_external_scanner_destroy(void *payload) {
-  // No-op
+  free(payload);
 }
 
 unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload, char *buffer) {
-  return 0;
+  ScannerState *state = (ScannerState *)payload;
+  buffer[0] = state->in_raw_macro_mode ? 1 : 0;
+  return 1;
 }
 
 void tree_sitter_rgbasm_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
-  // No-op
+  ScannerState *state = (ScannerState *)payload;
+  state->in_raw_macro_mode = (length > 0 && buffer[0] != 0);
 }
 
 static inline bool is_identifier_char(int32_t c) {
@@ -376,7 +385,7 @@ static void read_string_like(TSLexer *lexer, bool is_raw, bool *has_content) {
   }
 }
 
-static bool scan_macro_arg(TSLexer *lexer, const bool *valid_symbols) {
+static bool scan_macro_arg(ScannerState *state, TSLexer *lexer, const bool *valid_symbols) {
   // Skip leading blanks
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
@@ -406,6 +415,7 @@ static bool scan_macro_arg(TSLexer *lexer, const bool *valid_symbols) {
         return true;
       }
       // No content and EOF - emit end marker
+      state->in_raw_macro_mode = false;
       lexer->result_symbol = MACRO_ARG_END;
       return true;
     }
@@ -426,6 +436,7 @@ static bool scan_macro_arg(TSLexer *lexer, const bool *valid_symbols) {
         return true;
       }
       // No content and newline - emit end marker
+      state->in_raw_macro_mode = false;
       lexer->result_symbol = MACRO_ARG_END;
       return true;
     }
@@ -561,8 +572,52 @@ static bool scan_macro_arg(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
+static bool scan_raw_macro_mode(ScannerState *state, TSLexer *lexer, const bool *valid_symbols) {
+  if (!valid_symbols[RAW_MACRO_MODE]) return false;
+
+  // Skip blanks/comments, but do NOT cross newline
+  int32_t c;
+  do {
+    c = lexer->lookahead;
+    if (c == ';') {
+      // Skip line comment to newline
+      skip_line_comment(lexer);
+      c = lexer->lookahead;
+    } else if (c == '/') {
+      // Check for block comment start
+      advance(lexer);
+      if (lexer->lookahead == '*') {
+        skip_block_comment(lexer);
+      } else {
+        // Not a block comment, back up - but this is complex, 
+        // so let's use a simpler approach
+        return false;  // Conservative: if we see '/' that's not '/*', assume no RAW mode
+      }
+      c = lexer->lookahead;
+    } else if (c == ' ' || c == '\t') {
+      skip(lexer);
+      c = lexer->lookahead;
+    } else {
+      break;
+    }
+  } while (!lexer->eof(lexer));
+
+  if (c == '\n' || c == '\r' || lexer->eof(lexer)) {
+    // No trailing content: this macro call has no args → let the
+    // expression/no-args variant handle it
+    return false;
+  }
+
+  // There is trailing content: enable RAW mode
+  state->in_raw_macro_mode = true;
+  lexer->result_symbol = RAW_MACRO_MODE;
+  return true;
+}
+
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
                                                const bool *valid_symbols) {
+  ScannerState *state = (ScannerState *)payload;
+  
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
@@ -574,9 +629,17 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  // Only then: raw macro args, and only when requested
-  if (valid_symbols[MACRO_ARG] || valid_symbols[MACRO_ARG_END]) {
-    return scan_macro_arg(lexer, valid_symbols);
+  // RAW macro mode toggle (only when requested by the grammar)
+  if (valid_symbols[RAW_MACRO_MODE]) {
+    if (scan_raw_macro_mode(state, lexer, valid_symbols)) {
+      return true;
+    }
+  }
+
+  // Raw macro arguments, only if RAW mode is active
+  if (state->in_raw_macro_mode &&
+      (valid_symbols[MACRO_ARG] || valid_symbols[MACRO_ARG_END])) {
+    return scan_macro_arg(state, lexer, valid_symbols);
   }
 
   return false;

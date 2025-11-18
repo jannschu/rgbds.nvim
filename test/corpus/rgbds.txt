@@ -490,19 +490,17 @@ test
           (primary_expression
             (string_literal)))))
     end: (directive_keyword))
-  (instruction_line
-    (instruction_list
-      (instruction
-        opcode: (identifier))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
   (directive
     (opt_directive
       keyword: (directive_keyword)
       (opt_arg
         (raw_string))))
-  (instruction_line
-    (instruction_list
-      (instruction
-        opcode: (identifier)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier))))
 
 ================================================================================
 Test Name: RGBDS import: div/mod macro arithmetic
