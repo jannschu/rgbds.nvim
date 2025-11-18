@@ -16,7 +16,6 @@ module.exports = grammar({
   conflicts: $ => [
     [$.operand, $.primary_expression],
     [$._top_level_statement, $.fragment_literal],
-    [$.instruction, $.macro_invocation],
     [$.assert_directive, $.primary_expression],
   ],
 
@@ -39,21 +38,31 @@ module.exports = grammar({
     // Top-level statement: blocks or regular statements (each decides where it ends)
     _top_level_statement: $ =>
       choice(
-        // Block directives have higher precedence (don't consume newlines)
+        // Block directives: highest precedence (don't consume newlines internally)
         prec(1, $.macro_definition),
         prec(1, $.if_block),
-       prec(1, $.rept_block),
-       prec(1, $.for_block),
-       prec(1, $.load_block),
+        prec(1, $.rept_block),
+        prec(1, $.for_block),
+        prec(1, $.load_block),
         prec(1, $.union_block),
+
         // Standalone block comments
         seq($.block_comment, /\r?\n/),
-        // Regular statements (consume newlines)
-        // Labels have higher precedence than macro invocations
+
+        // 1. Labels (global/local/anonymous)
         seq($.label_definition, optional($.inline_comment), /\r?\n/),
+
+        // 2. Directives (SECTION, DEF, LOAD, ENDL, etc.)
         prec(2, seq($.directive, optional($.inline_comment), /\r?\n/)),
-        seq($.instruction_line, optional($.inline_comment), /\r?\n/),
-        seq(optional($.inline_comment), /\r?\n/)  // Empty lines
+
+        // 3. Instructions – *only* real opcodes
+        prec(1, seq($.instruction_line, optional($.inline_comment), /\r?\n/)),
+
+        // 4. Macro invocations – non-opcode symbols
+        prec(2, seq($.macro_invocation_line, optional($.inline_comment), /\r?\n/)),
+
+        // 5. Blank or comment-only lines
+        seq(optional($.inline_comment), /\r?\n/)
       ),
 
     // ----- Comments -----
@@ -88,29 +97,27 @@ module.exports = grammar({
 
     global_label: $ =>
       choice(
-        // Exported label: identifier or raw identifier followed by ::
+        // identifier followed by ':' or '::' (via LABEL_TOKEN)
         seq(
-          field('name', choice(alias($._label_token, $.identifier), $.raw_identifier)),
+          field('name', alias($._label_token, $.identifier)),
           field('export_marker', '::')
         ),
-        // Regular label: identifier or raw identifier followed by :
         seq(
-          field('name', choice(alias($._label_token, $.identifier), $.raw_identifier)),
+          field('name', alias($._label_token, $.identifier)),
           ':'
+        ),
+        // raw identifiers: #load:, #IF:, #ELSE: - colon consumed but not in tree
+        seq(
+          field('name', $.raw_identifier),
+          choice('::', ':')
         ),
       ),
 
     local_label: $ =>
-      field(
-        'name',
-        seq(
-          $.local_identifier,
-          optional(':')
-        )
-      ),
+      field('name', seq($.local_identifier, optional(':'))),
 
     anonymous_label: $ =>
-      token(':'), // lone ":" at start of line
+      token(':'), // ':' at column ≥ 0
 
     // Local label / symbol reference like `.loop` or `Global.loop`
     local_identifier: $ =>
@@ -515,7 +522,11 @@ module.exports = grammar({
     macro_invocation: $ =>
       seq(
         field('name', alias($._symbol_token, $.identifier)),
-        optional(field('arguments', $.macro_arg_list))
+        // Simplified arguments - just expressions for now
+        optional(seq(
+          field('argument', $.expression),
+          repeat(seq(',', field('argument', $.expression)))
+        ))
       ),
 
     macro_arg_list: $ =>
@@ -567,7 +578,7 @@ module.exports = grammar({
               $.directive
             ),
             optional($.inline_comment),
-            choice($._macro_arg_end, /\r?\n/),
+            /\r?\n/,
             repeat($._top_level_statement)
           )
         )
