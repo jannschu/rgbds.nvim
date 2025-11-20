@@ -10,6 +10,14 @@
 ] @indent.begin
   (#set! indent.immediate 1))
 
+; Label block constructs (hierarchical structure for label-scoped indentation)
+; These create parent-child relationships so instructions under labels can be indented
+([
+  (global_label_block)
+  (local_label_block)
+] @indent.begin
+  (#set! indent.immediate 1))
+
 ; Branch constructs (intermediate indentation points)
 [
   (elif_clause)

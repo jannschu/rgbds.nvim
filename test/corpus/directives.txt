@@ -21,57 +21,57 @@ RSSET 10
 (source_file
   (inline_comment
     (comment))
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
       (section_type)))
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
-      (section_type)))
-  (inline_comment
-    (comment))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (ds_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
-        (number_literal))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (number_literal))))))
+      (section_type))
+    (inline_comment
+      (comment))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal))
+          (primary_expression
+            (number_literal)))))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal)))))
+    (directive
+      (ds_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal)))))
+    (inline_comment
+      (comment))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (identifier)
+        value: (primary_expression
+          (number_literal))))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (primary_expression
+            (number_literal)))))))
 
 ================================================================================
 Directives: compound assignment operators
@@ -419,28 +419,28 @@ POPC
   (directive
     (simple_directive
       (directive_keyword)))
-  (directive
+  (section_block
     (section_directive
       (directive_keyword)
       (string_literal)
-      (section_type)))
-  (directive
-    (simple_directive
-      (directive_keyword)))
-  (inline_comment
-    (comment))
-  (directive
-    (simple_directive
-      (directive_keyword)))
-  (directive
-    (simple_directive
-      (directive_keyword)
-      (argument_list
-        (primary_expression
-          (identifier)))))
-  (directive
-    (simple_directive
-      (directive_keyword))))
+      (section_type))
+    (directive
+      (simple_directive
+        (directive_keyword)))
+    (inline_comment
+      (comment))
+    (directive
+      (simple_directive
+        (directive_keyword)))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (primary_expression
+            (identifier)))))
+    (directive
+      (simple_directive
+        (directive_keyword)))))
 
 ================================================================================
 Directives: INCLUDE, INCBIN, EXPORT
@@ -521,7 +521,7 @@ SECTION "Code", ROMX, BANK[7]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -541,7 +541,7 @@ SECTION "OAM Data", WRAM0, ALIGN[8]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -561,7 +561,7 @@ SECTION "Data", ROMX, ALIGN[4, 2]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -583,7 +583,7 @@ SECTION "Fixed", ROM0[$100]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -601,7 +601,7 @@ SECTION "Data", ROMX[$4000]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -619,7 +619,7 @@ SECTION "Variables", WRAM0[$C000]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -637,7 +637,7 @@ SECTION "Test", ROM0[0]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -655,7 +655,7 @@ SECTION "Computed", ROM0[$100 * 2]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -676,7 +676,7 @@ SECTION "Cool Stuff", ROMX[$4567], BANK[3]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -699,7 +699,7 @@ SECTION "VRAM Data", ROMX, BANK[2], ALIGN[4]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -723,7 +723,7 @@ SECTION "Complex", ROMX[$4000], BANK[5], ALIGN[8, 0]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -752,7 +752,7 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       fragment: (directive_keyword)
@@ -1049,7 +1049,7 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       fragment: (directive_keyword)
