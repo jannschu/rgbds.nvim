@@ -1,0 +1,242 @@
+================================================================================
+Macros: no arguments
+================================================================================
+
+macrowithoutargs
+anothermacro
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier))))
+
+================================================================================
+Macros: no arguments with comments
+================================================================================
+
+macrowithoutargs ; trailing comment
+testmacro ; another comment
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
+  (inline_comment
+    (comment))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
+  (inline_comment
+    (comment)))
+
+================================================================================
+Macros: expression arguments with numbers
+================================================================================
+
+mymacro 1, 2, 3
+calcmacro (A + 1) << 2
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (number_literal))
+        argument: (primary_expression
+          (number_literal))
+        argument: (primary_expression
+          (number_literal)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (binary_expression
+          left: (primary_expression
+            (binary_expression
+              left: (primary_expression
+                (register))
+              right: (primary_expression
+                (number_literal))))
+          right: (primary_expression
+            (number_literal)))))))
+
+================================================================================
+Macros: expression arguments with strings
+================================================================================
+
+print_str "Hello"
+print_pair "foo", "bar"
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (string_literal)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (string_literal))
+        argument: (primary_expression
+          (string_literal))))))
+
+================================================================================
+Macros: simple RAW arguments
+================================================================================
+
+print_all This test probably passes
+debug_macro some words here
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Macros: RAW arguments with multiple words
+================================================================================
+
+print_all This test has multiple words
+log_macro Processing file data now
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      arguments: (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Macros: comment only (no RAW mode)
+================================================================================
+
+somemacro ; just a comment, no args
+testmacro ; another comment
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
+  (inline_comment
+    (comment))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)))
+  (inline_comment
+    (comment)))
+
+================================================================================
+Macros: block comment then RAW text
+================================================================================
+
+print_all /* leading comment */ This is RAW text
+debug_log /* note */ Processing data
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_raw
+        argument: (macro_call_argument
+          (macro_argument_raw))))))
+
+================================================================================
+Macros: expression arguments with identifiers
+================================================================================
+
+; Single identifiers correctly use expression parsing with improved heuristics
+
+mymacro single_identifier
+simple_call A
+
+---
+
+(source_file
+  (inline_comment
+    (comment))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (identifier)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (register))))))
+
+================================================================================
+Macros: mixed string and number arguments
+================================================================================
+
+log_entry "Error", 42
+format_msg "Hello", 123, "World"
+
+---
+
+(source_file
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (string_literal))
+        argument: (primary_expression
+          (number_literal)))))
+  (macro_invocation_line
+    (macro_invocation
+      name: (identifier)
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (string_literal))
+        argument: (primary_expression
+          (number_literal))
+        argument: (primary_expression
+          (string_literal))))))

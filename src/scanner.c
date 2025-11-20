@@ -608,14 +608,31 @@ static bool scan_raw_macro_mode(ScannerState *state, TSLexer *lexer, const bool 
     return false;
   }
 
-  // String-leading heuristic: If the first non-comment token is a string, 
-  // use expression-style arguments for more robust parsing
+  // Extended expression-friendly heuristic: Use expression parsing for patterns
+  // that are likely to be well-structured expressions rather than free-form text
   if (c == '"') {
-    // This looks like an expression-style string argument
+    // String literal - definitely expression-style
     return false;
   }
+  
+  if ((c >= '0' && c <= '9') || c == '$' || c == '%') {
+    // Number literal (decimal, hex, binary) - likely expression-style  
+    return false;
+  }
+  
+  if (c == '(') {
+    // Parenthesized expression - definitely expression-style
+    return false;
+  }
+  
+  if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+    // Identifier - this could be expression or RAW
+    // Default to RAW mode for compatibility with free-form text patterns
+    // Single identifiers and simple comma lists may not parse optimally,
+    // but this preserves the behavior for multi-word RAW text
+  }
 
-  // There is trailing content: enable RAW mode
+  // For free-form text, enable RAW mode
   state->in_raw_macro_mode = true;
   lexer->result_symbol = RAW_MACRO_MODE;
   return true;

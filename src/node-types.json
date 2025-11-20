@@ -99,11 +99,6 @@
     }
   },
   {
-    "type": "anonymous_label",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "argument_list",
     "named": true,
     "fields": {},
@@ -507,27 +502,11 @@
           "named": true
         },
         {
-          "type": "fragment_literal",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
           "type": "incbin_directive",
           "named": true
         },
         {
           "type": "include_directive",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
           "named": true
         },
         {
@@ -547,10 +526,6 @@
           "named": true
         },
         {
-          "type": "section_directive",
-          "named": true
-        },
-        {
           "type": "setcharmap_directive",
           "named": true
         },
@@ -560,10 +535,6 @@
         },
         {
           "type": "simple_directive",
-          "named": true
-        },
-        {
-          "type": "union_block",
           "named": true
         }
       ]
@@ -594,136 +565,6 @@
         },
         {
           "type": "argument_list",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "elif_clause",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "directive_keyword",
-          "named": true
-        },
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "else_clause",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "directive_keyword",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
           "named": true
         }
       ]
@@ -762,193 +603,6 @@
         },
         {
           "type": "macro_argument",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "for_block",
-    "named": true,
-    "fields": {
-      "count": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "end": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          },
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "start": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "step": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "var": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "interpolatable_identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "fragment_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
           "named": true
         }
       ]
@@ -1011,43 +665,12 @@
     }
   },
   {
-    "type": "if_block",
+    "type": "global_label_block",
     "named": true,
-    "fields": {
-      "condition": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "end": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "block_comment",
@@ -1058,19 +681,7 @@
           "named": true
         },
         {
-          "type": "elif_clause",
-          "named": true
-        },
-        {
-          "type": "else_clause",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
+          "type": "global_label",
           "named": true
         },
         {
@@ -1078,31 +689,11 @@
           "named": true
         },
         {
-          "type": "instruction_line",
+          "type": "instruction_list",
           "named": true
         },
         {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
+          "type": "local_label_block",
           "named": true
         }
       ]
@@ -1226,25 +817,6 @@
     }
   },
   {
-    "type": "instruction_line",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "instruction_list",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "instruction_list",
     "named": true,
     "fields": {},
@@ -1319,129 +891,6 @@
     }
   },
   {
-    "type": "label_definition",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "anonymous_label",
-          "named": true
-        },
-        {
-          "type": "global_label",
-          "named": true
-        },
-        {
-          "type": "local_label",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "load_block",
-    "named": true,
-    "fields": {
-      "end": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "section_type",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "local_label",
     "named": true,
     "fields": {
@@ -1462,90 +911,12 @@
     }
   },
   {
-    "type": "macro_arg_list_expr",
-    "named": true,
-    "fields": {
-      "argument": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "macro_arg_list_raw",
-    "named": true,
-    "fields": {
-      "argument": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "macro_call_argument",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "macro_call_argument",
+    "type": "local_label_block",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "macro_argument_raw",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "macro_definition",
-    "named": true,
-    "fields": {
-      "end": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "block_comment",
@@ -1556,111 +927,15 @@
           "named": true
         },
         {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
           "type": "inline_comment",
           "named": true
         },
         {
-          "type": "instruction_line",
+          "type": "instruction_list",
           "named": true
         },
         {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "macro_params",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "macro_invocation",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "macro_arg_list_expr",
-          "named": true
-        },
-        {
-          "type": "macro_arg_list_raw",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "macro_invocation_line",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "macro_params",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
+          "type": "local_label",
           "named": true
         }
       ]
@@ -1807,10 +1082,6 @@
         },
         {
           "type": "expression",
-          "named": true
-        },
-        {
-          "type": "fragment_literal",
           "named": true
         },
         {
@@ -2009,96 +1280,6 @@
     }
   },
   {
-    "type": "rept_block",
-    "named": true,
-    "fields": {
-      "count": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "end": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "section_address",
     "named": true,
     "fields": {
@@ -2112,6 +1293,41 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "section_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "section_directive",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2307,43 +1523,11 @@
           "named": true
         },
         {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
           "type": "inline_comment",
           "named": true
         },
         {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
+          "type": "section_block",
           "named": true
         }
       ]
@@ -2374,96 +1558,6 @@
       "types": [
         {
           "type": "expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "union_block",
-    "named": true,
-    "fields": {
-      "end": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "separator": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "block_comment",
-          "named": true
-        },
-        {
-          "type": "directive",
-          "named": true
-        },
-        {
-          "type": "for_block",
-          "named": true
-        },
-        {
-          "type": "if_block",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
-          "named": true
-        },
-        {
-          "type": "instruction_line",
-          "named": true
-        },
-        {
-          "type": "label_definition",
-          "named": true
-        },
-        {
-          "type": "load_block",
-          "named": true
-        },
-        {
-          "type": "macro_definition",
-          "named": true
-        },
-        {
-          "type": "macro_invocation_line",
-          "named": true
-        },
-        {
-          "type": "rept_block",
-          "named": true
-        },
-        {
-          "type": "union_block",
           "named": true
         }
       ]
@@ -2630,15 +1724,7 @@
     "named": false
   },
   {
-    "type": "[[",
-    "named": false
-  },
-  {
     "type": "]",
-    "named": false
-  },
-  {
-    "type": "]]",
     "named": false
   },
   {
@@ -2697,10 +1783,6 @@
   },
   {
     "type": "macro_argument",
-    "named": true
-  },
-  {
-    "type": "macro_argument_raw",
     "named": true
   },
   {

@@ -48,3 +48,6 @@ zig-out/
 *.tar.gz
 *.tgz
 *.zip
+
+/tmp
+.DS_Store
