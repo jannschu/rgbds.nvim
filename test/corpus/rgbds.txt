@@ -58,7 +58,7 @@ SECTION UNION "X", WRAM0, ALIGN[16]
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       union: (directive_keyword)
@@ -109,19 +109,19 @@ PURGE :-
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
-      (section_type)))
-  (directive
-    (export_directive
-      keyword: (directive_keyword)
-      (anonymous_label_ref)))
-  (directive
-    (purge_directive
-      keyword: (directive_keyword)
-      (anonymous_label_ref))))
+      (section_type))
+    (directive
+      (export_directive
+        keyword: (directive_keyword)
+        (anonymous_label_ref)))
+    (directive
+      (purge_directive
+        keyword: (directive_keyword)
+        (anonymous_label_ref)))))
 
 ================================================================================
 Test Name: RGBDS import: character literals in CHARMAP/CHAR
@@ -554,7 +554,7 @@ ds align[8, $ff], 6
 ---
 
 (source_file
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
@@ -563,18 +563,18 @@ ds align[8, $ff], 6
         (section_option
           (align_option
             align: (primary_expression
-              (number_literal)))))))
-  (directive
-    (ds_directive
-      keyword: (directive_keyword)
-      (align_option
-        align: (primary_expression
-          (number_literal))
-        offset: (primary_expression
-          (number_literal)))
-      (argument_list
-        (primary_expression
-          (number_literal))))))
+              (number_literal))))))
+    (directive
+      (ds_directive
+        keyword: (directive_keyword)
+        (align_option
+          align: (primary_expression
+            (number_literal))
+          offset: (primary_expression
+            (number_literal)))
+        (argument_list
+          (primary_expression
+            (number_literal)))))))
 
 ================================================================================
 Test Name: RGBDS import: ASSERT with lowercase severity

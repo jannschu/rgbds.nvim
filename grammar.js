@@ -43,7 +43,11 @@ module.exports = grammar({
         $._section_header,
         repeat($._section_statement),
         repeat($.global_label_block),
-        // FIXME: allow optional "ENDSECTION" directive
+        optional(seq(
+          alias(/[Ee][Nn][Dd][Ss][Ee][Cc][Tt][Ii][Oo][Nn]/, $.directive_keyword),
+          optional($.inline_comment),
+          /\r?\n/
+        ))
       ),
 
     _section_header: $ =>
