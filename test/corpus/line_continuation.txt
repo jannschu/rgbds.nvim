@@ -9,7 +9,7 @@ DB 1, \
 
 (source_file
   (directive
-    (simple_directive
+    (db_directive
       (directive_keyword)
       (argument_list
         (primary_expression
@@ -31,7 +31,7 @@ DB 1, 2, 3, \
 
 (source_file
   (directive
-    (simple_directive
+    (db_directive
       (directive_keyword)
       (argument_list
         (primary_expression

@@ -9,14 +9,15 @@ module.exports = grammar({
     $._macro_arg_end,          // Marks the end of macro-arg mode at EOL / EOF
     $._raw_macro_mode,         // Zero-width token that toggles RAW mode on this line
     $._label_token,            // Identifier immediately followed by : (becomes label)
-    $._register_token,         // CPU register token (A, B, C, D, E, H, L, AF, BC, DE, HL, SP, PC)
+    // $._register_token,      // Now handled by inline tokens (r8_register, r16_register, etc.)
     $._symbol_token,           // Plain identifier (for macro calls, etc.)
-    $._instruction_token,      // Known Z80/GB instruction opcode
+    $._instruction_token,      // Known Z80/GB instruction opcode (except those with specific rules)
   ],
 
   conflicts: $ => [
     [$.operand, $.primary_expression],
     [$.assert_directive, $.primary_expression],
+    [$.r8_register, $.primary_expression],
   ],
 
   extras: $ => [
@@ -174,6 +175,8 @@ module.exports = grammar({
         $.purge_directive,
         $.align_directive,
         $.ds_directive,
+        $.db_directive,
+        $.dw_directive,
         $.shift_directive,
         $.break_directive,
         // $.load_block,
@@ -291,6 +294,18 @@ module.exports = grammar({
         )
       ),
 
+    db_directive: $ =>
+      seq(
+        field('keyword', alias(/[Dd][Bb]/, $.directive_keyword)),
+        $.argument_list
+      ),
+
+    dw_directive: $ =>
+      seq(
+        field('keyword', alias(/[Dd][Ww]/, $.directive_keyword)),
+        $.argument_list
+      ),
+
     shift_directive: $ =>
       prec.right(seq(
         field('keyword', alias(/[Ss][Hh][Ii][Ff][Tt]/, $.directive_keyword)),
@@ -393,8 +408,6 @@ module.exports = grammar({
           // TODO: add the parameters to these directives
           /[Ee][Qq][Uu]/,
           /[Ee][Qq][Uu][Ss]/,
-          /[Dd][Bb]/,
-          /[Dd][Ww]/,
           /[Cc][Hh][Aa][Rr]/,
           /[Rr][Ee][Aa][Dd][Ff][Ii][Ll][Ee]/,
           /[Pp][Rr][Ii][Nn][Tt]/,
@@ -584,12 +597,105 @@ module.exports = grammar({
       ),
 
     instruction: $ =>
+      choice(
+        $.arith_a_instruction,    // ADC, SBC, SUB, CP with optional A
+        $.logic_a_instruction,    // AND, OR, XOR with optional A
+        $.add_instruction,        // ADD special cases
+        $.inc_dec_instruction,    // INC, DEC
+        $.cpl_instruction,        // CPL with optional A
+        // $.generic_instruction     // Fallback for all other instructions
+      ),
+
+    // Generic instruction fallback
+    generic_instruction: $ =>
       seq(
         field('opcode', choice(
           alias($._instruction_token, $.identifier),
           $.interpolatable_identifier
         )),
         optional($.operand_list)
+      ),
+
+    a_register: $ => token(/[Aa]/),
+
+    // FIXME: maybe any literal expression is allowed here?
+    n8: $ => $.number_literal,
+    e8: $ => $.number_literal,
+
+    // TODO: add punctuation here?
+    hl_address: $ => seq('[', $.hl_register, ']'),
+
+    // 8-bit arithmetic with optional A destination: ADC, SBC, SUB, CP
+    // Pattern: OPCODE [A,] (r8 | [HL] | n8)
+    arith_a_instruction: $ =>
+      seq(
+        field('opcode', choice(
+          alias(token(/[Aa][Dd][Cc]/), $.instruction_keyword),
+          alias(token(/[Ss][Bb][Cc]/), $.instruction_keyword),
+          alias(token(/[Ss][Uu][Bb]/), $.instruction_keyword),
+          alias(token(/[Cc][Pp]/), $.instruction_keyword)
+        )),
+        optional(seq($.a_register, ',')),
+        choice($.r8_register, $.hl_address, $.n8),
+        // choice(
+        //   seq($.a_register, ',', choice($.r8_register, $.hl_register, $.n8)),
+        //   choice($.r8_register, $.hl_register, $.n8),
+        // ),
+      ),
+
+    // Bitwise logic with optional A destination: AND, OR, XOR
+    // Pattern: OPCODE [A,] (r8 | [HL] | n8)
+    logic_a_instruction: $ =>
+      seq(
+        field('opcode', choice(
+          alias(token(/[Aa][Nn][Dd]/), $.instruction_keyword),
+          alias(token(/[Oo][Rr]/), $.instruction_keyword),
+          alias(token(/[Xx][Oo][Rr]/), $.instruction_keyword)
+        )),
+        optional(seq($.a_register, ',')),
+        choice($.r8_register, $.hl_address, $.n8),
+      ),
+
+    // ADD instruction: handles both 8-bit and 16-bit forms
+    // Patterns:
+    //   ADD HL, r16
+    //   ADD HL, SP
+    //   ADD SP, e8
+    //   ADD [A,] (r8 | [HL] | n8)
+    add_instruction: $ =>
+      seq(
+        field('opcode', alias(token(/[Aa][Dd][Dd]/), $.instruction_keyword)),
+        choice(
+          // 16-bit forms
+          seq($.hl_register, ',', $.r16_register),
+          seq($.sp_register, ',', $.e8),
+          // 8-bit forms
+          seq(optional(seq($.a_register, ',')), choice($.r8_register, $.hl_address, $.n8)),
+        )
+      ),
+
+    // INC/DEC instructions: work on r8, r16, SP, or [HL]
+    // Pattern: INC/DEC (r8 | r16 | SP | [HL])
+    inc_dec_instruction: $ =>
+      seq(
+        field('opcode', choice(
+          alias(token(/[Ii][Nn][Cc]/), $.instruction_keyword),
+          alias(token(/[Dd][Ee][Cc]/), $.instruction_keyword)
+        )),
+        choice(
+          $.r8_register,
+          $.r16_register,
+          $.sp_register,
+          $.hl_address,
+        )
+      ),
+
+    // CPL instruction: optionally takes A
+    // Pattern: CPL [A]
+    cpl_instruction: $ =>
+      seq(
+        field('opcode', alias(token(/[Cc][Pp][Ll]/), $.instruction_keyword)),
+        optional($.a_register)
       ),
 
     operand_list: $ =>
@@ -600,11 +706,75 @@ module.exports = grammar({
 
     operand: $ =>
       choice(
+        $.condition_code,
+        $.rst_vector,
+        $.r8_register,
+        $.r16_register,
+        $.a_register,
+        $.hl_register,
+        $.sp_register,
         $.address,
         $.local_identifier,
         $.anonymous_label_ref,
         $.expression
       ),
+
+    // Condition codes for conditional instructions (JP cc, JR cc, CALL cc, RET cc)
+    // These need to come before expression to avoid being parsed as identifiers
+    condition_code: $ =>
+      token(choice(
+        /[Zz]/,
+        /[Nn][Zz]/,
+        /[Cc]/,
+        /[Nn][Cc]/
+      )),
+
+    // RST vectors: specific addresses for RST instruction (vec operand type)
+    rst_vector: $ =>
+      token(choice(
+        /\$00/,
+        /\$08/,
+        /\$10/,
+        /\$18/,
+        /\$20/,
+        /\$28/,
+        /\$30/,
+        /\$38/,
+        /0[xX]00/,
+        /0[xX]08/,
+        /0[xX]10/,
+        /0[xX]18/,
+        /0[xX]20/,
+        /0[xX]28/,
+        /0[xX]30/,
+        /0[xX]38/
+      )),
+
+    // Specific register types from gbz80.7
+    // r8: Any 8-bit register (A, B, C, D, E, H, L)
+    r8_register: $ =>
+      choice(
+        $.a_register,
+        /[Bb]/,
+        /[Cc]/,
+        /[Dd]/,
+        /[Ee]/,
+        /[Hh]/,
+        /[Ll]/
+      ),
+
+    // r16: Any 16-bit general-purpose register (BC, DE, HL)
+    r16_register: $ =>
+      token(choice(
+        /[Bb][Cc]/,
+        /[Dd][Ee]/,
+        /[Hh][Ll]/
+      )),
+
+    // Specific single registers for precise instruction matching
+    a_register: $ => token(/[Aa]/),
+    hl_register: $ => token(/[Hh][Ll]/),
+    sp_register: $ => token(/[Ss][Pp]/),
 
     address: $ =>
       choice(
@@ -636,7 +806,11 @@ module.exports = grammar({
         $.macro_unique_suffix,
         $.function_call,
         alias('@', $.identifier),
-        alias($._register_token, $.register),
+        $.r8_register,
+        $.r16_register,
+        $.a_register,
+        $.hl_register,
+        $.sp_register,
         $.identifier,
         $.raw_identifier,
         $.local_identifier,

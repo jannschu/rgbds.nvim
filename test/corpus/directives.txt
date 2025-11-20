@@ -34,7 +34,7 @@ RSSET 10
     (inline_comment
       (comment))
     (directive
-      (simple_directive
+      (db_directive
         keyword: (directive_keyword)
         (argument_list
           (primary_expression
@@ -44,7 +44,7 @@ RSSET 10
           (primary_expression
             (number_literal)))))
     (directive
-      (simple_directive
+      (dw_directive
         keyword: (directive_keyword)
         (argument_list
           (primary_expression
