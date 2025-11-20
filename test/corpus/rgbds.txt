@@ -456,7 +456,7 @@ db 999
       (opt_arg
         (raw_string))))
   (directive
-    (simple_directive
+    (db_directive
       keyword: (directive_keyword)
       (argument_list
         (primary_expression

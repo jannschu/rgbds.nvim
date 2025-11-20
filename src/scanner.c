@@ -81,26 +81,28 @@ static bool is_instruction(const char *name, size_t len) {
   upper[len] = '\0';
   
   // Complete SM83 (Game Boy) / Z80 instruction set
+  // Note: Some instructions (ADC, SBC, SUB, CP, AND, OR, XOR, ADD, INC, DEC, CPL)
+  // are handled by specific grammar rules and excluded here
   if (len == 2) {
     return (upper[0] == 'L' && upper[1] == 'D') ||  // LD
-           (upper[0] == 'C' && upper[1] == 'P') ||  // CP
-           (upper[0] == 'O' && upper[1] == 'R') ||  // OR
+           // CP - handled by specific rule
+           // OR - handled by specific rule
            (upper[0] == 'J' && upper[1] == 'R') ||  // JR
            (upper[0] == 'J' && upper[1] == 'P') ||  // JP
            (upper[0] == 'D' && upper[1] == 'I') ||  // DI
            (upper[0] == 'E' && upper[1] == 'I');    // EI
   }
   if (len == 3) {
-    return (upper[0] == 'A' && upper[1] == 'D' && upper[2] == 'D') ||  // ADD
-           (upper[0] == 'A' && upper[1] == 'D' && upper[2] == 'C') ||  // ADC
-           (upper[0] == 'S' && upper[1] == 'U' && upper[2] == 'B') ||  // SUB
-           (upper[0] == 'S' && upper[1] == 'B' && upper[2] == 'C') ||  // SBC
-           (upper[0] == 'A' && upper[1] == 'N' && upper[2] == 'D') ||  // AND
-           (upper[0] == 'X' && upper[1] == 'O' && upper[2] == 'R') ||  // XOR
-           (upper[0] == 'I' && upper[1] == 'N' && upper[2] == 'C') ||  // INC
-           (upper[0] == 'D' && upper[1] == 'E' && upper[2] == 'C') ||  // DEC
+    return // ADD - handled by specific rule
+           // ADC - handled by specific rule
+           // SUB - handled by specific rule
+           // SBC - handled by specific rule
+           // AND - handled by specific rule
+           // XOR - handled by specific rule
+           // INC - handled by specific rule
+           // DEC - handled by specific rule
            (upper[0] == 'D' && upper[1] == 'A' && upper[2] == 'A') ||  // DAA
-           (upper[0] == 'C' && upper[1] == 'P' && upper[2] == 'L') ||  // CPL
+           // CPL - handled by specific rule
            (upper[0] == 'S' && upper[1] == 'C' && upper[2] == 'F') ||  // SCF
            (upper[0] == 'C' && upper[1] == 'C' && upper[2] == 'F') ||  // CCF
            (upper[0] == 'N' && upper[1] == 'O' && upper[2] == 'P') ||  // NOP
@@ -270,12 +272,12 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return false;
   }
 
-  // CPU register names (A, B, C, D, E, H, L, AF, BC, DE, HL, SP, PC)
-  // Only emit REGISTER_TOKEN when registers are valid in this context
-  if (is_register_name(name, len) && valid_symbols[REGISTER_TOKEN]) {
-    lexer->result_symbol = REGISTER_TOKEN;
-    return true;
-  }
+  // CPU register names are now handled by inline grammar tokens (r8_register, r16_register, etc.)
+  // Disabled external register recognition to allow precise register type matching
+  // if (is_register_name(name, len) && valid_symbols[REGISTER_TOKEN]) {
+  //   lexer->result_symbol = REGISTER_TOKEN;
+  //   return true;
+  // }
 
   // Known instruction opcodes
   if (is_instruction(name, len) && valid_symbols[INSTRUCTION_TOKEN]) {
@@ -283,11 +285,12 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return true;
   }
 
-  // Plain symbol (macro name, etc.)
-  if (valid_symbols[SYMBOL_TOKEN]) {
-    lexer->result_symbol = SYMBOL_TOKEN;
-    return true;
-  }
+  // Plain symbols are now handled by the internal lexer as identifiers
+  // This allows inline instruction tokens (ADC, ADD, etc.) to match with higher priority
+  // if (valid_symbols[SYMBOL_TOKEN]) {
+  //   lexer->result_symbol = SYMBOL_TOKEN;
+  //   return true;
+  // }
   
   // If we got here, we scanned an identifier but didn't match any external
   // tokens (label/register). Let the internal scanner produce a normal
