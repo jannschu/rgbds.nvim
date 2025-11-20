@@ -1,41 +1,57 @@
-; Indent bodies of block directives
-((if_block) @indent.begin
+; Block constructs with immediate indentation
+([
+  (if_block)
+  (macro_definition)
+  (rept_block)
+  (for_block)
+  (union_block)
+  (fragment_literal)
+  (load_block)
+] @indent.begin
   (#set! indent.immediate 1))
 
-((elif_clause) @indent.branch)
+; Branch constructs (intermediate indentation points)
+[
+  (elif_clause)
+  (else_clause)
+] @indent.branch
 
-((else_clause) @indent.branch)
+; Union separator branches
+(union_block
+  separator: (directive_keyword)) @indent.branch
 
-((macro_definition) @indent.begin
-  (#set! indent.immediate 1))
+; Parentheses and brackets alignment - use primary_expression for parentheses
+; Note: RGBASM grammar handles parentheses within primary_expression
+((argument_list) @indent.align
+  (#set! indent.open_delimiter "(")
+  (#set! indent.close_delimiter ")"))
 
-((rept_block) @indent.begin
-  (#set! indent.immediate 1))
+; Fragment literal end marker
+(fragment_literal "]]") @indent.end
 
-((for_block) @indent.begin
-  (#set! indent.immediate 1))
+; Block terminators (parsed as end fields within block nodes)
+(if_block
+  end: (directive_keyword) @indent.end)
 
-((union_block) @indent.begin
-  (#set! indent.immediate 1))
+(macro_definition  
+  end: (directive_keyword) @indent.end)
 
-((union_block
-   separator: (directive_keyword)) @indent.branch)
+(rept_block
+  end: (directive_keyword) @indent.end)
 
-((fragment_literal) @indent.begin
-  (#set! indent.immediate 1))
+(for_block
+  end: (directive_keyword) @indent.end)
 
-((load_block) @indent.begin
-  (#set! indent.immediate 1))
+(union_block
+  end: (directive_keyword) @indent.end)
 
-; Fragment literal terminator resets indent
-((fragment_literal "]]") @indent.dedent)
+(load_block
+  end: (directive_keyword) @indent.end)
 
-; Dedent on block terminators
-; Note: Case-insensitive per RGBASM spec (rgbasm.5:101-102)
-((directive_keyword) @indent.dedent
-  (#match? @indent.dedent "^(?i)(ENDM|ENDC|ENDR|ENDU|ENDL)$"))
+; Top-level constructs at column 0
+[
+  (section_directive)
+] @indent.zero
 
-; Top-level constructs stay at column 0
-((global_label) @indent.zero)
-
-((section_directive) @indent.zero)
+; Comments and subsequent labels preserve indentation
+(comment) @indent.auto

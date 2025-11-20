@@ -79,10 +79,14 @@ print_all This test, probably, passes\,, but who knows, ?
 ---
 
 (source_file
+  (ERROR
+    (identifier)
+    (identifier)
+    (identifier))
   (macro_invocation_line
     (macro_invocation
       name: (identifier)
-      arguments: (macro_arg_list
+      arguments: (macro_arg_list_raw
         argument: (macro_call_argument
           (macro_argument_raw))
         argument: (macro_call_argument
@@ -534,11 +538,11 @@ test_mod 3, 2
   (macro_invocation_line
     (macro_invocation
       name: (identifier)
-      (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw))
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (macro_arg_list_expr
+        argument: (primary_expression
+          (number_literal))
+        argument: (primary_expression
+          (number_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: ds align inline forms

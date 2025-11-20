@@ -25,15 +25,27 @@
   opcode: (interpolatable_identifier) @function.builtin)
 
 ; Registers
-(register) @variable.builtin
+(register) @constant.builtin
 
 ; HL auto-inc/dec address forms
-(hl_auto_address) @variable.builtin
+(hl_auto_address) @constant.builtin
 
-; Directives and section types
-(directive_keyword) @keyword
+; Control flow keywords
+((directive_keyword) @keyword.conditional
+  (#match? @keyword.conditional "^\\c\\(IF\\|ELIF\\|ELSE\\|ENDC\\)$"))
 
-(section_type) @type.builtin
+((directive_keyword) @keyword.repeat  
+  (#match? @keyword.repeat "^\\c\\(REPT\\|FOR\\|ENDR\\)$"))
+
+; Definition/declaration keywords
+((directive_keyword) @keyword.directive.define
+  (#match? @keyword.directive.define "^\\c\\(DEF\\|REDEF\\|EQU\\|EQUS\\|MACRO\\|ENDM\\|PURGE\\)$"))
+
+; Import/include keywords  
+((directive_keyword) @keyword.import
+  (#match? @keyword.import "^\\c\\(INCLUDE\\|INCBIN\\)$"))
+
+(section_type) @module
 
 ; Macros
 (macro_definition
@@ -49,7 +61,7 @@
 (macro_unique_suffix) @constant.builtin
 
 ; Macro call arguments (raw text passed to macros)
-(macro_argument_raw) @string.special
+(macro_argument_raw) @markup.raw
 
 (shift_directive
   keyword: (directive_keyword) @keyword.directive)
@@ -84,6 +96,10 @@
 (section_directive
   keyword: (directive_keyword) @keyword.directive)
 
+; Section name as module (direct string literal, no field name)
+(section_directive
+  (string_literal) @module)
+
 ; SECTION options (BANK, ALIGN)
 (bank_option
   "BANK" @keyword.modifier)
@@ -91,6 +107,13 @@
 (align_option
   "ALIGN" @keyword.modifier)
 
+; Align directive content [value] 
+(align_option
+  align: (_) @attribute.builtin)
+
+(align_option
+  offset: (_) @attribute.builtin)
+
 (def_directive
   keyword: (directive_keyword) @keyword.directive)
 
@@ -135,7 +158,7 @@
   keyword: (directive_keyword) @keyword.directive)
 
 (assert_directive
-  severity: _ @keyword.modifier)
+  severity: _ @comment.error)
 
 (purge_directive
   keyword: (directive_keyword) @keyword.directive)
@@ -175,23 +198,27 @@
 (function_call
   function: (identifier) @function.builtin
   (#match? @function.builtin
-    "^(?i)(HIGH|LOW|BANK|SIN|COS|TAN|ASIN|ACOS|ATAN|ATAN2|MUL|DIV|POW|LOG|CEIL|FLOOR|FMOD|ROUND|BITWIDTH|TZCOUNT|STRLEN|STRCAT|STRCMP|STRFIND|STRRFIND|STRRPL|STRSLICE|STRUPR|STRLWR|STRFMT|STRCHAR|BYTELEN|STRBYTE|CHARLEN|CHARSIZE|CHARVAL|INCHARMAP|REVCHAR|CHARCMP|READFILE|SIZEOF|DEF|ISCONST|SECTION|STARTOF)$"))
+    "^\\c\\(HIGH\\|LOW\\|BANK\\|SIN\\|COS\\|TAN\\|ASIN\\|ACOS\\|ATAN\\|ATAN2\\|MUL\\|DIV\\|POW\\|LOG\\|CEIL\\|FLOOR\\|FMOD\\|ROUND\\|BITWIDTH\\|TZCOUNT\\|STRLEN\\|STRCAT\\|STRCMP\\|STRFIND\\|STRRFIND\\|STRRPL\\|STRSLICE\\|STRUPR\\|STRLWR\\|STRFMT\\|STRCHAR\\|STRSUB\\|BYTELEN\\|STRBYTE\\|CHARLEN\\|CHARSIZE\\|CHARVAL\\|INCHARMAP\\|REVCHAR\\|CHARCMP\\|READFILE\\|SIZEOF\\|DEF\\|ISCONST\\|SECTION\\|STARTOF\\|HRAM\\|WRAM0\\|VRAM\\|SRAM\\|OAM\\)$"))
 
 ((primary_expression
    (identifier) @function.builtin)
   (#match? @function.builtin
-    "^(?i)(HIGH|LOW|BANK|SIN|COS|TAN|ASIN|ACOS|ATAN|ATAN2|MUL|DIV|POW|LOG|CEIL|FLOOR|FMOD|ROUND|BITWIDTH|TZCOUNT|STRLEN|STRCAT|STRCMP|STRFIND|STRRFIND|STRRPL|STRSLICE|STRUPR|STRLWR|STRFMT|STRCHAR|BYTELEN|STRBYTE|CHARLEN|CHARSIZE|CHARVAL|INCHARMAP|REVCHAR|CHARCMP|READFILE|SIZEOF|DEF|ISCONST|SECTION|STARTOF)$"))
+    "^\\c\\(HIGH\\|LOW\\|BANK\\|SIN\\|COS\\|TAN\\|ASIN\\|ACOS\\|ATAN\\|ATAN2\\|MUL\\|DIV\\|POW\\|LOG\\|CEIL\\|FLOOR\\|FMOD\\|ROUND\\|BITWIDTH\\|TZCOUNT\\|STRLEN\\|STRCAT\\|STRCMP\\|STRFIND\\|STRRFIND\\|STRRPL\\|STRSLICE\\|STRUPR\\|STRLWR\\|STRFMT\\|STRCHAR\\|STRSUB\\|BYTELEN\\|STRBYTE\\|CHARLEN\\|CHARSIZE\\|CHARVAL\\|INCHARMAP\\|REVCHAR\\|CHARCMP\\|READFILE\\|SIZEOF\\|DEF\\|ISCONST\\|SECTION\\|STARTOF\\|HRAM\\|WRAM0\\|VRAM\\|SRAM\\|OAM\\)$"))
 
 ; Special constants
 ; Note: Case-insensitive per RGBASM spec (rgbasm.5:101-102)
 ((identifier) @constant.builtin
   (#match? @constant.builtin
-    "^(?i)(_PI|_RS|_NARG|__LINE__|__FILE__|__DATE__|__TIME__)$"))
+    "^\\c\\(_PI\\|_RS\\|_NARG\\|__LINE__\\|__FILE__\\|__DATE__\\|__TIME__\\|__ISO_8601_LOCAL__\\|__ISO_8601_UTC__\\|__UTC_YEAR__\\|__UTC_MONTH__\\|__UTC_DAY__\\|__UTC_HOUR__\\|__UTC_MINUTE__\\|__UTC_SECOND__\\)$"))
 
 ((identifier) @constant.builtin
   (#eq? @constant.builtin "@"))
 
 ; Literals
+; Fixed-point literals (decimal notation) - must come before general @number
+(number_literal) @number.float
+  (#match? @number.float "\\.[0-9]")
+
 (number_literal) @number
 
 (graphics_literal) @number
@@ -232,12 +259,22 @@
 (interpolatable_identifier
   (identifier_fragment) @variable)
 
-; Comments
+; Comments with special patterns
 [
   (comment)
   (block_comment)
   (inline_comment)
 ] @comment @spell
+
+; TODO/FIXME comments
+((comment) @comment.todo
+  (#match? @comment.todo "TODO\\|FIXME\\|XXX"))
+
+((comment) @comment.error  
+  (#match? @comment.error "ERROR\\|BUG\\|HACK"))
+
+((comment) @comment.warning
+  (#match? @comment.warning "WARNING\\|WARN\\|FIX"))
 
 ; Operators
 [

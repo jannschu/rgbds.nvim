@@ -16,7 +16,6 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.operand, $.primary_expression],
-    [$._top_level_statement, $.fragment_literal],
     [$.assert_directive, $.primary_expression],
   ],
 
@@ -32,178 +31,74 @@ module.exports = grammar({
   ],
 
   rules: {
-    // Source file is a sequence of top-level statements.
-    // Block directives don't consume newlines; other statements do.
-    source_file: $ => repeat($._top_level_statement),
+    source_file: $ => seq(
+      repeat($._non_section_statement),
+      repeat($.section_block),
+    ),
 
-    // Top-level statement: blocks or regular statements (each decides where it ends)
-    _top_level_statement: $ =>
-      choice(
-        // Block directives: highest precedence (don't consume newlines internally)
-        prec(1, $.macro_definition),
-        prec(1, $.if_block),
-        prec(1, $.rept_block),
-        prec(1, $.for_block),
-        prec(1, $.load_block),
-        prec(1, $.union_block),
-
-        // Standalone block comments
-        seq($.block_comment, /\r?\n/),
-
-        // 1. Labels (global/local/anonymous)
-        seq($.label_definition, optional($.inline_comment), /\r?\n/),
-
-        // 2. Directives (SECTION, DEF, LOAD, ENDL, etc.)
-        prec(2, seq($.directive, optional($.inline_comment), /\r?\n/)),
-
-        // 3. Instructions – *only* real opcodes
-        prec(1, seq($.instruction_line, optional($.inline_comment), /\r?\n/)),
-
-        // 4. Macro invocations – non-opcode symbols
-        prec(2, seq($.macro_invocation_line, optional($.inline_comment), /\r?\n/)),
-
-        // 5. Blank or comment-only lines
-        seq(optional($.inline_comment), /\r?\n/)
-      ),
-
-    // ----- Comments -----
-
-    comment: $ => token(seq(';', /.*/)),
-
-    inline_comment: $ => prec(1, $.comment),
-
-    // C-style block comments (RGBDS behavior: no nesting)
-    block_comment: $ =>
-      token(
-        seq(
-          '/*',
-          repeat(
-            choice(
-              /[^*]/,
-              /\*+[^/]/
-            )
-          ),
-          '*/'
-        )
-      ),
-
-    // ----- Labels -----
-
-    label_definition: $ =>
-      choice(
-        $.global_label,
-        $.local_label,
-        $.anonymous_label
-      ),
-
-    global_label: $ =>
-      choice(
-        // identifier followed by ':' or '::' (via LABEL_TOKEN)
-        seq(
-          field('name', alias($._label_token, $.identifier)),
-          field('export_marker', '::')
-        ),
-        seq(
-          field('name', alias($._label_token, $.identifier)),
-          ':'
-        ),
-        // raw identifiers: #load:, #IF:, #ELSE: - colon consumed but not in tree
-        seq(
-          field('name', $.raw_identifier),
-          choice('::', ':')
-        ),
-      ),
-
-    local_label: $ =>
-      field('name', seq($.local_identifier, optional(':'))),
-
-    anonymous_label: $ =>
-      token(':'), // ':' at column ≥ 0
-
-    // Local label / symbol reference like `.loop` or `Global.loop`
-    local_identifier: $ =>
-      token(
-        choice(
-          /\.[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/,              // .local
-          /[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z0-9_]*(?:\\@)?/  // Global.local
-        )
-      ),
-
-    // Anonymous label reference like :+, :++, :-, :--
-    anonymous_label_ref: $ =>
-      token(/:[+-]+/),
-
-    // ----- Instructions -----
-
-    instruction_line: $ =>
+    // Section blocks: SECTION directive and its contents
+    section_block: $ =>
+      // FIXME: POPS PUSHS implementation
       seq(
-        optional($.label_definition),
-        $.instruction_list
+        $._section_header,
+        repeat($._section_statement),
+        repeat($.global_label_block),
+        // FIXME: allow optional "ENDSECTION" directive
       ),
 
-    instruction_list: $ =>
+    _section_header: $ =>
       seq(
-        $.instruction,
-        repeat(seq('::', $.instruction))
-      ),
-
-    instruction: $ =>
-      seq(
-        field('opcode', choice(
-          alias($._instruction_token, $.identifier),
-          $.interpolatable_identifier
-        )),
-        optional($.operand_list)
-      ),
-
-    operand_list: $ =>
-      seq(
-        $.operand,
-        repeat(seq(',', $.operand))
-      ),
-
-    operand: $ =>
-      choice(
-        $.address,
-        $.local_identifier,
-        $.anonymous_label_ref,
-        $.expression
-      ),
-
-    address: $ =>
-      choice(
-        alias(token(/\[[Hh][Ll](\+|-|[Ii][Dd])\]/), $.hl_auto_address), // [HL+]/[HLI]/[HL-]/[HLD]
-        seq('[', /[Hh]/, /[Ll]/, ']'), // [hl] form
-        seq('[', $.expression, ']'),
-      ),
-
-    // ----- Directives -----
-
-    directive: $ =>
-      choice(
         $.section_directive,
-        $.macro_definition,
-        $.if_block,
-        $.redef_directive,
-        $.def_directive,
-        $.assert_directive,
-        $.purge_directive,
-        $.align_directive,
-        $.ds_directive,
-        $.shift_directive,
-        $.break_directive,
-        $.load_block,
-        $.include_directive,
-        $.incbin_directive,
-        $.union_block,
-        $.fragment_literal,
-        $.charmap_directive,
-        $.newcharmap_directive,
-        $.setcharmap_directive,
-        $.export_directive,
-        $.opt_directive,
-        $.simple_directive
+        optional($.inline_comment),
+        /\r?\n/
       ),
+
+    // Global label blocks: global label and its contents
+    global_label_block: $ =>
+      seq(
+        $._global_label_header,
+        repeat($._section_statement),
+        repeat($.local_label_block),
+      ),
+
+    _global_label_header: $ =>
+      seq(
+        $.global_label,
+        optional($.inline_comment),
+        /\r?\n/
+      ),
+
+    // Local label blocks: local label and its contents
+    local_label_block: $ =>
+      seq(
+        $._local_label_header,
+        repeat($._section_statement)
+      ),
+
+    _local_label_header: $ =>
+      seq(
+        $.local_label,
+        optional($.inline_comment),
+        /\r?\n/
+      ),
+
+    // ----- Section statements -----
+
+    _section_statement: $ =>
+      choice(
+        seq($.instruction_list, optional($.inline_comment), /\r?\n/),
+        // FIXME: anonymous label here?
+        $._non_section_statement,
+      ),
+
+    _non_section_statement: $ => choice(
+      seq($.directive, optional($.inline_comment), /\r?\n/),
+      seq($.block_comment, /\r?\n/),
+      // Blank line or line with only comment
+      seq(optional($.inline_comment), /\r?\n/),
+    ),
+
+    // ----- Section -----
 
     section_directive: $ =>
       seq(
@@ -260,6 +155,34 @@ module.exports = grammar({
         field('align', $.expression),
         optional(seq(',', field('offset', $.expression))),
         ']'
+      ),
+
+
+    // ----- Directives -----
+
+    directive: $ =>
+      choice(
+        // $.macro_definition,
+        // $.if_block,
+        $.redef_directive,
+        $.def_directive,
+        $.assert_directive,
+        $.purge_directive,
+        $.align_directive,
+        $.ds_directive,
+        $.shift_directive,
+        $.break_directive,
+        // $.load_block,
+        $.include_directive,
+        $.incbin_directive,
+        // $.union_block,
+        // $.fragment_literal,
+        $.charmap_directive,
+        $.newcharmap_directive,
+        $.setcharmap_directive,
+        $.export_directive,
+        $.opt_directive,
+        $.simple_directive,
       ),
 
     def_directive: $ =>
@@ -463,21 +386,18 @@ module.exports = grammar({
     directive_keyword: $ =>
       token(
         choice(
-          /[Rr][Ee][Dd][Ee][Ff]/,
+          // TODO: add the parameters to these directives
           /[Ee][Qq][Uu]/,
           /[Ee][Qq][Uu][Ss]/,
           /[Dd][Bb]/,
           /[Dd][Ww]/,
-          /[Dd][Ss]/,
           /[Cc][Hh][Aa][Rr]/,
           /[Rr][Ee][Aa][Dd][Ff][Ii][Ll][Ee]/,
           /[Pp][Rr][Ii][Nn][Tt]/,
           /[Pp][Rr][Ii][Nn][Tt][Ll][Nn]/,
-          /[Pp][Rr][Ii][Nn][Tt][Tt]/,
           /[Ff][Aa][Ii][Ll]/,
           /[Ww][Aa][Rr][Nn]/,
           /[Ii][Mm][Pp][Oo][Rr][Tt]/,
-          /[Xx][Rr][Ee][Ff]/,
           /[Rr][Ss][Ss][Ee][Tt]/,
           /[Rr][Ss][Rr][Ee][Ss][Ee][Tt]/,
           /[Pp][Uu][Ss][Hh][Oo]/,
@@ -486,13 +406,6 @@ module.exports = grammar({
           /[Pp][Oo][Pp][Ss]/,
           /[Pp][Uu][Ss][Hh][Cc]/,
           /[Pp][Oo][Pp][Cc]/,
-          /[Cc][Hh][Aa][Rr][Mm][Aa][Pp]/,
-          /[Nn][Ee][Ww][Cc][Hh][Aa][Rr][Mm][Aa][Pp]/,
-          /[Ss][Ee][Tt][Cc][Hh][Aa][Rr][Mm][Aa][Pp]/,
-          /[Ll][Oo][Aa][Dd]/,
-          /[Ee][Nn][Dd][Ll]/,
-          /[Ff][Rr][Aa][Gg][Mm][Ee][Nn][Tt]/,
-          /[Aa][Ll][Ii][Gg][Nn]/
         )
       ),
 
@@ -502,183 +415,199 @@ module.exports = grammar({
         repeat(seq(',', $.expression))
       ),
 
-    // ----- Block directives -----
+    // ----- Control structures -----
+    // FIXME: What statements should be valid inside these blocks?
+    //        They can be used _everywhere_, pre-processor-style.
+    //        In particular, they may "mask" a section start:
+    //
+    //        IF 0
+    //        SECTION "A"
+    //        ELSE
+    //        SECTION "B"
+    //        ENDC
+    //          nop
+    //
+    // This does not fit into the current section/block structure!
+    // Should they just contain "source_file" and we add
+    // allow such preprocessor statements as alternatives to section and global label headers?
+    //
+    // if_block: $ =>
+    //   seq(
+    //     field('keyword', alias(/[Ii][Ff]/, $.directive_keyword)),
+    //     field('condition', $.expression),
+    //     /\r?\n/,
+    //     repeat($._top_level_statement),
+    //     repeat($.elif_clause),
+    //     optional($.else_clause),
+    //     field('end', alias(/[Ee][Nn][Dd][Cc]/, $.directive_keyword))
+    //   ),
+    //
+    // elif_clause: $ =>
+    //   seq(
+    //     alias(/[Ee][Ll][Ii][Ff]/, $.directive_keyword),
+    //     $.expression,
+    //     /\r?\n/,
+    //     repeat($._top_level_statement)
+    //   ),
+    //
+    // else_clause: $ =>
+    //   seq(
+    //     alias(/[Ee][Ll][Ss][Ee]/, $.directive_keyword),
+    //     choice(
+    //       // ELSE followed by newline and body
+    //       seq(/\r?\n/, repeat($._top_level_statement)),
+    //       // ELSE followed by statement on same line, then newline and body
+    //       seq(
+    //         choice(
+    //           $.label_definition,
+    //           $.macro_invocation_line,
+    //           $.instruction_line,
+    //           $.directive
+    //         ),
+    //         optional($.inline_comment),
+    //         /\r?\n/,
+    //         repeat($._top_level_statement)
+    //       )
+    //     )
+    //   ),
+    //
+    // rept_block: $ =>
+    //   seq(
+    //     field('keyword', alias(/[Rr][Ee][Pp][Tt]/, $.directive_keyword)),
+    //     field('count', $.expression),
+    //     /\r?\n/,
+    //     repeat($._top_level_statement),
+    //     field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
+    //   ),
+    //
+    // for_block: $ =>
+    //   seq(
+    //     field('keyword', alias(/[Ff][Oo][Rr]/, $.directive_keyword)),
+    //     field('var', choice(
+    //       $.identifier,
+    //       $.interpolatable_identifier
+    //     )),
+    //     ',',
+    //     choice(
+    //       // Single argument form: FOR var, count (iterate 0 to count-1)
+    //       field('count', $.expression),
+    //       // Two or three argument form: FOR var, start, end [, step]
+    //       seq(
+    //         field('start', $.expression),
+    //         ',',
+    //         field('end', $.expression),
+    //         optional(seq(',', field('step', $.expression)))
+    //       )
+    //     ),
+    //     /\r?\n/,
+    //     repeat($._top_level_statement),
+    //     field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
+    //   ),
 
-    macro_definition: $ =>
-      seq(
-        field('keyword', alias(/[Mm][Aa][Cc][Rr][Oo]/, $.directive_keyword)),
-        field('name', $.identifier),
-        optional($.macro_params),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        field('end', alias(/[Ee][Nn][Dd][Mm]/, $.directive_keyword))
-      ),
+    // ----- Comments -----
 
-    macro_invocation_line: $ =>
-      seq(
-        optional($.label_definition),
-        $.macro_invocation
-      ),
+    comment: $ => token(seq(';', /.*/)),
 
-    macro_invocation: $ =>
-      choice(
-        // Expression-style macro call (no RAW mode)
+    inline_comment: $ => prec(1, $.comment),
+
+    // C-style block comments (RGBDS behavior: no nesting)
+    block_comment: $ =>
+      token(
         seq(
-          field('name', alias($._symbol_token, $.identifier)),
-          optional($.macro_arg_list_expr)
-        ),
-        // RAW-style macro call (explicitly marked)
-        seq(
-          field('name', alias($._symbol_token, $.identifier)),
-          $._raw_macro_mode,
-          $.macro_arg_list_raw
-        )
-      ),
-
-    macro_arg_list_raw: $ =>
-      seq(
-        field('argument', $.macro_call_argument),
-        repeat(seq(',', field('argument', $.macro_call_argument)))
-      ),
-
-    macro_arg_list_expr: $ =>
-      seq(
-        field('argument', $.expression),
-        repeat(seq(',', field('argument', $.expression)))
-      ),
-
-    macro_call_argument: $ =>
-      alias($._macro_arg, $.macro_argument_raw),
-
-    macro_params: $ =>
-      seq(
-        $.identifier,
-        repeat(seq(',', $.identifier))
-      ),
-
-    if_block: $ =>
-      seq(
-        field('keyword', alias(/[Ii][Ff]/, $.directive_keyword)),
-        field('condition', $.expression),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        repeat($.elif_clause),
-        optional($.else_clause),
-        field('end', alias(/[Ee][Nn][Dd][Cc]/, $.directive_keyword))
-      ),
-
-    elif_clause: $ =>
-      seq(
-        alias(/[Ee][Ll][Ii][Ff]/, $.directive_keyword),
-        $.expression,
-        /\r?\n/,
-        repeat($._top_level_statement)
-      ),
-
-    else_clause: $ =>
-      seq(
-        alias(/[Ee][Ll][Ss][Ee]/, $.directive_keyword),
-        choice(
-          // ELSE followed by newline and body
-          seq(/\r?\n/, repeat($._top_level_statement)),
-          // ELSE followed by statement on same line, then newline and body
-          seq(
+          '/*',
+          repeat(
             choice(
-              $.label_definition,
-              $.macro_invocation_line,
-              $.instruction_line,
-              $.directive
-            ),
-            optional($.inline_comment),
-            /\r?\n/,
-            repeat($._top_level_statement)
-          )
+              /[^*]/,
+              /\*+[^/]/
+            )
+          ),
+          '*/'
         )
       ),
 
-    rept_block: $ =>
-      seq(
-        field('keyword', alias(/[Rr][Ee][Pp][Tt]/, $.directive_keyword)),
-        field('count', $.expression),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
+    // ----- Labels -----
+
+    label_definition: $ =>
+      choice(
+        $.global_label,
+        $.local_label,
+        $.anonymous_label
       ),
 
-    for_block: $ =>
+    global_label: $ =>
+      choice(
+        // identifier followed by ':' or '::' (via LABEL_TOKEN)
+        seq(
+          field('name', alias($._label_token, $.identifier)),
+          field('export_marker', '::')
+        ),
+        seq(
+          field('name', alias($._label_token, $.identifier)),
+          ':'
+        ),
+        // raw identifiers: #load:, #IF:, #ELSE: - colon consumed but not in tree
+        seq(
+          field('name', $.raw_identifier),
+          choice('::', ':')
+        ),
+      ),
+
+    local_label: $ =>
+      field('name', seq($.local_identifier, optional(':'))),
+
+    anonymous_label: $ =>
+      token(':'), // ':' at column ≥ 0
+
+    // Local label / symbol reference like `.loop` or `Global.loop`
+    local_identifier: $ =>
+      token(
+        choice(
+          /\.[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/,              // .local
+          /[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z0-9_]*(?:\\@)?/  // Global.local
+        )
+      ),
+
+    // Anonymous label reference like :+, :++, :-, :--
+    anonymous_label_ref: $ =>
+      token(/:[+-]+/),
+
+    // ----- Instructions -----
+
+    instruction_list: $ =>
       seq(
-        field('keyword', alias(/[Ff][Oo][Rr]/, $.directive_keyword)),
-        field('var', choice(
-          $.identifier,
+        $.instruction,
+        repeat(seq('::', $.instruction))
+      ),
+
+    instruction: $ =>
+      seq(
+        field('opcode', choice(
+          alias($._instruction_token, $.identifier),
           $.interpolatable_identifier
         )),
-        ',',
-        choice(
-          // Single argument form: FOR var, count (iterate 0 to count-1)
-          field('count', $.expression),
-          // Two or three argument form: FOR var, start, end [, step]
-          seq(
-            field('start', $.expression),
-            ',',
-            field('end', $.expression),
-            optional(seq(',', field('step', $.expression)))
-          )
-        ),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
+        optional($.operand_list)
       ),
 
-    union_block: $ =>
+    operand_list: $ =>
       seq(
-        field('keyword', alias(/[Uu][Nn][Ii][Oo][Nn]/, $.directive_keyword)),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        repeat(
-          seq(
-            field('separator', alias(/[Nn][Ee][Xx][Tt][Uu]/, $.directive_keyword)),
-            /\r?\n/,
-            repeat($._top_level_statement)
-          )
-        ),
-        field('end', alias(/[Ee][Nn][Dd][Uu]/, $.directive_keyword))
+        $.operand,
+        repeat(seq(',', $.operand))
       ),
 
-    load_block: $ =>
-      seq(
-        field('keyword', alias(/[Ll][Oo][Aa][Dd]/, $.directive_keyword)),
-        field('name', $.string_literal),
-        ',',
-        field('type', $.section_type),
-        /\r?\n/,
-        repeat($._top_level_statement),
-        field('end', alias(/[Ee][Nn][Dd][Ll]/, $.directive_keyword))
-      ),
-
-    fragment_literal: $ =>
+    operand: $ =>
       choice(
-        // Block-style fragment literal with statements (allows nested fragments)
-        prec.left(seq(
-          '[[',
-          optional(/\r?\n/),
-          repeat($._top_level_statement),
-          ']]'
-        )),
-        // Inline fragment literal used where a statement fits (e.g., DW [[ db 1 ]])
-        prec.left(seq(
-          '[[',
-          choice(
-            $.label_definition,
-            $.instruction_line,
-            $.directive
-          ),
-          ']]'
-        ))
+        $.address,
+        $.local_identifier,
+        $.anonymous_label_ref,
+        $.expression
       ),
 
-    // Note: RGBASM does not have C-style preprocessor directives.
-    // The # prefix is only used for raw identifiers (e.g., #load, #IF)
-    // to prevent keywords from being treated as reserved words.
+    address: $ =>
+      choice(
+        alias(token(/\[[Hh][Ll](\+|-|[Ii][Dd])\]/), $.hl_auto_address), // [HL+]/[HLI]/[HL-]/[HLD]
+        seq('[', /[Hh]/, /[Ll]/, ']'), // [hl] form
+        seq('[', $.expression, ']'),
+      ),
 
     // ----- Expressions -----
 
@@ -696,7 +625,8 @@ module.exports = grammar({
         $.raw_string_literal,
         $.graphics_literal,
         $.char_literal,
-        $.fragment_literal,
+        // FIXME: add back fragment literal support
+        // $.fragment_literal,
         $.macro_argument,
         $.macro_arguments_spread,
         $.macro_unique_suffix,
