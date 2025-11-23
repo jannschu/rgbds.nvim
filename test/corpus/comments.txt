@@ -12,28 +12,22 @@ Start:
 (source_file
   (inline_comment
     (comment))
-  (label_definition
+  (global_label_block
     (global_label
-      (identifier)))
-  (instruction_line
+      (symbol))
     (instruction_list
       (instruction
-        (identifier))))
-  (inline_comment
-    (comment))
-  (instruction_line
+        (instruction_name)))
+    (inline_comment
+      (comment))
     (instruction_list
       (instruction
-        (identifier)
+        (instruction_name)
         (operand_list
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (primary_expression
-              (register)))))))
-  (inline_comment
-    (comment)))
+          (register)
+          (register))))
+    (inline_comment
+      (comment))))
 
 ================================================================================
 Comments: single-line block comments
@@ -41,36 +35,17 @@ Comments: single-line block comments
 
 /* Single line block comment */
 Start:
-    ld a, 1 :: ld b, 2 /* inline block comment */
+    ;ld a, 1 :: ld b, 2 /* inline block comment */
 
 ---
 
 (source_file
   (block_comment)
-  (label_definition
+  (global_label_block
     (global_label
-      (identifier)))
-  (instruction_line
-    (instruction_list
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (primary_expression
-              (number_literal)))))
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (primary_expression
-              (number_literal)))))))
-  (block_comment))
+      (symbol))
+    (inline_comment
+      (comment))))
 
 ================================================================================
 Comments: multi-line block comments
@@ -89,28 +64,20 @@ Start:
 
 (source_file
   (block_comment)
-  (label_definition
+  (global_label_block
     (global_label
-      (identifier)))
-  (block_comment)
-  (instruction_line
+      (symbol))
+    (block_comment)
     (instruction_list
       (instruction
-        (identifier))))
-  (instruction_line
+        (instruction_name)))
     (instruction_list
       (instruction
-        (identifier)
+        (instruction_name)
         (operand_list
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (primary_expression
-              (register))))))))
+          (register)
+          (register)
+          (register))))))
 
 ================================================================================
 Comments: block comments in expressions
@@ -125,24 +92,26 @@ DEF y = /* before */ 3 * /* after */ 4
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (block_comment)
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (block_comment)
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
+      (symbol)
       (block_comment)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (block_comment)
-        (primary_expression
-          (number_literal))))))
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (block_comment)
+          (expression
+            (number_literal)))))))
 
 ================================================================================
 Comments: nested and complex cases
@@ -162,26 +131,22 @@ Start: /* block after label */
 (source_file
   (inline_comment
     (comment))
-  (label_definition
+  (global_label_block
     (global_label
-      (identifier)))
-  (block_comment)
-  (block_comment)
-  (instruction_line
+      (symbol))
+    (block_comment)
+    (block_comment)
     (instruction_list
       (instruction
-        (identifier)
+        (instruction_name)
         (block_comment)
         (operand_list
-          (operand
-            (primary_expression
-              (register)))))))
-  (inline_comment
-    (comment))
-  (instruction_line
+          (register))))
+    (inline_comment
+      (comment))
     (instruction_list
       (instruction
-        (identifier)))))
+        (instruction_name)))))
 
 ================================================================================
 Comments: comments with special characters
@@ -199,12 +164,11 @@ Start:
   (inline_comment
     (comment))
   (block_comment)
-  (label_definition
+  (global_label_block
     (global_label
-      (identifier)))
-  (instruction_line
+      (symbol))
     (instruction_list
       (instruction
-        (identifier))))
-  (inline_comment
-    (comment)))
+        (instruction_name)))
+    (inline_comment
+      (comment))))

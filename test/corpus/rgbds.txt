@@ -10,9 +10,9 @@ align 4, 2
   (directive
     (align_directive
       keyword: (directive_keyword)
-      align: (primary_expression
+      align: (expression
         (number_literal))
-      offset: (primary_expression
+      offset: (expression
         (number_literal)))))
 
 ================================================================================
@@ -28,8 +28,8 @@ println @
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
-          (identifier))))))
+        (expression
+          (constant))))))
 
 ================================================================================
 Test Name: RGBDS import: DS ALIGN helper call
@@ -44,9 +44,9 @@ ds align [8, $C2]
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (primary_expression
+        align: (expression
           (number_literal))
-        offset: (primary_expression
+        offset: (expression
           (number_literal))))))
 
 ================================================================================
@@ -67,7 +67,7 @@ SECTION UNION "X", WRAM0, ALIGN[16]
       (section_options
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -331,21 +331,21 @@ label:
 ---
 
 (source_file
-  (label_definition
+  (global_label_block
     (global_label
-      name: (identifier)))
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
-        (number_literal))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (identifier))))))
+      name: (symbol))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (symbol)
+        value: (expression
+          (number_literal))))
+    (directive
+      (db_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (expression
+            (symbol)))))))
 
 ================================================================================
 Test Name: RGBDS import: deprecated functions
@@ -459,7 +459,7 @@ db 999
     (db_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (number_literal))))))
 
 ================================================================================
@@ -562,18 +562,18 @@ ds align[8, $ff], 6
       (section_options
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))
     (directive
       (ds_directive
         keyword: (directive_keyword)
         (align_option
-          align: (primary_expression
+          align: (expression
             (number_literal))
-          offset: (primary_expression
+          offset: (expression
             (number_literal)))
         (argument_list
-          (primary_expression
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -631,7 +631,7 @@ PURGE _NARG
   (directive
     (purge_directive
       keyword: (directive_keyword)
-      (identifier))))
+      (symbol))))
 
 ================================================================================
 Test Name: RGBDS import: DEF with dot as symbol name
@@ -747,32 +747,32 @@ PRINTLN "{d:X}"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              symbol: (identifier)))))))
+              name: (interpolation_content)))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
               format: (format_spec)
-              symbol: (identifier)))))))
+              name: (interpolation_content)))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
               format: (format_spec)
-              symbol: (identifier))))))))
+              name: (interpolation_content))))))))

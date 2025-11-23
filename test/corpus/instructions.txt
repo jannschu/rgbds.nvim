@@ -1,4 +1,25 @@
 ================================================================================
+Instructions: nop
+================================================================================
+
+SECTION "Test", ROM0
+  adc a
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))))
+
+================================================================================
 Instructions: arithmetic A with register, immediate, or memory
 ================================================================================
 
@@ -18,53 +39,51 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      keyword: (directive_keyword)
       (string_literal)
       (section_type))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (r8_register
-            (a_register)))))
+        opcode: (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (r8_register))))
+        opcode: (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        opcode: (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (n8
+        opcode: (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (n8
+        opcode: (instruction_name)
+        (operand_list
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (hl_address
-            (hl_register)))))
+        opcode: (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (arith_a_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))))
+        opcode: (instruction_name)
+        (operand_list
+          (address
+            (register)))))))
 
 ================================================================================
 Instructions: ADD
@@ -98,62 +117,60 @@ SECTION "Test", ROM0
       (comment))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (a_register)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (a_register)
-          (n8
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (n8
+        (instruction_name)
+        (operand_list
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (a_register)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))
     (inline_comment
       (comment))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (hl_register)
-          (r16_register))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (add_instruction
-          (instruction_keyword)
-          (sp_register)
-          (e8
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -174,13 +191,12 @@ SECTION "Test", ROM0
       (section_type))
     (instruction_list
       (instruction
-        (cpl_instruction
-          (instruction_keyword)
-          (a_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (cpl_instruction
-          (instruction_keyword))))))
+        (instruction_name)))))
 
 ================================================================================
 Instructions: logic
@@ -232,140 +248,134 @@ SECTION "Test", ROM0
       (comment))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (n8
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (n8
+        (instruction_name)
+        (operand_list
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))
     (inline_comment
       (comment))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (n8
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (n8
+        (instruction_name)
+        (operand_list
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))
     (inline_comment
       (comment))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (n8
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (n8
+        (instruction_name)
+        (operand_list
+          (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (a_register)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (logic_a_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))))
 
 ================================================================================
 Instructions: INC and DEC
@@ -394,55 +404,233 @@ SECTION "Test", ROM0
       (section_type))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r16_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (sp_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r8_register
-            (a_register)))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r8_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (r16_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (sp_register))))
+        (instruction_name)
+        (operand_list
+          (register))))
     (instruction_list
       (instruction
-        (inc_dec_instruction
-          (instruction_keyword)
-          (hl_address
-            (hl_register)))))))
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))))
+
+================================================================================
+Instructions: LD
+================================================================================
+
+SECTION "Test", ROM0
+  LD [HL], $40
+  Ld [HL],d
+
+  ;
+  LD BC, $1234
+
+  ;
+  LD c,[Hl]
+  LD a, $56
+  LD a, a
+
+  ;
+  ; ld [hld], a
+
+  ld a, [$4242]
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (address
+            (register))
+          (expression
+            (number_literal)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (address
+            (register))
+          (register))))
+    (inline_comment
+      (comment))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
+            (number_literal)))))
+    (inline_comment
+      (comment))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
+            (number_literal)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
+    (inline_comment
+      (comment))
+    (inline_comment
+      (comment))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (expression
+              (number_literal))))))))
+
+================================================================================
+Instructions: Jumps
+================================================================================
+
+SECTION "Test", ROM0
+  jp nz, $1234
+  jp nc, $9ABC
+  jp c, $DEF0
+  jp $1357
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (condition_code)
+          (expression
+            (number_literal)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (condition_code)
+          (expression
+            (number_literal)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (expression
+            (number_literal)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (expression
+            (number_literal)))))))
+
+================================================================================
+Instructions: Label jump
+================================================================================
+
+SECTION "Test", ROM0
+: jp z, :-
+Global:: jp nz, Global
+.local: jp c, .local
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (anonymous_label)
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (condition_code)
+          (expression
+            (anonymous_label_ref)))))
+    (global_label_block
+      (global_label
+        (symbol))
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (condition_code)
+            (expression
+              (symbol)))))
+      (local_label_block
+        (local_label
+          (local_identifier))
+        (instruction_list
+          (instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (expression
+                (local_identifier)))))))))

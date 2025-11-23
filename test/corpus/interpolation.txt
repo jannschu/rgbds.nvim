@@ -11,17 +11,17 @@ PRINTLN "Value is {name}"
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              (identifier))))))))
+              (interpolation_content))))))))
 
 ================================================================================
 Interpolation: nested interpolation
@@ -37,26 +37,27 @@ PRINTLN "The {{topic}} is {answer}"
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
+      (symbol)
       (directive_keyword)
       (string_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              (interpolation
-                (identifier)))
+              (interpolation_content
+                (interpolation
+                  (interpolation_content))))
             (interpolation
-              (identifier))))))))
+              (interpolation_content))))))))
 
 ================================================================================
 Interpolation: format specifier
@@ -71,24 +72,24 @@ PRINTLN "Hex {X:X} dec {d:X} bin {b:X}"
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
               (format_spec)
-              (identifier))
+              (interpolation_content))
             (interpolation
               (format_spec)
-              (identifier))
+              (interpolation_content))
             (interpolation
               (format_spec)
-              (identifier))))))))
+              (interpolation_content))))))))
 
 ================================================================================
 Interpolation in names: DEF/FOR/PURGE
@@ -154,10 +155,38 @@ PRINTLN "{#if}"
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              (raw_identifier))))))))
+              (interpolation_content))))))))
+
+================================================================================
+Interpolation: Nested and concatenated
+================================================================================
+
+DEF foo{bar}{d:{x}{y}_} = 0
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (interpolatable_identifier
+        (identifier_fragment)
+        (interpolation
+          (interpolation_content))
+        (interpolation
+          (format_spec)
+          (interpolation_content
+            (interpolation
+              (interpolation_content)))
+          (interpolation_content
+            (interpolation
+              (interpolation_content)))
+          (interpolation_content)))
+      (expression
+        (number_literal)))))
 
 ================================================================================
 Invalid: # followed by { outside string

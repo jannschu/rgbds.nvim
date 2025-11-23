@@ -144,144 +144,161 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
+      (symbol)
+      (expression
         (binary_expression
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
+            (binary_expression
+              (expression
+                (number_literal))
+              (expression
+                (number_literal))))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (unary_expression
+          (expression
+            (binary_expression
+              (expression
+                (number_literal))
+              (expression
+                (number_literal))))))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
             (number_literal))))))
   (inline_comment
     (comment))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (unary_expression
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (unary_expression
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (unary_expression
-        (binary_expression
-          (primary_expression
-            (number_literal))
-          (primary_expression
+      (symbol)
+      (expression
+        (unary_expression
+          (expression
             (number_literal))))))
   (inline_comment
     (comment))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (unary_expression
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (unary_expression
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (unary_expression
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal))))))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal)))))))
 
 ================================================================================
 Expressions: built-in functions
@@ -303,56 +320,56 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (identifier))))))
+          (function_name)
+          (expression
+            (symbol))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (identifier))))))
+          (function_name)
+          (expression
+            (symbol))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -581,103 +598,103 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))))))
   (inline_comment
     (comment))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal)))))))
 
 ================================================================================
@@ -697,33 +714,33 @@ DEF BYTE2 = STRBYTE("ABC", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -743,35 +760,35 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -792,39 +809,39 @@ DEF SEC_START = STARTOF(ROM0)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (identifier))))))
+          (function_name)
+          (expression
+            (symbol))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (identifier))))))
+          (function_name)
+          (expression
+            (symbol))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (identifier)))))))
+          (function_name)
+          (expression
+            (symbol)))))))
 
 ================================================================================
 Expressions: charmap functions
@@ -860,159 +877,159 @@ DEF STR2 = STRCHAR("A:)", 1)
     (charmap_directive
       (directive_keyword)
       (string_literal)
-      (primary_expression
+      (expression
         (number_literal))))
   (directive
     (charmap_directive
       (directive_keyword)
       (string_literal)
-      (primary_expression
+      (expression
         (number_literal))))
   (directive
     (charmap_directive
       (directive_keyword)
       (string_literal)
-      (primary_expression
+      (expression
         (number_literal))
-      (primary_expression
+      (expression
         (number_literal))))
   (inline_comment
     (comment))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (string_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (string_literal))
-          (primary_expression
+          (expression
             (number_literal)))))))

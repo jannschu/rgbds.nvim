@@ -98,68 +98,68 @@ DEF x ^= $FF
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal)))))
 
 ================================================================================
@@ -190,43 +190,43 @@ DEF str_word RW 2
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
-        (number_literal))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (directive_keyword)
-      (primary_expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (directive_keyword)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (inline_comment
     (comment))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
+      (symbol)
+      (directive_keyword)
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (directive_keyword)
+      (expression
+        (number_literal))))
+  (inline_comment
+    (comment))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
       (directive_keyword)
       (string_literal)))
   (inline_comment
@@ -234,14 +234,14 @@ DEF str_word RW 2
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal)))))
 
 ================================================================================
@@ -488,7 +488,7 @@ EXPORT SingleSymbol
     (incbin_directive
       (directive_keyword)
       (string_literal)
-      (primary_expression
+      (expression
         (number_literal))))
   (inline_comment
     (comment))
@@ -496,21 +496,21 @@ EXPORT SingleSymbol
     (incbin_directive
       (directive_keyword)
       (string_literal)
-      (primary_expression
+      (expression
         (number_literal))
-      (primary_expression
+      (expression
         (number_literal))))
   (inline_comment
     (comment))
   (directive
     (export_directive
       (directive_keyword)
-      (identifier)
-      (identifier)))
+      (symbol)
+      (symbol)))
   (directive
     (export_directive
       (directive_keyword)
-      (identifier))))
+      (symbol))))
 
 ================================================================================
 Directives: SECTION with BANK option
@@ -529,7 +529,7 @@ SECTION "Code", ROMX, BANK[7]
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -549,7 +549,7 @@ SECTION "OAM Data", WRAM0, ALIGN[8]
       (section_options
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -569,9 +569,9 @@ SECTION "Data", ROMX, ALIGN[4, 2]
       (section_options
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))
-            offset: (primary_expression
+            offset: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -589,7 +589,7 @@ SECTION "Fixed", ROM0[$100]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal))))))
 
 ================================================================================
@@ -607,7 +607,7 @@ SECTION "Data", ROMX[$4000]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal))))))
 
 ================================================================================
@@ -625,7 +625,7 @@ SECTION "Variables", WRAM0[$C000]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal))))))
 
 ================================================================================
@@ -643,7 +643,7 @@ SECTION "Test", ROM0[0]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal))))))
 
 ================================================================================
@@ -661,11 +661,12 @@ SECTION "Computed", ROM0[$100 * 2]
       (string_literal)
       (section_type)
       (section_address
-        address: (binary_expression
-          left: (primary_expression
-            (number_literal))
-          right: (primary_expression
-            (number_literal)))))))
+        address: (expression
+          (binary_expression
+            left: (expression
+              (number_literal))
+            right: (expression
+              (number_literal))))))))
 
 ================================================================================
 Directives: SECTION with address and BANK option
@@ -682,12 +683,12 @@ SECTION "Cool Stuff", ROMX[$4567], BANK[3]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal)))
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -707,11 +708,11 @@ SECTION "VRAM Data", ROMX, BANK[2], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -729,18 +730,18 @@ SECTION "Complex", ROMX[$4000], BANK[5], ALIGN[8, 0]
       (string_literal)
       (section_type)
       (section_address
-        address: (primary_expression
+        address: (expression
           (number_literal)))
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))
-            offset: (primary_expression
+            offset: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -761,11 +762,11 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))))
 
 ================================================================================
@@ -849,16 +850,16 @@ REDEF n EQU 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
-      value: (primary_expression
+      value: (expression
         (number_literal))))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
-      value: (primary_expression
+      value: (expression
         (number_literal)))))
 
 ================================================================================
@@ -874,17 +875,17 @@ REDEF s EQUS "{s}world!"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
       value: (string_literal
         (interpolation
-          symbol: (identifier))))))
+          name: (interpolation_content))))))
 
 ================================================================================
 Directives: REDEF with = (redefine variable)
@@ -899,14 +900,14 @@ REDEF x = 20
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal))))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal)))))
 
 ================================================================================
@@ -922,14 +923,14 @@ REDEF counter += 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal))))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal)))))
 
 ================================================================================
@@ -979,13 +980,13 @@ REDEF struct_b RW
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
-      value: (primary_expression
+      name: (symbol)
+      value: (expression
         (number_literal))))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier))))
+      name: (symbol))))
 
 ================================================================================
 Directives: REDEF with interpolatable identifier
@@ -1000,7 +1001,7 @@ REDEF {LIST_NAME} EQUS "["
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
@@ -1008,7 +1009,7 @@ REDEF {LIST_NAME} EQUS "["
       keyword: (directive_keyword)
       name: (interpolatable_identifier
         (interpolation
-          symbol: (identifier)))
+          name: (interpolation_content)))
       assign_type: (directive_keyword)
       value: (string_literal))))
 
@@ -1025,20 +1026,21 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
-      value: (primary_expression
+      value: (expression
         (number_literal))))
   (directive
     (redef_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
-      value: (binary_expression
-        left: (primary_expression
-          (identifier))
-        right: (primary_expression
-          (number_literal))))))
+      value: (expression
+        (binary_expression
+          left: (expression
+            (symbol))
+          right: (expression
+            (number_literal)))))))
 
 ================================================================================
 Directives: SECTION FRAGMENT
@@ -1058,11 +1060,11 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (primary_expression
+            bank: (expression
               (number_literal))))
         (section_option
           (align_option
-            align: (primary_expression
+            align: (expression
               (number_literal))))))))
 
 ================================================================================
