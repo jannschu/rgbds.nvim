@@ -12,11 +12,11 @@ DB 1, \
     (db_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))))))
 
 ================================================================================
@@ -34,23 +34,23 @@ DB 1, 2, 3, \
     (db_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))
-        (primary_expression
+        (expression
           (number_literal))))))
 
 ================================================================================
@@ -66,18 +66,21 @@ DEF X = 1 + 2 + \
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
+      (symbol)
+      (expression
         (binary_expression
-          (binary_expression
-            (primary_expression
-              (number_literal))
-            (primary_expression
-              (number_literal)))
-          (primary_expression
-            (number_literal)))
-        (primary_expression
-          (number_literal))))))
+          (expression
+            (binary_expression
+              (expression
+                (binary_expression
+                  (expression
+                    (number_literal))
+                  (expression
+                    (number_literal))))
+              (expression
+                (number_literal))))
+          (expression
+            (number_literal)))))))
 
 ================================================================================
 Line continuation: in instruction
@@ -89,15 +92,10 @@ Line continuation: in instruction
 ---
 
 (source_file
-  (instruction_line
-    (instruction_list
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (primary_expression
-              (register)))
-          (operand
-            (address
-              (primary_expression
-                (register)))))))))
+  (instruction_list
+    (instruction
+      (instruction_name)
+      (operand_list
+        (register)
+        (address
+          (register))))))

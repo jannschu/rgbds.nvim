@@ -5,35 +5,34 @@ module.exports = grammar({
   name: 'rgbasm',
 
   externals: $ => [
-    $._macro_arg,              // Raw macro argument (RGBDS-style RAW lexer mode)
-    $._macro_arg_end,          // Marks the end of macro-arg mode at EOL / EOF
-    $._raw_macro_mode,         // Zero-width token that toggles RAW mode on this line
-    $._label_token,            // Identifier immediately followed by : (becomes label)
-    // $._register_token,      // Now handled by inline tokens (r8_register, r16_register, etc.)
-    $._symbol_token,           // Plain identifier (for macro calls, etc.)
-    $._instruction_token,      // Known Z80/GB instruction opcode (except those with specific rules)
+    $.symbol,
   ],
 
   conflicts: $ => [
-    [$.operand, $.primary_expression],
-    [$.assert_directive, $.primary_expression],
-    [$.r8_register, $.primary_expression],
+    [$.condition_code, $.register],  // both accept 'C'
   ],
 
   extras: $ => [
     $.comment,
     $.block_comment,
     /[ \t\uFEFF\u2060]+/,  // Spaces and tabs only, NOT newlines
+    // FIXME: allow inline comment after \
     /\\[ \t]*\r?\n/,  // Line continuation: backslash + optional spaces + newline
   ],
 
   supertypes: $ => [
-    $.expression,
+    // $.expression,
   ],
+
+  // TODO: test inputs without trailing newlines
 
   rules: {
     source_file: $ => seq(
-      repeat($._non_section_statement),
+      // we allow statements outside sections/labels
+      // to support macro generated code we can not see and files that are included
+      repeat($._statement),
+      repeat($.local_label_block),
+      repeat($.global_label_block),
       repeat($.section_block),
     ),
 
@@ -42,63 +41,58 @@ module.exports = grammar({
       // FIXME: POPS PUSHS implementation
       seq(
         $._section_header,
-        repeat($._section_statement),
+        repeat($._statement),
+        // TODO: is a local label valid before a global label in a section?
+        //       maybe if files are included into other sections, what about PUSHS, maybe there?
         repeat($.global_label_block),
         optional(seq(
-          alias(/[Ee][Nn][Dd][Ss][Ee][Cc][Tt][Ii][Oo][Nn]/, $.directive_keyword),
-          optional($.inline_comment),
-          /\r?\n/
-        ))
+          alias(ci('ENDSECTION'), $.directive_keyword),
+        )),
       ),
 
     _section_header: $ =>
       seq(
         $.section_directive,
-        optional($.inline_comment),
-        /\r?\n/
+        // TODO: is this newline required?
+        // optional($.inline_comment),
+        // /\r?\n/
       ),
 
     // Global label blocks: global label and its contents
     global_label_block: $ =>
       seq(
         $._global_label_header,
-        repeat($._section_statement),
+        repeat($._statement),
         repeat($.local_label_block),
       ),
 
     _global_label_header: $ =>
       seq(
         $.global_label,
-        optional($.inline_comment),
-        /\r?\n/
       ),
 
     // Local label blocks: local label and its contents
     local_label_block: $ =>
       seq(
         $._local_label_header,
-        repeat($._section_statement)
+        repeat($._statement)
       ),
 
     _local_label_header: $ =>
       seq(
         $.local_label,
-        optional($.inline_comment),
-        /\r?\n/
+        // TODO: remove
+        // optional($.inline_comment),
+        // /\r?\n/
       ),
 
     // ----- Section statements -----
 
-    _section_statement: $ =>
-      choice(
-        seq($.instruction_list, optional($.inline_comment), /\r?\n/),
-        // FIXME: anonymous label here?
-        $._non_section_statement,
-      ),
-
-    _non_section_statement: $ => choice(
+    _statement: $ => choice(
+      seq($.instruction_list, optional($.inline_comment), /\r?\n/),
       seq($.directive, optional($.inline_comment), /\r?\n/),
       seq($.block_comment, /\r?\n/),
+      $.anonymous_label,
       // Blank line or line with only comment
       seq(optional($.inline_comment), /\r?\n/),
     ),
@@ -107,24 +101,25 @@ module.exports = grammar({
 
     section_directive: $ =>
       seq(
-        field('keyword', alias(/[Ss][Ee][Cc][Tt][Ii][Oo][Nn]/, $.directive_keyword)),
-        optional(field('fragment', alias(/[Ff][Rr][Aa][Gg][Mm][Ee][Nn][Tt]/, $.directive_keyword))),
-        optional(field('union', alias(/[Uu][Nn][Ii][Oo][Nn]/, $.directive_keyword))),
+        // FIXME: anonymous label here?
+        field('keyword', alias(ci('SECTION'), $.directive_keyword)),
+        optional(field('fragment', alias(ci('FRAGMENT'), $.directive_keyword))),
+        optional(field('union', alias(ci('UNION'), $.directive_keyword))),
         $.string_literal,
         optional(seq(',', $.section_type, optional($.section_address))),
         optional($.section_options)
       ),
 
     section_type: $ =>
-      choice(
-        /[Rr][Oo][Mm]0/,
-        /[Rr][Oo][Mm][Xx]/,
-        /[Ww][Rr][Aa][Mm]0/,
-        /[Ww][Rr][Aa][Mm][Xx]/,
-        /[Hh][Rr][Aa][Mm]/,
-        /[Ss][Rr][Aa][Mm]/,
-        /[Oo][Aa][Mm]/,
-        /[Vv][Rr][Aa][Mm]/
+      ci(
+        'ROM0',
+        'ROMX',
+        'VRAM',
+        'SRAM',
+        'WRAM0',
+        'WRAMX',
+        'OAM',
+        'HRAM',
       ),
 
     section_address: $ =>
@@ -147,7 +142,7 @@ module.exports = grammar({
 
     bank_option: $ =>
       seq(
-        alias(/[Bb][Aa][Nn][Kk]/, 'BANK'),
+        alias(ci('BANK'), 'BANK'),
         '[',
         field('bank', $.expression),
         ']'
@@ -155,7 +150,7 @@ module.exports = grammar({
 
     align_option: $ =>
       seq(
-        alias(/[Aa][Ll][Ii][Gg][Nn]/, 'ALIGN'),
+        alias(ci('ALIGN'), 'ALIGN'),
         '[',
         field('align', $.expression),
         optional(seq(',', field('offset', $.expression))),
@@ -194,21 +189,21 @@ module.exports = grammar({
 
     def_directive: $ =>
       seq(
-        field('keyword', alias(/[Dd][Ee][Ff]/, $.directive_keyword)),
+        field('keyword', alias(ci('DEF'), $.directive_keyword)),
         field('name', choice(
-          $.identifier,
+          $.interpolatable_identifier,
           $.raw_identifier,
-          $.interpolatable_identifier
+          $.symbol,
         )),
         choice(
           // String constant: DEF name EQUS "value" or #"value"
           seq(
-            field('assign_type', alias(/[Ee][Qq][Uu][Ss]/, $.directive_keyword)),
+            field('assign_type', alias(ci('EQUS'), $.directive_keyword)),
             field('value', choice($.string_literal, $.raw_string_literal))
           ),
           // Numeric constant (immutable): DEF name EQU value
           seq(
-            field('assign_type', alias(/[Ee][Qq][Uu]/, $.directive_keyword)),
+            field('assign_type', alias(ci('EQU'), $.directive_keyword)),
             field('value', $.expression)
           ),
           // Variable (mutable): DEF name = value
@@ -218,7 +213,7 @@ module.exports = grammar({
           ),
           // RS offset constants: DEF name RB/RW/RL count
           seq(
-            field('assign_type', choice(/[Rr][Bb]/, /[Rr][Ww]/, /[Rr][Ll]/)),
+            field('assign_type', ci('RB', 'RW', 'RL')),
             optional(field('value', $.expression))
           )
         )
@@ -226,21 +221,21 @@ module.exports = grammar({
 
     redef_directive: $ =>
       seq(
-        field('keyword', alias(/[Rr][Ee][Dd][Ee][Ff]/, $.directive_keyword)),
+        field('keyword', alias(ci('REDEF'), $.directive_keyword)),
         field('name', choice(
-          $.identifier,
+          $.interpolatable_identifier,
           $.raw_identifier,
-          $.interpolatable_identifier
+          $.symbol,
         )),
         choice(
           // String constant: REDEF name EQUS "value" or #"value"
           seq(
-            field('assign_type', alias(/[Ee][Qq][Uu][Ss]/, $.directive_keyword)),
+            field('assign_type', alias(ci('EQUS'), $.directive_keyword)),
             field('value', choice($.string_literal, $.raw_string_literal))
           ),
           // Numeric constant: REDEF name EQU value
           seq(
-            field('assign_type', alias(/[Ee][Qq][Uu]/, $.directive_keyword)),
+            field('assign_type', alias(ci('EQU'), $.directive_keyword)),
             field('value', $.expression)
           ),
           // Variable: REDEF name = value
@@ -250,7 +245,7 @@ module.exports = grammar({
           ),
           // RS offset constants: REDEF name RB/RW/RL count
           seq(
-            field('assign_type', choice(/[Rr][Bb]/, /[Rr][Ww]/, /[Rr][Ll]/)),
+            field('assign_type', ci('RB', 'RW', 'RL')),
             optional(field('value', $.expression))
           )
         )
@@ -258,13 +253,10 @@ module.exports = grammar({
 
     assert_directive: $ =>
       prec.right(seq(
-        field('keyword', choice(
-          alias(/[Aa][Ss][Ss][Ee][Rr][Tt]/, $.directive_keyword),
-          alias(/[Ss][Tt][Aa][Tt][Ii][Cc]_[Aa][Ss][Ss][Ee][Rr][Tt]/, $.directive_keyword)
-        )),
+        field('keyword', alias(ci('ASSERT', 'STATIC_ASSERT'), $.directive_keyword)),
         // Optional severity with REQUIRED comma: ASSERT [severity,] condition [, message]
         optional(seq(
-          field('severity', $.identifier),
+          field('severity', ci('FAIL', 'WARN')),
           ','
         )),
         field('condition', $.expression),
@@ -273,21 +265,21 @@ module.exports = grammar({
 
     purge_directive: $ =>
       seq(
-        field('keyword', alias(/[Pp][Uu][Rr][Gg][Ee]/, $.directive_keyword)),
-        choice($.identifier, $.interpolatable_identifier, $.anonymous_label_ref, $.macro_argument),
-        repeat(seq(',', choice($.identifier, $.interpolatable_identifier, $.anonymous_label_ref, $.macro_argument)))
+        field('keyword', alias(ci('PURGE'), $.directive_keyword)),
+        choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument),
+        repeat(seq(',', choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument)))
       ),
 
     align_directive: $ =>
       seq(
-        field('keyword', alias(/[Aa][Ll][Ii][Gg][Nn]/, $.directive_keyword)),
+        field('keyword', alias(ci('ALIGN'), $.directive_keyword)),
         field('align', $.expression),
         optional(seq(',', field('offset', $.expression)))
       ),
 
     ds_directive: $ =>
       seq(
-        field('keyword', alias(/[Dd][Ss]/, $.directive_keyword)),
+        field('keyword', alias(ci('DS'), $.directive_keyword)),
         choice(
           seq($.align_option, optional(seq(',', $.argument_list))),
           $.argument_list
@@ -296,34 +288,35 @@ module.exports = grammar({
 
     db_directive: $ =>
       seq(
-        field('keyword', alias(/[Dd][Bb]/, $.directive_keyword)),
+        field('keyword', alias(ci('DB'), $.directive_keyword)),
         $.argument_list
       ),
 
     dw_directive: $ =>
       seq(
-        field('keyword', alias(/[Dd][Ww]/, $.directive_keyword)),
+        field('keyword', alias(ci('DW'), $.directive_keyword)),
         $.argument_list
       ),
 
     shift_directive: $ =>
       prec.right(seq(
-        field('keyword', alias(/[Ss][Hh][Ii][Ff][Tt]/, $.directive_keyword)),
+        field('keyword', alias(ci('SHIFT'), $.directive_keyword)),
         optional(field('count', $.expression))
       )),
 
     break_directive: $ =>
-      field('keyword', alias(/[Bb][Rr][Ee][Aa][Kk]/, $.directive_keyword)),
+      field('keyword', alias(ci('BREAK'), $.directive_keyword)),
 
     include_directive: $ =>
       seq(
-        field('keyword', alias(/[Ii][Nn][Cc][Ll][Uu][Dd][Ee]/, $.directive_keyword)),
+        field('keyword', alias(ci('INCLUDE'), $.directive_keyword)),
+        // TODO: allow expressions?
         field('path', $.string_literal)
       ),
 
     incbin_directive: $ =>
       seq(
-        field('keyword', alias(/[Ii][Nn][Cc][Bb][Ii][Nn]/, $.directive_keyword)),
+        field('keyword', alias(ci('INCBIN'), $.directive_keyword)),
         field('path', $.string_literal),
         optional(
           seq(
@@ -336,14 +329,15 @@ module.exports = grammar({
 
     export_directive: $ =>
       seq(
-        field('keyword', alias(/[Ee][Xx][Pp][Oo][Rr][Tt]/, $.directive_keyword)),
-        choice($.identifier, $.interpolatable_identifier, $.anonymous_label_ref, $.macro_argument),
-        repeat(seq(',', choice($.identifier, $.interpolatable_identifier, $.anonymous_label_ref, $.macro_argument)))
+        field('keyword', alias(ci('EXPORT'), $.directive_keyword)),
+        // TODO: "EXPORT DEF ..." / "EXPORT REDEF ..."?
+        choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument),
+        repeat(seq(',', choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument)))
       ),
 
     charmap_directive: $ =>
       seq(
-        field('keyword', alias(/[Cc][Hh][Aa][Rr][Mm][Aa][Pp]/, $.directive_keyword)),
+        field('keyword', alias(ci('CHARMAP'), $.directive_keyword)),
         field('key', choice(
           $.string_literal,
           $.char_literal,
@@ -362,20 +356,22 @@ module.exports = grammar({
 
     newcharmap_directive: $ =>
       seq(
-        field('keyword', alias(/[Nn][Ee][Ww][Cc][Hh][Aa][Rr][Mm][Aa][Pp]/, $.directive_keyword)),
-        field('name', $.identifier),
-        optional(seq(',', field('base', $.identifier)))
+        field('keyword', alias(ci('NEWCHARMAP'), $.directive_keyword)),
+        // TODO: allow raw_identifier and interpolatable_identifier?
+        field('name', $.symbol),
+        optional(seq(',', field('base', $.symbol)))
       ),
 
     setcharmap_directive: $ =>
       seq(
-        field('keyword', alias(/[Ss][Ee][Tt][Cc][Hh][Aa][Rr][Mm][Aa][Pp]/, $.directive_keyword)),
-        field('name', $.identifier)
+        // TODO: allow raw_identifier and interpolatable_identifier?
+        field('keyword', alias(ci('SETCHARMAP'), $.directive_keyword)),
+        field('name', $.symbol)
       ),
 
     opt_directive: $ =>
       seq(
-        field('keyword', alias(/[Oo][Pp][Tt]/, $.directive_keyword)),
+        field('keyword', alias(ci('OPT'), $.directive_keyword)),
         optional(seq(
           $.opt_arg,
           repeat(seq(',', $.opt_arg))
@@ -396,6 +392,7 @@ module.exports = grammar({
     opt_raw_string: $ =>
       token(/[^\s,"][^\r\n,]*/),
 
+    // TODO: add the parameters to these directives?
     simple_directive: $ =>
       seq(
         field('keyword', $.directive_keyword),
@@ -404,25 +401,24 @@ module.exports = grammar({
 
     directive_keyword: $ =>
       token(
-        choice(
-          // TODO: add the parameters to these directives
-          /[Ee][Qq][Uu]/,
-          /[Ee][Qq][Uu][Ss]/,
-          /[Cc][Hh][Aa][Rr]/,
-          /[Rr][Ee][Aa][Dd][Ff][Ii][Ll][Ee]/,
-          /[Pp][Rr][Ii][Nn][Tt]/,
-          /[Pp][Rr][Ii][Nn][Tt][Ll][Nn]/,
-          /[Ff][Aa][Ii][Ll]/,
-          /[Ww][Aa][Rr][Nn]/,
-          /[Ii][Mm][Pp][Oo][Rr][Tt]/,
-          /[Rr][Ss][Ss][Ee][Tt]/,
-          /[Rr][Ss][Rr][Ee][Ss][Ee][Tt]/,
-          /[Pp][Uu][Ss][Hh][Oo]/,
-          /[Pp][Oo][Pp][Oo]/,
-          /[Pp][Uu][Ss][Hh][Ss]/,
-          /[Pp][Oo][Pp][Ss]/,
-          /[Pp][Uu][Ss][Hh][Cc]/,
-          /[Pp][Oo][Pp][Cc]/,
+        ci(
+          // 'EQU',
+          // 'EQUS',
+          // 'CHAR',
+          // 'READFILE',
+          'PRINT',
+          'PRINTLN',
+          // 'FAIL',
+          // 'WARN',
+          // 'IMPORT',
+          // 'RSSET',
+          // 'RSRESET',
+          // 'PUSHO',
+          // 'POPO',
+          // 'PUSHS',
+          // 'POPS',
+          // 'PUSHC',
+          // 'POPC',
         )
       ),
 
@@ -544,51 +540,102 @@ module.exports = grammar({
 
     // ----- Labels -----
 
-    label_definition: $ =>
-      choice(
-        $.global_label,
-        $.local_label,
-        $.anonymous_label
-      ),
-
     global_label: $ =>
-      choice(
-        // identifier followed by ':' or '::' (via LABEL_TOKEN)
-        seq(
-          field('name', alias($._label_token, $.identifier)),
-          field('export_marker', '::')
-        ),
-        seq(
-          field('name', alias($._label_token, $.identifier)),
-          ':'
-        ),
-        // raw identifiers: #load:, #IF:, #ELSE: - colon consumed but not in tree
-        seq(
-          field('name', $.raw_identifier),
-          choice('::', ':')
-        ),
+      seq(
+        field('name', choice($.symbol, $.raw_identifier)),
+        choice(token.immediate('::'), token.immediate(':')),
       ),
 
-    local_label: $ =>
-      field('name', seq($.local_identifier, optional(':'))),
+    local_label: $ => field('name', seq($.local_identifier, optional(token.immediate(':')))),
 
-    anonymous_label: $ =>
-      token(':'), // ':' at column ≥ 0
+    anonymous_label: $ => token(':'),
 
     // Local label / symbol reference like `.loop` or `Global.loop`
-    local_identifier: $ =>
-      token(
-        choice(
-          /\.[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/,              // .local
-          /[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z0-9_]*(?:\\@)?/  // Global.local
-        )
-      ),
+    // TODO: clarify usage of #$@ in identifiers, also see raw_identifier and
+    //       identifier_fragment
+    local_identifier: $ => token(/(?:[A-Za-z_][A-Za-z0-9_#$@]*)?\.[A-Za-z_][A-Za-z0-9_#$@]*/),
 
     // Anonymous label reference like :+, :++, :-, :--
     anonymous_label_ref: $ =>
-      token(/:[+-]+/),
+      token(choice(
+        seq(':', repeat1('+')),
+        seq(':', repeat1('-')),
+      )),
 
     // ----- Instructions -----
+
+
+    instruction_name: $ => ci(
+      'ADC',
+      'ADD',
+      'AND',
+      'BIT',
+      'CALL',
+      'CCF',
+      'CP',
+      'CPL',
+      'DAA',
+      'DEC',
+      'DI',
+      'EI',
+      'HALT',
+      'INC',
+      'JP',
+      'JR',
+      'LD',
+      'LDH',
+      'NOP',
+      'OR',
+      'POP',
+      'PUSH',
+      'RES',
+      'RET',
+      'RETI',
+      'RL',
+      'RLA',
+      'RLC',
+      'RLCA',
+      'RR',
+      'RRA',
+      'RRC',
+      'RRCA',
+      'RST',
+      'SBC',
+      'SCF',
+      'SET',
+      'SLA',
+      'SRA',
+      'SRL',
+      'STOP',
+      'SUB',
+      'SWAP',
+      'XOR',
+    ),
+
+    constant: $ =>
+      ci(
+        '@',
+        '.',
+        '..',
+        '__SCOPE__',
+        '_RS',
+        '_NARG',
+        '__ISO_8601_LOCAL__',
+        '__ISO_8601_UTC__',
+        '__UTC_YEAR__',
+        '__UTC_MONTH__',
+        '__UTC_DAY__',
+        '__UTC_HOUR__',
+        '__UTC_MINUTE__',
+        '__UTC_SECOND__',
+        '__RGBDS_MAJOR__',
+        '__RGBDS_MINOR__',
+        '__RGBDS_PATCH__',
+        '__RGBDS_RC__',
+        '__RGBDS_VERSION__',
+      ),
+
+    register: $ => ci('A', 'B', 'C', 'D', 'E', 'H', 'L', 'BC', 'DE', 'HL', 'SP'),
 
     instruction_list: $ =>
       seq(
@@ -597,191 +644,38 @@ module.exports = grammar({
       ),
 
     instruction: $ =>
-      choice(
-        $.arith_a_instruction,    // ADC, SBC, SUB, CP with optional A
-        $.logic_a_instruction,    // AND, OR, XOR with optional A
-        $.add_instruction,        // ADD special cases
-        $.inc_dec_instruction,    // INC, DEC
-        $.cpl_instruction,        // CPL with optional A
-        // $.generic_instruction     // Fallback for all other instructions
-      ),
-
-    // Generic instruction fallback
-    generic_instruction: $ =>
       seq(
-        field('opcode', choice(
-          alias($._instruction_token, $.identifier),
-          $.interpolatable_identifier
-        )),
-        optional($.operand_list)
+        field('opcode', $.instruction_name),
+        optional($.operand_list),
       ),
 
-    a_register: $ => token(/[Aa]/),
-
-    // FIXME: maybe any literal expression is allowed here?
-    n8: $ => $.number_literal,
-    e8: $ => $.number_literal,
-
-    // TODO: add punctuation here?
-    hl_address: $ => seq('[', $.hl_register, ']'),
-
-    // 8-bit arithmetic with optional A destination: ADC, SBC, SUB, CP
-    // Pattern: OPCODE [A,] (r8 | [HL] | n8)
-    arith_a_instruction: $ =>
-      seq(
-        field('opcode', choice(
-          alias(token(/[Aa][Dd][Cc]/), $.instruction_keyword),
-          alias(token(/[Ss][Bb][Cc]/), $.instruction_keyword),
-          alias(token(/[Ss][Uu][Bb]/), $.instruction_keyword),
-          alias(token(/[Cc][Pp]/), $.instruction_keyword)
-        )),
-        optional(seq($.a_register, ',')),
-        choice($.r8_register, $.hl_address, $.n8),
-        // choice(
-        //   seq($.a_register, ',', choice($.r8_register, $.hl_register, $.n8)),
-        //   choice($.r8_register, $.hl_register, $.n8),
-        // ),
-      ),
-
-    // Bitwise logic with optional A destination: AND, OR, XOR
-    // Pattern: OPCODE [A,] (r8 | [HL] | n8)
-    logic_a_instruction: $ =>
-      seq(
-        field('opcode', choice(
-          alias(token(/[Aa][Nn][Dd]/), $.instruction_keyword),
-          alias(token(/[Oo][Rr]/), $.instruction_keyword),
-          alias(token(/[Xx][Oo][Rr]/), $.instruction_keyword)
-        )),
-        optional(seq($.a_register, ',')),
-        choice($.r8_register, $.hl_address, $.n8),
-      ),
-
-    // ADD instruction: handles both 8-bit and 16-bit forms
-    // Patterns:
-    //   ADD HL, r16
-    //   ADD HL, SP
-    //   ADD SP, e8
-    //   ADD [A,] (r8 | [HL] | n8)
-    add_instruction: $ =>
-      seq(
-        field('opcode', alias(token(/[Aa][Dd][Dd]/), $.instruction_keyword)),
-        choice(
-          // 16-bit forms
-          seq($.hl_register, ',', $.r16_register),
-          seq($.sp_register, ',', $.e8),
-          // 8-bit forms
-          seq(optional(seq($.a_register, ',')), choice($.r8_register, $.hl_address, $.n8)),
-        )
-      ),
-
-    // INC/DEC instructions: work on r8, r16, SP, or [HL]
-    // Pattern: INC/DEC (r8 | r16 | SP | [HL])
-    inc_dec_instruction: $ =>
-      seq(
-        field('opcode', choice(
-          alias(token(/[Ii][Nn][Cc]/), $.instruction_keyword),
-          alias(token(/[Dd][Ee][Cc]/), $.instruction_keyword)
-        )),
-        choice(
-          $.r8_register,
-          $.r16_register,
-          $.sp_register,
-          $.hl_address,
-        )
-      ),
-
-    // CPL instruction: optionally takes A
-    // Pattern: CPL [A]
-    cpl_instruction: $ =>
-      seq(
-        field('opcode', alias(token(/[Cc][Pp][Ll]/), $.instruction_keyword)),
-        optional($.a_register)
-      ),
+    condition_code: $ => seq(
+      optional('!'),
+      field('condition', ci('Z', 'NZ', 'C', 'NC')),
+    ),
 
     operand_list: $ =>
       seq(
-        $.operand,
-        repeat(seq(',', $.operand))
+        $._operand,
+        repeat(seq(',', $._operand))
       ),
 
-    operand: $ =>
+    _operand: $ =>
       choice(
         $.condition_code,
-        $.rst_vector,
-        $.r8_register,
-        $.r16_register,
-        $.a_register,
-        $.hl_register,
-        $.sp_register,
         $.address,
-        $.local_identifier,
-        $.anonymous_label_ref,
+        $.register,
         $.expression
       ),
 
-    // Condition codes for conditional instructions (JP cc, JR cc, CALL cc, RET cc)
-    // These need to come before expression to avoid being parsed as identifiers
-    condition_code: $ =>
-      token(choice(
-        /[Zz]/,
-        /[Nn][Zz]/,
-        /[Cc]/,
-        /[Nn][Cc]/
-      )),
-
-    // RST vectors: specific addresses for RST instruction (vec operand type)
-    rst_vector: $ =>
-      token(choice(
-        /\$00/,
-        /\$08/,
-        /\$10/,
-        /\$18/,
-        /\$20/,
-        /\$28/,
-        /\$30/,
-        /\$38/,
-        /0[xX]00/,
-        /0[xX]08/,
-        /0[xX]10/,
-        /0[xX]18/,
-        /0[xX]20/,
-        /0[xX]28/,
-        /0[xX]30/,
-        /0[xX]38/
-      )),
-
-    // Specific register types from gbz80.7
-    // r8: Any 8-bit register (A, B, C, D, E, H, L)
-    r8_register: $ =>
-      choice(
-        $.a_register,
-        /[Bb]/,
-        /[Cc]/,
-        /[Dd]/,
-        /[Ee]/,
-        /[Hh]/,
-        /[Ll]/
-      ),
-
-    // r16: Any 16-bit general-purpose register (BC, DE, HL)
-    r16_register: $ =>
-      token(choice(
-        /[Bb][Cc]/,
-        /[Dd][Ee]/,
-        /[Hh][Ll]/
-      )),
-
-    // Specific single registers for precise instruction matching
-    a_register: $ => token(/[Aa]/),
-    hl_register: $ => token(/[Hh][Ll]/),
-    sp_register: $ => token(/[Ss][Pp]/),
-
     address: $ =>
-      choice(
-        alias(token(/\[[Hh][Ll](\+|-|[Ii][Dd])\]/), $.hl_auto_address), // [HL+]/[HLI]/[HL-]/[HLD]
-        seq('[', /[Hh]/, /[Ll]/, ']'), // [hl] form
-        seq('[', $.expression, ']'),
-      ),
+      seq('[',
+        choice(
+          $.expression,
+          $.register,
+          alias(ci('HLD', 'HL-', 'HLI', 'HL+'), $.register),
+        ),
+        ']'),
 
     // ----- Expressions -----
 
@@ -789,37 +683,78 @@ module.exports = grammar({
       choice(
         $.binary_expression,
         $.unary_expression,
-        $.primary_expression
-      ),
-
-    primary_expression: $ =>
-      choice(
         $.number_literal,
         $.string_literal,
         $.raw_string_literal,
         $.graphics_literal,
         $.char_literal,
+        $.anonymous_label_ref,
+        $.constant,
         // FIXME: add back fragment literal support
         // $.fragment_literal,
+        // TODO: add interpolatable_identifier
+        // TODO: add macro paramater
         $.macro_argument,
         $.macro_arguments_spread,
         $.macro_unique_suffix,
         $.function_call,
-        alias('@', $.identifier),
-        $.r8_register,
-        $.r16_register,
-        $.a_register,
-        $.hl_register,
-        $.sp_register,
-        $.identifier,
+        $.symbol,
         $.raw_identifier,
         $.local_identifier,
         seq('(', $.expression, ')')
       ),
 
+    function_name: $ => ci(
+      "ACOS",
+      "ASIN",
+      "ATAN",
+      "ATAN2",
+      "BANK",
+      "BITWIDTH",
+      "BYTELEN",
+      "CEIL",
+      "CHARCMP",
+      "CHARLEN",
+      "CHARSIZE",
+      "CHARVAL",
+      "COS",
+      "DEF",
+      "DIV",
+      "FLOOR",
+      "FMOD",
+      "HIGH",
+      "INCHARMAP",
+      "ISCONST",
+      "LOG",
+      "LOW",
+      "MUL",
+      "POW",
+      "READFILE",
+      "REVCHAR",
+      "ROUND",
+      "SECTION",
+      "SIN",
+      "SIZEOF",
+      "STARTOF",
+      "STRBYTE",
+      "STRCAT",
+      "STRCHAR",
+      "STRCMP",
+      "STRFIND",
+      "STRFMT",
+      "STRLEN",
+      "STRLWR",
+      "STRRFIND",
+      "STRRPL",
+      "STRSLICE",
+      "STRUPR",
+      "TAN",
+      "TZCOUNT",
+    ),
+
     function_call: $ =>
       seq(
-        field('function', $.identifier),
+        $.function_name,
         '(',
         optional(
           seq(
@@ -840,16 +775,6 @@ module.exports = grammar({
           $.expression
         )
       ),
-
-    interpolated_symbol: $ =>
-      seq(
-        '{',
-        optional($.format_specifier),
-        $.identifier,
-        '}'
-      ),
-
-    format_specifier: $ => /[+# 0-9.*A-Za-z]+/,
 
     number_literal: $ =>
       token(
@@ -912,30 +837,37 @@ module.exports = grammar({
       token.immediate(prec(1, /([^"{]|\\.)+/)),
 
     interpolation: $ =>
-      choice(
-        // Nested interpolation: {{name}} - try first as it's most specific
-        seq(
-          '{',
-          field('inner', $.interpolation),
-          '}'
-        ),
-        // Format with symbol: {fmt:name} - must try before simple symbol
-        prec(1, seq(
-          '{',
-          field('format', $.format_spec),
-          field('symbol', choice($.identifier, $.raw_identifier)),
-          '}'
-        )),
-        // Simple symbol: {name} - lowest priority
-        seq(
-          '{',
-          field('symbol', choice($.identifier, $.raw_identifier)),
-          '}'
-        )
+      seq(
+        '{',
+        optional(field('format', $.format_spec)),
+        field('name', repeat1($.interpolation_content)),
+        '}'
       ),
 
+    // Content inside interpolation braces: identifier chars and nested interpolations
+    // Matches RGBDS behavior of reading chars until '}' (lexer.cpp:1344-1347)
+    // Must be visible (not _hidden) to appear in parse tree
+    interpolation_content: $ =>
+      choice(
+        // Nested interpolation: {inner}
+        $.interpolation,
+        // Raw identifier characters (don't use $.symbol - avoid external scanner)
+        // Matches [A-Za-z_][A-Za-z0-9_#$@]* with different prefix patterns
+        // TODO: a predefined keyword without any other interpolation should error
+        //       eg "{if}"
+        /[A-Za-z_][A-Za-z0-9_#$@]*/,
+        // TODO: check if {.foo} is valid, not sure if this local label style identifier is allowed
+        // Dot prefix for local labels: .label
+        /\.[A-Za-z_][A-Za-z0-9_#$@]*/,
+        // Hash prefix for raw identifiers: #keyword
+        /#[A-Za-z_][A-Za-z0-9_#$@]*/,
+      ),
+
+    // Format specifier for interpolation: {formatspec:symbol}
+    // Syntax: [sign][exact][align][pad][width][frac][prec]type:
+    // NOTE: Single letter format types (d, x, X, etc.) conflict with symbol matching
     format_spec: $ =>
-      token(seq(
+      token.immediate(seq(
         optional(choice('+', ' ')),  // sign
         optional('#'),                // exact
         optional('-'),                // align
@@ -944,7 +876,8 @@ module.exports = grammar({
         optional(seq('.', /[0-9]*/)), // frac
         optional(/q[0-9]+/),          // prec
         choice('d', 'u', 'x', 'X', 'b', 'o', 'f', 's'), // type
-        ':'                           // disambiguator
+        // TODO: expose this as separate field / node
+        ':',
       )),
 
     // Macro argument escapes usable inside macro/rept bodies
@@ -975,30 +908,41 @@ module.exports = grammar({
         )
       ),
 
-    // Identifiers for opcodes, symbols, etc. (no dots except standalone dot)
-    identifier: $ =>
-      token(choice(
-        /[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/,
-        '.',  // Standalone dot is a valid identifier in RGBDS
-        /-?[A-Za-z_][A-Za-z0-9_.=-]*/ // OPT-style identifiers (Wtruncation=256, -Weverything, Q.16)
-      )),
-
     // Raw identifiers allow using reserved keywords as symbols
     // e.g. #load, #LOAD, #IF, etc.
     raw_identifier: $ =>
       token(seq('#', /[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/)),
 
-    // Interpolatable identifier: must start with an interpolation per RGBDS (e.g., {name}, {name}_SUFFIX)
+    // Interpolatable identifier: identifier containing at least one {interpolation}
+    // Examples: {x}, foo{x}, {x}foo, foo{x}bar{y}
     interpolatable_identifier: $ =>
-      prec.left(seq(
+      seq(
+        // Optional: identifier fragment before first interpolation
+        // Don't use .immediate() for first fragment (no preceding token)
+        optional($._identifier_fragment_initial),
+
+        // At least one interpolation required (distinguishes from plain symbol)
         $.interpolation,
-        repeat(choice($.identifier_fragment, $.interpolation))
-      )),
+
+        // Then any mix of fragments and interpolations
+        // Subsequent fragments use .immediate() to prevent whitespace
+        repeat(
+          choice(
+            $.identifier_fragment,  // Uses .immediate()
+            $.interpolation,
+          )
+        )
+      ),
+
+    // First identifier fragment (no .immediate() needed)
+    _identifier_fragment_initial: $ =>
+      alias(token(/[A-Za-z_][A-Za-z0-9_#$@]*/), $.identifier_fragment),
 
     // Identifier fragment: part of identifier without braces
     // Must be immediate to prevent whitespace between parts
+    // Supports RGBDS identifier chars: A-Za-z0-9_#$@
     identifier_fragment: $ =>
-      token.immediate(/[A-Za-z_][A-Za-z0-9_]*/),
+      token.immediate(/[A-Za-z_][A-Za-z0-9_#$@]*/),
   },
 });
 
@@ -1025,4 +969,30 @@ function binary_ops($) {
       )
     );
   });
+}
+
+function ci(...keywords) {
+  const patterns = keywords.map(keyword => {
+    const charPattern = keyword
+      .split('')
+      .map(c => {
+        const lower = c.toLowerCase();
+        const upper = c.toUpperCase();
+        // Check if lower and upper are the same to avoid duplicates
+        if (lower === upper) {
+          // Escape special regex characters
+          return RegExp.escape(c);
+        }
+        // Escape characters in character classes
+        const escapedLower = RegExp.escape(lower);
+        const escapedUpper = RegExp.escape(upper);
+        return `[${escapedLower}${escapedUpper}]`;
+      })
+      .join('');
+
+    return new RegExp(charPattern);
+  });
+
+  // Do not wrap in choice if only one keyword
+  return patterns.length === 1 ? patterns[0] : choice(...patterns);
 }

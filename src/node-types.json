@@ -1,71 +1,18 @@
 [
   {
-    "type": "expression",
+    "type": "address",
     "named": true,
-    "subtypes": [
-      {
-        "type": "binary_expression",
-        "named": true
-      },
-      {
-        "type": "primary_expression",
-        "named": true
-      },
-      {
-        "type": "unary_expression",
-        "named": true
-      }
-    ]
-  },
-  {
-    "type": "add_instruction",
-    "named": true,
-    "fields": {
-      "opcode": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "a_register",
+          "type": "expression",
           "named": true
         },
         {
-          "type": "e8",
-          "named": true
-        },
-        {
-          "type": "hl_address",
-          "named": true
-        },
-        {
-          "type": "hl_register",
-          "named": true
-        },
-        {
-          "type": "n8",
-          "named": true
-        },
-        {
-          "type": "r16_register",
-          "named": true
-        },
-        {
-          "type": "r8_register",
-          "named": true
-        },
-        {
-          "type": "sp_register",
+          "type": "register",
           "named": true
         }
       ]
@@ -149,44 +96,6 @@
     }
   },
   {
-    "type": "arith_a_instruction",
-    "named": true,
-    "fields": {
-      "opcode": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "a_register",
-          "named": true
-        },
-        {
-          "type": "hl_address",
-          "named": true
-        },
-        {
-          "type": "n8",
-          "named": true
-        },
-        {
-          "type": "r8_register",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "assert_directive",
     "named": true,
     "fields": {
@@ -216,16 +125,6 @@
         "types": [
           {
             "type": "string_literal",
-            "named": true
-          }
-        ]
-      },
-      "severity": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
             "named": true
           }
         ]
@@ -433,30 +332,14 @@
     }
   },
   {
-    "type": "cpl_instruction",
+    "type": "condition_code",
     "named": true,
-    "fields": {
-      "opcode": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "a_register",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
+  },
+  {
+    "type": "constant",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "db_directive",
@@ -557,15 +440,15 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
-            "named": true
-          },
-          {
             "type": "interpolatable_identifier",
             "named": true
           },
           {
             "type": "raw_identifier",
+            "named": true
+          },
+          {
+            "type": "symbol",
             "named": true
           }
         ]
@@ -730,21 +613,6 @@
     }
   },
   {
-    "type": "e8",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "number_literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "export_directive",
     "named": true,
     "fields": {
@@ -764,19 +632,98 @@
       "required": true,
       "types": [
         {
-          "type": "anonymous_label_ref",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "interpolatable_identifier",
           "named": true
         },
         {
           "type": "macro_argument",
+          "named": true
+        },
+        {
+          "type": "raw_identifier",
+          "named": true
+        },
+        {
+          "type": "symbol",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_label_ref",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "char_literal",
+          "named": true
+        },
+        {
+          "type": "constant",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_call",
+          "named": true
+        },
+        {
+          "type": "graphics_literal",
+          "named": true
+        },
+        {
+          "type": "local_identifier",
+          "named": true
+        },
+        {
+          "type": "macro_argument",
+          "named": true
+        },
+        {
+          "type": "macro_arguments_spread",
+          "named": true
+        },
+        {
+          "type": "macro_unique_suffix",
+          "named": true
+        },
+        {
+          "type": "number_literal",
+          "named": true
+        },
+        {
+          "type": "raw_identifier",
+          "named": true
+        },
+        {
+          "type": "raw_string_literal",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "symbol",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
@@ -785,53 +732,41 @@
   {
     "type": "function_call",
     "named": true,
-    "fields": {
-      "function": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_name",
           "named": true
         }
       ]
     }
   },
   {
+    "type": "function_name",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "global_label",
     "named": true,
     "fields": {
-      "export_marker": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "::",
-            "named": false
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "raw_identifier",
             "named": true
           },
           {
-            "type": "raw_identifier",
+            "type": "symbol",
             "named": true
           }
         ]
@@ -846,6 +781,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
         {
           "type": "block_comment",
           "named": true
@@ -868,59 +807,6 @@
         },
         {
           "type": "local_label_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "hl_address",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "hl_register",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "inc_dec_instruction",
-    "named": true,
-    "fields": {
-      "opcode": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "hl_address",
-          "named": true
-        },
-        {
-          "type": "r16_register",
-          "named": true
-        },
-        {
-          "type": "r8_register",
-          "named": true
-        },
-        {
-          "type": "sp_register",
           "named": true
         }
       ]
@@ -1016,29 +902,24 @@
   {
     "type": "instruction",
     "named": true,
-    "fields": {},
+    "fields": {
+      "opcode": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "add_instruction",
-          "named": true
-        },
-        {
-          "type": "arith_a_instruction",
-          "named": true
-        },
-        {
-          "type": "cpl_instruction",
-          "named": true
-        },
-        {
-          "type": "inc_dec_instruction",
-          "named": true
-        },
-        {
-          "type": "logic_a_instruction",
+          "type": "operand_list",
           "named": true
         }
       ]
@@ -1058,6 +939,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "instruction_name",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "interpolatable_identifier",
@@ -1092,30 +978,31 @@
           }
         ]
       },
-      "inner": {
-        "multiple": false,
-        "required": false,
+      "name": {
+        "multiple": true,
+        "required": true,
         "types": [
           {
-            "type": "interpolation",
-            "named": true
-          }
-        ]
-      },
-      "symbol": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "raw_identifier",
+            "type": "interpolation_content",
             "named": true
           }
         ]
       }
+    }
+  },
+  {
+    "type": "interpolation_content",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "interpolation",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1147,6 +1034,10 @@
       "required": true,
       "types": [
         {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
           "type": "block_comment",
           "named": true
         },
@@ -1170,59 +1061,6 @@
     }
   },
   {
-    "type": "logic_a_instruction",
-    "named": true,
-    "fields": {
-      "opcode": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "a_register",
-          "named": true
-        },
-        {
-          "type": "hl_address",
-          "named": true
-        },
-        {
-          "type": "n8",
-          "named": true
-        },
-        {
-          "type": "r8_register",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "n8",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "number_literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "newcharmap_directive",
     "named": true,
     "fields": {
@@ -1231,7 +1069,7 @@
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "symbol",
             "named": true
           }
         ]
@@ -1251,11 +1089,38 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "symbol",
             "named": true
           }
         ]
       }
+    }
+  },
+  {
+    "type": "operand_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "address",
+          "named": true
+        },
+        {
+          "type": "condition_code",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "register",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1308,89 +1173,6 @@
     }
   },
   {
-    "type": "primary_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "a_register",
-          "named": true
-        },
-        {
-          "type": "char_literal",
-          "named": true
-        },
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "function_call",
-          "named": true
-        },
-        {
-          "type": "graphics_literal",
-          "named": true
-        },
-        {
-          "type": "hl_register",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "local_identifier",
-          "named": true
-        },
-        {
-          "type": "macro_argument",
-          "named": true
-        },
-        {
-          "type": "macro_arguments_spread",
-          "named": true
-        },
-        {
-          "type": "macro_unique_suffix",
-          "named": true
-        },
-        {
-          "type": "number_literal",
-          "named": true
-        },
-        {
-          "type": "r16_register",
-          "named": true
-        },
-        {
-          "type": "r8_register",
-          "named": true
-        },
-        {
-          "type": "raw_identifier",
-          "named": true
-        },
-        {
-          "type": "raw_string_literal",
-          "named": true
-        },
-        {
-          "type": "sp_register",
-          "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "purge_directive",
     "named": true,
     "fields": {
@@ -1410,34 +1192,19 @@
       "required": true,
       "types": [
         {
-          "type": "anonymous_label_ref",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "interpolatable_identifier",
           "named": true
         },
         {
           "type": "macro_argument",
           "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "r8_register",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
+        },
         {
-          "type": "a_register",
+          "type": "raw_identifier",
+          "named": true
+        },
+        {
+          "type": "symbol",
           "named": true
         }
       ]
@@ -1516,15 +1283,15 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
-            "named": true
-          },
-          {
             "type": "interpolatable_identifier",
             "named": true
           },
           {
             "type": "raw_identifier",
+            "named": true
+          },
+          {
+            "type": "symbol",
             "named": true
           }
         ]
@@ -1550,6 +1317,11 @@
     }
   },
   {
+    "type": "register",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "section_address",
     "named": true,
     "fields": {
@@ -1573,6 +1345,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
         {
           "type": "block_comment",
           "named": true
@@ -1720,7 +1496,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "symbol",
             "named": true
           }
         ]
@@ -1789,6 +1565,10 @@
       "required": false,
       "types": [
         {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
           "type": "block_comment",
           "named": true
         },
@@ -1797,7 +1577,19 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
           "named": true
         },
         {
@@ -2010,7 +1802,7 @@
     "named": false
   },
   {
-    "type": "a_register",
+    "type": "anonymous_label",
     "named": true
   },
   {
@@ -2044,19 +1836,7 @@
     "named": true
   },
   {
-    "type": "hl_register",
-    "named": true
-  },
-  {
-    "type": "identifier",
-    "named": true
-  },
-  {
     "type": "identifier_fragment",
-    "named": true
-  },
-  {
-    "type": "instruction_keyword",
     "named": true
   },
   {
@@ -2080,10 +1860,6 @@
     "named": true
   },
   {
-    "type": "r16_register",
-    "named": true
-  },
-  {
     "type": "raw_identifier",
     "named": true
   },
@@ -2096,7 +1872,7 @@
     "named": true
   },
   {
-    "type": "sp_register",
+    "type": "symbol",
     "named": true
   },
   {
