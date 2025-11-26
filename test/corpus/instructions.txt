@@ -113,8 +113,7 @@ SECTION "Test", ROM0
       (directive_keyword)
       (string_literal)
       (section_type))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -157,8 +156,7 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -244,8 +242,7 @@ SECTION "Test", ROM0
       (directive_keyword)
       (string_literal)
       (section_type))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -288,8 +285,7 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -332,8 +328,7 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -499,8 +494,7 @@ SECTION "Test", ROM0
           (address
             (register))
           (register))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -508,8 +502,7 @@ SECTION "Test", ROM0
           (register)
           (expression
             (number_literal)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -530,10 +523,8 @@ SECTION "Test", ROM0
         (operand_list
           (register)
           (register))))
-    (inline_comment
-      (comment))
-    (inline_comment
-      (comment))
+    (inline_comment)
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
@@ -615,8 +606,7 @@ Global:: jp nz, Global
           (expression
             (anonymous_label_ref)))))
     (global_label_block
-      (global_label
-        (symbol))
+      (label)
       (instruction_list
         (instruction
           (instruction_name)
@@ -625,12 +615,11 @@ Global:: jp nz, Global
             (expression
               (symbol)))))
       (local_label_block
-        (local_label
-          (local_identifier))
+        (local)
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
               (expression
-                (local_identifier)))))))))
+                (local)))))))))

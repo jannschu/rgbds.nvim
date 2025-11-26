@@ -7,12 +7,12 @@ DEF X = 1 + 2 * 3
 DEF Y = (1 + 2) * 3
 
 ; Operator precedence with shift and bitwise
-DEF Z = 1 + 2 << 3 & 7
+DEF Var1 = 1 + 2 << 3 & 7
 
 ; Logical and comparisons
-DEF A = 1 && 0 || 1
-DEF B = 1 == 2
-DEF C = 1 != 2
+DEF Var2 = 1 && 0 || 1
+DEF Var3 = 1 == 2
+DEF Var4 = 1 != 2
 
 ; Interpolation (this is more about string parsing than full semantics)
 PRINTLN "The value is {X}"
@@ -20,92 +20,99 @@ PRINTLN "The value is {X}"
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
+      (symbol)
+      (expression
         (binary_expression
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
+            (binary_expression
+              (expression
+                (number_literal))
+              (expression
+                (number_literal))))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (expression
+              (binary_expression
+                (expression
+                  (number_literal))
+                (expression
+                  (number_literal)))))
+          (expression
+            (number_literal))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (binary_expression
+              (expression
+                (binary_expression
+                  (expression
+                    (number_literal))
+                  (expression
+                    (number_literal))))
+              (expression
+                (number_literal))))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (binary_expression
+              (expression
+                (number_literal))
+              (expression
+                (number_literal))))
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (binary_expression
-            (primary_expression
-              (number_literal))
-            (primary_expression
-              (number_literal))))
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
+      (symbol)
+      (expression
         (binary_expression
-          (binary_expression
-            (primary_expression
-              (number_literal))
-            (primary_expression
-              (number_literal)))
-          (primary_expression
-            (number_literal))))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (binary_expression
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
-            (number_literal)))
-        (primary_expression
-          (number_literal)))))
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (number_literal))
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
+      (symbol)
+      (expression
+        (binary_expression
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              (identifier))))))))
+              (interpolation_content))))))))
 
 ================================================================================
 Expressions: all operators
@@ -139,8 +146,7 @@ DEF GE = 2 >= 1
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -165,8 +171,7 @@ DEF GE = 2 >= 1
                 (number_literal))
               (expression
                 (number_literal))))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -199,8 +204,7 @@ DEF GE = 2 >= 1
                 (number_literal))
               (expression
                 (number_literal))))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -231,8 +235,7 @@ DEF GE = 2 >= 1
             (number_literal))
           (expression
             (number_literal))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -257,8 +260,7 @@ DEF GE = 2 >= 1
         (unary_expression
           (expression
             (number_literal))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -306,6 +308,7 @@ Expressions: built-in functions
 
 ; Memory and type functions
 DEF HI = HIGH($1234)
+DEF HI = HIGH(BC)
 DEF LO = LOW($1234)
 DEF BNK = BANK(MySection)
 DEF SZ = SIZEOF(MyStruct)
@@ -315,26 +318,36 @@ DEF TZ = TZCOUNT(8)
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (expression
         (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+          (high_low_function
+            (function_name)
+            (expression
+              (number_literal)))))))
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (expression
         (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (expression
+              (number_literal)))))))
   (directive
     (def_directive
       (directive_keyword)
@@ -373,6 +386,27 @@ DEF TZ = TZCOUNT(8)
             (number_literal)))))))
 
 ================================================================================
+Expressions: ATAN2
+================================================================================
+
+PRINTLN ATAN2(1.0, 1.0)
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (function_call
+            (function_name)
+            (expression
+              (number_literal))
+            (expression
+              (number_literal))))))))
+
+================================================================================
 Expressions: fixed-point functions
 ================================================================================
 
@@ -403,175 +437,171 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (primary_expression
-        (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
-            (number_literal))))))
-  (inline_comment
-    (comment))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (identifier)
-      (primary_expression
-        (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
+            (number_literal))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (function_call
-          (identifier)
-          (primary_expression
+          (function_name)
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (function_call
-              (identifier)
-              (primary_expression
-                (identifier)))))))))
+              (function_name)
+              (expression
+                (symbol)))))))))
 
 ================================================================================
 Expressions: string functions
@@ -593,8 +623,7 @@ DEF RFIND = STRRFIND("abcabc", "bc")
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -652,8 +681,7 @@ DEF RFIND = STRRFIND("abcabc", "bc")
             (string_literal))
           (expression
             (string_literal))))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -709,8 +737,7 @@ DEF BYTE2 = STRBYTE("ABC", 1)
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -755,8 +782,7 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -799,13 +825,12 @@ Expressions: symbol query functions
 DEF IS_DEF = DEF(MySymbol)
 DEF IS_CONST = ISCONST(42)
 DEF SEC_NAME = SECTION(MyLabel)
-DEF SEC_START = STARTOF(ROM0)
+DEF SEC_START = STARTOF(VRAM)
 
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -839,9 +864,401 @@ DEF SEC_START = STARTOF(ROM0)
       (symbol)
       (expression
         (function_call
+          (startof_function
+            (function_name)
+            (section_type)))))))
+
+================================================================================
+Expressions: Constants
+================================================================================
+
+PRINTLN @
+PRINTLN .
+PRINTLN ..
+PRINTLN _RS
+PRINTLN _NARG
+PRINTLN __SCOPE__
+PRINTLN __UTC_DAY__
+PRINTLN __UTC_HOUR__
+PRINTLN __RGBDS_RC__
+PRINTLN __UTC_YEAR__
+PRINTLN __UTC_MONTH__
+PRINTLN __UTC_MINUTE__
+PRINTLN __UTC_SECOND__
+PRINTLN __RGBDS_MAJOR__
+PRINTLN __RGBDS_MINOR__
+PRINTLN __RGBDS_PATCH__
+PRINTLN __ISO_8601_UTC__
+PRINTLN __RGBDS_VERSION__
+PRINTLN __ISO_8601_LOCAL__
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (constant))))))
+
+================================================================================
+Expressions: functions with non-expression parameters
+================================================================================
+
+; Functions that accept section types (not expressions)
+DEF START_ROM0 = STARTOF(ROM0)
+DEF START_ROMX = STARTOF(ROMX)
+DEF START_VRAM = STARTOF(VRAM)
+DEF START_WRAM0 = STARTOF(WRAM0)
+DEF START_HRAM = STARTOF(HRAM)
+DEF SIZE_ROM0 = SIZEOF(ROM0)
+DEF SIZE_VRAM = SIZEOF(VRAM)
+
+; Functions that accept strings (section names)
+DEF START_SEC = STARTOF("MySection")
+DEF SIZE_SEC = SIZEOF("MySection")
+DEF BANK_SEC = BANK("MySection")
+
+; Functions that accept registers
+DEF HIGH_HL = HIGH(HL)
+DEF HIGH_BC = HIGH(BC)
+DEF HIGH_DE = HIGH(DE)
+DEF LOW_HL = LOW(HL)
+DEF LOW_BC = LOW(BC)
+DEF SIZE_A = SIZEOF(A)
+DEF SIZE_HL = SIZEOF(HL)
+
+; Functions that accept special symbol @
+DEF BANK_CUR = BANK(@)
+
+; Functions that accept symbol names (raw identifiers)
+DEF IS_DEF = DEF(MySymbol)
+DEF SEC_OF = SECTION(MyLabel)
+
+; Functions that accept filenames
+DEF FILE_DATA = READFILE("data.bin")
+DEF FILE_PART = READFILE("data.bin", 256)
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (section_type))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (section_type))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (startof_function
+            (function_name)
+            (expression
+              (string_literal)))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (expression
+              (string_literal)))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
           (function_name)
           (expression
-            (symbol)))))))
+            (string_literal))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (high_low_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (register))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (register))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (constant))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (symbol))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (symbol))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (string_literal))
+          (expression
+            (number_literal)))))))
 
 ================================================================================
 Expressions: charmap functions
@@ -871,30 +1288,34 @@ DEF STR2 = STRCHAR("A:)", 1)
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
-    (charmap_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (expression
-        (number_literal))))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
   (directive
-    (charmap_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (expression
-        (number_literal))))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
   (directive
-    (charmap_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))))
-  (inline_comment
-    (comment))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal)))))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)

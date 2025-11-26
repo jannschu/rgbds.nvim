@@ -19,42 +19,6 @@
     }
   },
   {
-    "type": "align_directive",
-    "named": true,
-    "fields": {
-      "align": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "offset": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "align_option",
     "named": true,
     "fields": {
@@ -272,66 +236,6 @@
     }
   },
   {
-    "type": "break_directive",
-    "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "charmap_directive",
-    "named": true,
-    "fields": {
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "char_literal",
-            "named": true
-          },
-          {
-            "type": "macro_argument",
-            "named": true
-          },
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "condition_code",
     "named": true,
     "fields": {}
@@ -340,32 +244,6 @@
     "type": "constant",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "db_directive",
-    "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "argument_list",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "def_directive",
@@ -482,23 +360,7 @@
       "required": true,
       "types": [
         {
-          "type": "align_directive",
-          "named": true
-        },
-        {
           "type": "assert_directive",
-          "named": true
-        },
-        {
-          "type": "break_directive",
-          "named": true
-        },
-        {
-          "type": "charmap_directive",
-          "named": true
-        },
-        {
-          "type": "db_directive",
           "named": true
         },
         {
@@ -506,27 +368,19 @@
           "named": true
         },
         {
-          "type": "ds_directive",
-          "named": true
-        },
-        {
-          "type": "dw_directive",
-          "named": true
-        },
-        {
           "type": "export_directive",
           "named": true
         },
         {
-          "type": "incbin_directive",
+          "type": "for_block",
           "named": true
         },
         {
-          "type": "include_directive",
+          "type": "if_block",
           "named": true
         },
         {
-          "type": "newcharmap_directive",
+          "type": "macro_definition",
           "named": true
         },
         {
@@ -534,19 +388,7 @@
           "named": true
         },
         {
-          "type": "purge_directive",
-          "named": true
-        },
-        {
-          "type": "redef_directive",
-          "named": true
-        },
-        {
-          "type": "setcharmap_directive",
-          "named": true
-        },
-        {
-          "type": "shift_directive",
+          "type": "rept_block",
           "named": true
         },
         {
@@ -557,56 +399,74 @@
     }
   },
   {
-    "type": "ds_directive",
+    "type": "elif_clause",
     "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "align_option",
+          "type": "anonymous_label",
           "named": true
         },
         {
-          "type": "argument_list",
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "directive_keyword",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "dw_directive",
+    "type": "else_clause",
     "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "argument_list",
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "directive_keyword",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
           "named": true
         }
       ]
@@ -628,23 +488,15 @@
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "interpolatable_identifier",
+          "type": "argument_list",
           "named": true
         },
         {
-          "type": "macro_argument",
-          "named": true
-        },
-        {
-          "type": "raw_identifier",
-          "named": true
-        },
-        {
-          "type": "symbol",
+          "type": "def_directive",
           "named": true
         }
       ]
@@ -687,7 +539,7 @@
           "named": true
         },
         {
-          "type": "local_identifier",
+          "type": "local",
           "named": true
         },
         {
@@ -696,10 +548,6 @@
         },
         {
           "type": "macro_arguments_spread",
-          "named": true
-        },
-        {
-          "type": "macro_unique_suffix",
           "named": true
         },
         {
@@ -730,51 +578,7 @@
     }
   },
   {
-    "type": "function_call",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "function_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "function_name",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "global_label",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "raw_identifier",
-            "named": true
-          },
-          {
-            "type": "symbol",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "global_label_block",
+    "type": "for_block",
     "named": true,
     "fields": {},
     "children": {
@@ -794,7 +598,93 @@
           "named": true
         },
         {
-          "type": "global_label",
+          "type": "directive_keyword",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "high_low_function",
+          "named": true
+        },
+        {
+          "type": "sizeof_function",
+          "named": true
+        },
+        {
+          "type": "startof_function",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "global_label_block",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          },
+          {
+            "type": "raw_identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
           "named": true
         },
         {
@@ -813,87 +703,93 @@
     }
   },
   {
-    "type": "incbin_directive",
-    "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "length": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "offset": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "path": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "include_directive",
-    "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "path": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "inline_comment",
+    "type": "high_low_function",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "comment",
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "register",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_block",
+    "named": true,
+    "fields": {
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "elif_clause",
+          "named": true
+        },
+        {
+          "type": "else_clause",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
           "named": true
         }
       ]
@@ -1006,32 +902,23 @@
     }
   },
   {
-    "type": "local_label",
+    "type": "local_label_block",
     "named": true,
     "fields": {
       "name": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
           {
-            "type": ":",
-            "named": false
-          },
-          {
-            "type": "local_identifier",
+            "type": "local",
             "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "local_label_block",
-    "named": true,
-    "fields": {},
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "anonymous_label",
@@ -1052,24 +939,20 @@
         {
           "type": "instruction_list",
           "named": true
-        },
-        {
-          "type": "local_label",
-          "named": true
         }
       ]
     }
   },
   {
-    "type": "newcharmap_directive",
+    "type": "macro_definition",
     "named": true,
     "fields": {
-      "base": {
+      "end": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
-            "type": "symbol",
+            "type": "directive_keyword",
             "named": true
           }
         ]
@@ -1083,17 +966,37 @@
             "named": true
           }
         ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "symbol",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1173,9 +1076,34 @@
     }
   },
   {
-    "type": "purge_directive",
+    "type": "register",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "rept_block",
     "named": true,
     "fields": {
+      "count": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
       "keyword": {
         "multiple": false,
         "required": true,
@@ -1189,137 +1117,30 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "interpolatable_identifier",
+          "type": "anonymous_label",
           "named": true
         },
         {
-          "type": "macro_argument",
+          "type": "block_comment",
           "named": true
         },
         {
-          "type": "raw_identifier",
+          "type": "directive",
           "named": true
         },
         {
-          "type": "symbol",
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "redef_directive",
-    "named": true,
-    "fields": {
-      "assign_type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "%=",
-            "named": false
-          },
-          {
-            "type": "&=",
-            "named": false
-          },
-          {
-            "type": "*=",
-            "named": false
-          },
-          {
-            "type": "+=",
-            "named": false
-          },
-          {
-            "type": "-=",
-            "named": false
-          },
-          {
-            "type": "/=",
-            "named": false
-          },
-          {
-            "type": "<<=",
-            "named": false
-          },
-          {
-            "type": "=",
-            "named": false
-          },
-          {
-            "type": ">>=",
-            "named": false
-          },
-          {
-            "type": "^=",
-            "named": false
-          },
-          {
-            "type": "directive_keyword",
-            "named": true
-          },
-          {
-            "type": "|=",
-            "named": false
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "interpolatable_identifier",
-            "named": true
-          },
-          {
-            "type": "raw_identifier",
-            "named": true
-          },
-          {
-            "type": "symbol",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          },
-          {
-            "type": "raw_string_literal",
-            "named": true
-          },
-          {
-            "type": "string_literal",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "register",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "section_address",
@@ -1478,58 +1299,6 @@
     "fields": {}
   },
   {
-    "type": "setcharmap_directive",
-    "named": true,
-    "fields": {
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "symbol",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "shift_directive",
-    "named": true,
-    "fields": {
-      "count": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "keyword": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "directive_keyword",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "simple_directive",
     "named": true,
     "fields": {
@@ -1550,6 +1319,33 @@
       "types": [
         {
           "type": "argument_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sizeof_function",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "register",
+          "named": true
+        },
+        {
+          "type": "section_type",
           "named": true
         }
       ]
@@ -1594,6 +1390,29 @@
         },
         {
           "type": "section_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "startof_function",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "section_type",
           "named": true
         }
       ]
@@ -1819,11 +1638,6 @@
     "named": true
   },
   {
-    "type": "comment",
-    "named": true,
-    "extra": true
-  },
-  {
     "type": "directive_keyword",
     "named": true
   },
@@ -1840,7 +1654,16 @@
     "named": true
   },
   {
-    "type": "local_identifier",
+    "type": "inline_comment",
+    "named": true,
+    "extra": true
+  },
+  {
+    "type": "label",
+    "named": true
+  },
+  {
+    "type": "local",
     "named": true
   },
   {
@@ -1849,10 +1672,6 @@
   },
   {
     "type": "macro_arguments_spread",
-    "named": true
-  },
-  {
-    "type": "macro_unique_suffix",
     "named": true
   },
   {
