@@ -6,6 +6,8 @@ module.exports = grammar({
 
   externals: $ => [
     $.symbol,
+    $.label,
+    $.local,
   ],
 
   conflicts: $ => [
@@ -13,7 +15,7 @@ module.exports = grammar({
   ],
 
   extras: $ => [
-    $.comment,
+    $.inline_comment,
     $.block_comment,
     /[ \t\uFEFF\u2060]+/,  // Spaces and tabs only, NOT newlines
     // FIXME: allow inline comment after \
@@ -38,12 +40,9 @@ module.exports = grammar({
 
     // Section blocks: SECTION directive and its contents
     section_block: $ =>
-      // FIXME: POPS PUSHS implementation
       seq(
         $._section_header,
         repeat($._statement),
-        // TODO: is a local label valid before a global label in a section?
-        //       maybe if files are included into other sections, what about PUSHS, maybe there?
         repeat($.global_label_block),
         optional(seq(
           alias(ci('ENDSECTION'), $.directive_keyword),
@@ -53,9 +52,8 @@ module.exports = grammar({
     _section_header: $ =>
       seq(
         $.section_directive,
-        // TODO: is this newline required?
-        // optional($.inline_comment),
-        // /\r?\n/
+        optional($.inline_comment),
+        /\r?\n/
       ),
 
     // Global label blocks: global label and its contents
@@ -68,7 +66,8 @@ module.exports = grammar({
 
     _global_label_header: $ =>
       seq(
-        $.global_label,
+        field('name', choice($.label, $.raw_identifier)),
+        choice(token.immediate('::'), token.immediate(':')),
       ),
 
     // Local label blocks: local label and its contents
@@ -80,8 +79,9 @@ module.exports = grammar({
 
     _local_label_header: $ =>
       seq(
-        $.local_label,
-        // TODO: remove
+        field('name', $.local),
+        optional(token.immediate(':')),
+        // TODO: remove, ensure tests cover this
         // optional($.inline_comment),
         // /\r?\n/
       ),
@@ -101,7 +101,6 @@ module.exports = grammar({
 
     section_directive: $ =>
       seq(
-        // FIXME: anonymous label here?
         field('keyword', alias(ci('SECTION'), $.directive_keyword)),
         optional(field('fragment', alias(ci('FRAGMENT'), $.directive_keyword))),
         optional(field('union', alias(ci('UNION'), $.directive_keyword))),
@@ -162,34 +161,23 @@ module.exports = grammar({
 
     directive: $ =>
       choice(
-        // $.macro_definition,
-        // $.if_block,
-        $.redef_directive,
-        $.def_directive,
         $.assert_directive,
-        $.purge_directive,
-        $.align_directive,
-        $.ds_directive,
-        $.db_directive,
-        $.dw_directive,
-        $.shift_directive,
-        $.break_directive,
-        // $.load_block,
-        $.include_directive,
-        $.incbin_directive,
-        // $.union_block,
-        // $.fragment_literal,
-        $.charmap_directive,
-        $.newcharmap_directive,
-        $.setcharmap_directive,
+        $.def_directive,
         $.export_directive,
         $.opt_directive,
         $.simple_directive,
+        $.if_block,
+        $.for_block,
+        // TODO: $.macro_invocation_line
+        // TODO: $.load_block,
+        $.macro_definition,
+        $.rept_block,
+        // TODO: $.union_block,
       ),
 
     def_directive: $ =>
       seq(
-        field('keyword', alias(ci('DEF'), $.directive_keyword)),
+        field('keyword', alias(ci('DEF', 'REDEF'), $.directive_keyword)),
         field('name', choice(
           $.interpolatable_identifier,
           $.raw_identifier,
@@ -215,40 +203,8 @@ module.exports = grammar({
           seq(
             field('assign_type', ci('RB', 'RW', 'RL')),
             optional(field('value', $.expression))
-          )
-        )
-      ),
-
-    redef_directive: $ =>
-      seq(
-        field('keyword', alias(ci('REDEF'), $.directive_keyword)),
-        field('name', choice(
-          $.interpolatable_identifier,
-          $.raw_identifier,
-          $.symbol,
-        )),
-        choice(
-          // String constant: REDEF name EQUS "value" or #"value"
-          seq(
-            field('assign_type', alias(ci('EQUS'), $.directive_keyword)),
-            field('value', choice($.string_literal, $.raw_string_literal))
           ),
-          // Numeric constant: REDEF name EQU value
-          seq(
-            field('assign_type', alias(ci('EQU'), $.directive_keyword)),
-            field('value', $.expression)
-          ),
-          // Variable: REDEF name = value
-          seq(
-            field('assign_type', choice('=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '|=', '^=')),
-            field('value', $.expression)
-          ),
-          // RS offset constants: REDEF name RB/RW/RL count
-          seq(
-            field('assign_type', ci('RB', 'RW', 'RL')),
-            optional(field('value', $.expression))
-          )
-        )
+        ),
       ),
 
     assert_directive: $ =>
@@ -256,117 +212,20 @@ module.exports = grammar({
         field('keyword', alias(ci('ASSERT', 'STATIC_ASSERT'), $.directive_keyword)),
         // Optional severity with REQUIRED comma: ASSERT [severity,] condition [, message]
         optional(seq(
-          field('severity', ci('FAIL', 'WARN')),
+          field('severity', ci('FAIL', 'WARN', 'FATAL')),
           ','
         )),
         field('condition', $.expression),
         optional(seq(',', field('message', $.string_literal)))
       )),
 
-    purge_directive: $ =>
-      seq(
-        field('keyword', alias(ci('PURGE'), $.directive_keyword)),
-        choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument),
-        repeat(seq(',', choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument)))
-      ),
-
-    align_directive: $ =>
-      seq(
-        field('keyword', alias(ci('ALIGN'), $.directive_keyword)),
-        field('align', $.expression),
-        optional(seq(',', field('offset', $.expression)))
-      ),
-
-    ds_directive: $ =>
-      seq(
-        field('keyword', alias(ci('DS'), $.directive_keyword)),
-        choice(
-          seq($.align_option, optional(seq(',', $.argument_list))),
-          $.argument_list
-        )
-      ),
-
-    db_directive: $ =>
-      seq(
-        field('keyword', alias(ci('DB'), $.directive_keyword)),
-        $.argument_list
-      ),
-
-    dw_directive: $ =>
-      seq(
-        field('keyword', alias(ci('DW'), $.directive_keyword)),
-        $.argument_list
-      ),
-
-    shift_directive: $ =>
-      prec.right(seq(
-        field('keyword', alias(ci('SHIFT'), $.directive_keyword)),
-        optional(field('count', $.expression))
-      )),
-
-    break_directive: $ =>
-      field('keyword', alias(ci('BREAK'), $.directive_keyword)),
-
-    include_directive: $ =>
-      seq(
-        field('keyword', alias(ci('INCLUDE'), $.directive_keyword)),
-        // TODO: allow expressions?
-        field('path', $.string_literal)
-      ),
-
-    incbin_directive: $ =>
-      seq(
-        field('keyword', alias(ci('INCBIN'), $.directive_keyword)),
-        field('path', $.string_literal),
-        optional(
-          seq(
-            ',',
-            field('offset', $.expression),
-            optional(seq(',', field('length', $.expression)))
-          )
-        )
-      ),
-
     export_directive: $ =>
       seq(
         field('keyword', alias(ci('EXPORT'), $.directive_keyword)),
-        // TODO: "EXPORT DEF ..." / "EXPORT REDEF ..."?
-        choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument),
-        repeat(seq(',', choice($.interpolatable_identifier, $.raw_identifier, $.symbol, $.macro_argument)))
-      ),
-
-    charmap_directive: $ =>
-      seq(
-        field('keyword', alias(ci('CHARMAP'), $.directive_keyword)),
-        field('key', choice(
-          $.string_literal,
-          $.char_literal,
-          $.macro_argument
-        )),
-        optional(
-          seq(
-            ',',
-            optional(seq(
-              field('value', $.expression),
-              repeat(seq(',', field('value', $.expression)))
-            ))
-          )
-        )
-      ),
-
-    newcharmap_directive: $ =>
-      seq(
-        field('keyword', alias(ci('NEWCHARMAP'), $.directive_keyword)),
-        // TODO: allow raw_identifier and interpolatable_identifier?
-        field('name', $.symbol),
-        optional(seq(',', field('base', $.symbol)))
-      ),
-
-    setcharmap_directive: $ =>
-      seq(
-        // TODO: allow raw_identifier and interpolatable_identifier?
-        field('keyword', alias(ci('SETCHARMAP'), $.directive_keyword)),
-        field('name', $.symbol)
+        choice(
+          $.def_directive,
+          $.argument_list,
+        ),
       ),
 
     opt_directive: $ =>
@@ -392,7 +251,6 @@ module.exports = grammar({
     opt_raw_string: $ =>
       token(/[^\s,"][^\r\n,]*/),
 
-    // TODO: add the parameters to these directives?
     simple_directive: $ =>
       seq(
         field('keyword', $.directive_keyword),
@@ -402,23 +260,29 @@ module.exports = grammar({
     directive_keyword: $ =>
       token(
         ci(
-          // 'EQU',
-          // 'EQUS',
-          // 'CHAR',
-          // 'READFILE',
+          'ALIGN',
+          'BREAK',
+          'INCBIN',
+          'INCLUDE',
           'PRINT',
           'PRINTLN',
-          // 'FAIL',
-          // 'WARN',
-          // 'IMPORT',
-          // 'RSSET',
-          // 'RSRESET',
-          // 'PUSHO',
-          // 'POPO',
-          // 'PUSHS',
-          // 'POPS',
-          // 'PUSHC',
-          // 'POPC',
+          'PURGE',
+          'READFILE',
+          'DS',
+          'DB',
+          'DW',
+          'SHIFT',
+          'RSSET',
+          'RSRESET',
+          // TODO: 'PUSHO',
+          // TODO: 'POPO',
+          // TODO: 'PUSHS',
+          // TODO: 'POPS',
+          'NEWCHARMAP',
+          'SETCHARMAP',
+          'CHARMAP',
+          'PUSHC',
+          'POPC',
         )
       ),
 
@@ -428,100 +292,87 @@ module.exports = grammar({
         repeat(seq(',', $.expression))
       ),
 
+
+    // ----- Macro definition -----
+
+    macro_definition: $ =>
+      seq(
+        field('keyword', alias(ci('MACRO'), $.directive_keyword)),
+        $.expression,
+        optional($.inline_comment),
+        /\r?\n/,
+        repeat($._statement),
+        field('end', alias(ci('ENDM'), $.directive_keyword)),
+        optional($.inline_comment),
+        /\r?\n/,
+      ),
+
     // ----- Control structures -----
-    // FIXME: What statements should be valid inside these blocks?
-    //        They can be used _everywhere_, pre-processor-style.
-    //        In particular, they may "mask" a section start:
-    //
-    //        IF 0
-    //        SECTION "A"
-    //        ELSE
-    //        SECTION "B"
-    //        ENDC
-    //          nop
-    //
-    // This does not fit into the current section/block structure!
-    // Should they just contain "source_file" and we add
-    // allow such preprocessor statements as alternatives to section and global label headers?
-    //
-    // if_block: $ =>
-    //   seq(
-    //     field('keyword', alias(/[Ii][Ff]/, $.directive_keyword)),
-    //     field('condition', $.expression),
-    //     /\r?\n/,
-    //     repeat($._top_level_statement),
-    //     repeat($.elif_clause),
-    //     optional($.else_clause),
-    //     field('end', alias(/[Ee][Nn][Dd][Cc]/, $.directive_keyword))
-    //   ),
-    //
-    // elif_clause: $ =>
-    //   seq(
-    //     alias(/[Ee][Ll][Ii][Ff]/, $.directive_keyword),
-    //     $.expression,
-    //     /\r?\n/,
-    //     repeat($._top_level_statement)
-    //   ),
-    //
-    // else_clause: $ =>
-    //   seq(
-    //     alias(/[Ee][Ll][Ss][Ee]/, $.directive_keyword),
-    //     choice(
-    //       // ELSE followed by newline and body
-    //       seq(/\r?\n/, repeat($._top_level_statement)),
-    //       // ELSE followed by statement on same line, then newline and body
-    //       seq(
-    //         choice(
-    //           $.label_definition,
-    //           $.macro_invocation_line,
-    //           $.instruction_line,
-    //           $.directive
-    //         ),
-    //         optional($.inline_comment),
-    //         /\r?\n/,
-    //         repeat($._top_level_statement)
-    //       )
-    //     )
-    //   ),
-    //
-    // rept_block: $ =>
-    //   seq(
-    //     field('keyword', alias(/[Rr][Ee][Pp][Tt]/, $.directive_keyword)),
-    //     field('count', $.expression),
-    //     /\r?\n/,
-    //     repeat($._top_level_statement),
-    //     field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
-    //   ),
-    //
-    // for_block: $ =>
-    //   seq(
-    //     field('keyword', alias(/[Ff][Oo][Rr]/, $.directive_keyword)),
-    //     field('var', choice(
-    //       $.identifier,
-    //       $.interpolatable_identifier
-    //     )),
-    //     ',',
-    //     choice(
-    //       // Single argument form: FOR var, count (iterate 0 to count-1)
-    //       field('count', $.expression),
-    //       // Two or three argument form: FOR var, start, end [, step]
-    //       seq(
-    //         field('start', $.expression),
-    //         ',',
-    //         field('end', $.expression),
-    //         optional(seq(',', field('step', $.expression)))
-    //       )
-    //     ),
-    //     /\r?\n/,
-    //     repeat($._top_level_statement),
-    //     field('end', alias(/[Ee][Nn][Dd][Rr]/, $.directive_keyword))
-    //   ),
+
+    if_block: $ =>
+      seq(
+        field('keyword', alias(ci('IF'), $.directive_keyword)),
+        field('condition', $.expression),
+        optional($.inline_comment),
+        /\r?\n/,
+        repeat($._statement),
+        repeat($.elif_clause),
+        optional($.else_clause),
+        field('end', alias(ci('ENDC'), $.directive_keyword)),
+        optional($.inline_comment),
+        /\r?\n/,
+      ),
+
+    elif_clause: $ =>
+      seq(
+        alias(ci('ELIF'), $.directive_keyword),
+        $.expression,
+        optional($.inline_comment),
+        /\r\n?/,
+        repeat($._statement)
+      ),
+
+    else_clause: $ =>
+      seq(
+        alias(ci('ELSE'), $.directive_keyword),
+        optional($.inline_comment),
+        /\r\n?/,
+        repeat($._statement),
+      ),
+
+    rept_block: $ =>
+      seq(
+        field('keyword', alias(ci('REPT'), $.directive_keyword)),
+        field('count', $.expression),
+        optional($.inline_comment),
+        /\r?\n/,
+        repeat($._statement),
+        field('end', alias(ci('ENDR'), $.directive_keyword)),
+        optional($.inline_comment),
+        /\r?\n/,
+      ),
+
+    for_block: $ =>
+      seq(
+        alias(ci('FOR'), $.directive_keyword),
+        $.expression,
+        repeat(
+          seq(
+            ',',
+            $.expression,
+          ),
+        ),
+        optional($.inline_comment),
+        /\r?\n/,
+        repeat($._statement),
+        alias(ci('ENDR'), $.directive_keyword),
+        optional($.inline_comment),
+        /\r?\n/,
+      ),
 
     // ----- Comments -----
 
-    comment: $ => token(seq(';', /.*/)),
-
-    inline_comment: $ => prec(1, $.comment),
+    inline_comment: $ => token(seq(';', /.*/)),
 
     // C-style block comments (RGBDS behavior: no nesting)
     block_comment: $ =>
@@ -540,20 +391,7 @@ module.exports = grammar({
 
     // ----- Labels -----
 
-    global_label: $ =>
-      seq(
-        field('name', choice($.symbol, $.raw_identifier)),
-        choice(token.immediate('::'), token.immediate(':')),
-      ),
-
-    local_label: $ => field('name', seq($.local_identifier, optional(token.immediate(':')))),
-
     anonymous_label: $ => token(':'),
-
-    // Local label / symbol reference like `.loop` or `Global.loop`
-    // TODO: clarify usage of #$@ in identifiers, also see raw_identifier and
-    //       identifier_fragment
-    local_identifier: $ => token(/(?:[A-Za-z_][A-Za-z0-9_#$@]*)?\.[A-Za-z_][A-Za-z0-9_#$@]*/),
 
     // Anonymous label reference like :+, :++, :-, :--
     anonymous_label_ref: $ =>
@@ -690,25 +528,23 @@ module.exports = grammar({
         $.char_literal,
         $.anonymous_label_ref,
         $.constant,
-        // FIXME: add back fragment literal support
-        // $.fragment_literal,
+        // TODO: $.fragment_literal,
         // TODO: add interpolatable_identifier
         // TODO: add macro paramater
         $.macro_argument,
         $.macro_arguments_spread,
-        $.macro_unique_suffix,
         $.function_call,
         $.symbol,
+        $.local,
         $.raw_identifier,
-        $.local_identifier,
         seq('(', $.expression, ')')
       ),
 
     function_name: $ => ci(
       "ACOS",
       "ASIN",
-      "ATAN",
       "ATAN2",
+      "ATAN",
       "BANK",
       "BITWIDTH",
       "BYTELEN",
@@ -722,11 +558,12 @@ module.exports = grammar({
       "DIV",
       "FLOOR",
       "FMOD",
-      "HIGH",
+      // handled specially, accepts a register
+      // "HIGH",
+      // "LOW",
       "INCHARMAP",
       "ISCONST",
       "LOG",
-      "LOW",
       "MUL",
       "POW",
       "READFILE",
@@ -734,8 +571,10 @@ module.exports = grammar({
       "ROUND",
       "SECTION",
       "SIN",
-      "SIZEOF",
-      "STARTOF",
+      // handled specially, accepts a register or section type
+      // "SIZEOF",
+      // handled specially, accepts a section type
+      // "STARTOF",
       "STRBYTE",
       "STRCAT",
       "STRCHAR",
@@ -753,16 +592,45 @@ module.exports = grammar({
     ),
 
     function_call: $ =>
-      seq(
-        $.function_name,
-        '(',
-        optional(
-          seq(
-            $.expression,
-            repeat(seq(',', $.expression))
-          )
+      choice(
+        $.startof_function,
+        $.high_low_function,
+        $.sizeof_function,
+        seq(
+          $.function_name,
+          '(',
+          optional(
+            seq(
+              $.expression,
+              repeat(seq(',', $.expression))
+            )
+          ),
+          ')'
         ),
-        ')'
+      ),
+
+    startof_function: $ =>
+      seq(
+        alias(ci('STARTOF'), $.function_name),
+        '(',
+        choice($.section_type, $.expression),
+        ')',
+      ),
+
+    high_low_function: $ =>
+      seq(
+        alias(ci('HIGH', 'LOW'), $.function_name),
+        '(',
+        choice($.register, $.expression),
+        ')',
+      ),
+
+    sizeof_function: $ =>
+      seq(
+        alias(ci('SIZEOF'), $.function_name),
+        '(',
+        choice($.section_type, $.register, $.expression),
+        ')',
       ),
 
     binary_expression: $ =>
@@ -799,6 +667,7 @@ module.exports = grammar({
 
     // Single-character numeric constants like 'A' or '\n'
     char_literal: $ =>
+      // TODO: support '&euro;'?
       token(seq("'", /([^'\\\r\n]|\\.)+/, "'")),
 
     graphics_literal: $ =>
@@ -894,9 +763,6 @@ module.exports = grammar({
 
     macro_arguments_spread: $ =>
       token(seq('\\', '#')),
-
-    macro_unique_suffix: $ =>
-      token(seq('\\', '@')),
 
     raw_string_literal: $ =>
       token(

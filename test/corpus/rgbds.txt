@@ -8,12 +8,13 @@ align 4, 2
 
 (source_file
   (directive
-    (align_directive
+    (simple_directive
       keyword: (directive_keyword)
-      align: (expression
-        (number_literal))
-      offset: (expression
-        (number_literal)))))
+      (argument_list
+        (expression
+          (number_literal))
+        (expression
+          (number_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: PRINTLN current address symbol
@@ -117,11 +118,15 @@ PURGE :-
     (directive
       (export_directive
         keyword: (directive_keyword)
-        (anonymous_label_ref)))
+        (argument_list
+          (expression
+            (anonymous_label_ref)))))
     (directive
-      (purge_directive
+      (simple_directive
         keyword: (directive_keyword)
-        (anonymous_label_ref)))))
+        (argument_list
+          (expression
+            (anonymous_label_ref)))))))
 
 ================================================================================
 Test Name: RGBDS import: character literals in CHARMAP/CHAR
@@ -332,8 +337,7 @@ label:
 
 (source_file
   (global_label_block
-    (global_label
-      name: (symbol))
+    name: (label)
     (directive
       (def_directive
         keyword: (directive_keyword)
@@ -341,7 +345,7 @@ label:
         value: (expression
           (number_literal))))
     (directive
-      (db_directive
+      (simple_directive
         keyword: (directive_keyword)
         (argument_list
           (expression
@@ -456,7 +460,7 @@ db 999
       (opt_arg
         (raw_string))))
   (directive
-    (db_directive
+    (simple_directive
       keyword: (directive_keyword)
       (argument_list
         (expression
@@ -588,15 +592,16 @@ assert fatal, 2 + 2 == 5, "there are four lights"
   (directive
     (assert_directive
       keyword: (directive_keyword)
-      severity: (identifier)
-      condition: (binary_expression
-        left: (binary_expression
-          left: (primary_expression
-            (number_literal))
-          right: (primary_expression
-            (number_literal)))
-        right: (primary_expression
-          (number_literal)))
+      condition: (expression
+        (binary_expression
+          left: (expression
+            (binary_expression
+              left: (expression
+                (number_literal))
+              right: (expression
+                (number_literal))))
+          right: (expression
+            (number_literal))))
       message: (string_literal))))
 
 ================================================================================
@@ -629,9 +634,11 @@ PURGE _NARG
 
 (source_file
   (directive
-    (purge_directive
+    (simple_directive
       keyword: (directive_keyword)
-      (symbol))))
+      (argument_list
+        (expression
+          (symbol))))))
 
 ================================================================================
 Test Name: RGBDS import: DEF with dot as symbol name
@@ -645,9 +652,9 @@ DEF . EQU 12
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (identifier)
+      name: (symbol)
       assign_type: (directive_keyword)
-      value: (primary_expression
+      value: (expression
         (number_literal)))))
 
 ================================================================================

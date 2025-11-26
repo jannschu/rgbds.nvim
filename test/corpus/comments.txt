@@ -10,24 +10,20 @@ Start:
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (global_label_block
-    (global_label
-      (symbol))
+    (label)
     (instruction_list
       (instruction
         (instruction_name)))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
           (register))))
-    (inline_comment
-      (comment))))
+    (inline_comment)))
 
 ================================================================================
 Comments: single-line block comments
@@ -42,10 +38,8 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (global_label
-      (symbol))
-    (inline_comment
-      (comment))))
+    (label)
+    (inline_comment)))
 
 ================================================================================
 Comments: multi-line block comments
@@ -65,8 +59,7 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (global_label
-      (symbol))
+    (label)
     (block_comment)
     (instruction_list
       (instruction
@@ -129,11 +122,9 @@ Start: /* block after label */
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (global_label_block
-    (global_label
-      (symbol))
+    (label)
     (block_comment)
     (block_comment)
     (instruction_list
@@ -142,8 +133,7 @@ Start: /* block after label */
         (block_comment)
         (operand_list
           (register))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)))))
@@ -161,14 +151,11 @@ Start:
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (block_comment)
   (global_label_block
-    (global_label
-      (symbol))
+    (label)
     (instruction_list
       (instruction
         (instruction_name)))
-    (inline_comment
-      (comment))))
+    (inline_comment)))

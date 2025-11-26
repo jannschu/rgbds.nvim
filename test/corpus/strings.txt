@@ -19,32 +19,28 @@ ASSERT "a" !== "b"
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (directive_keyword)
       (string_literal)))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (directive_keyword)
       (string_literal)))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (directive_keyword)
       (raw_string_literal)))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)

@@ -1,8 +1,34 @@
 ================================================================================
+Labels: basic usage
+================================================================================
+
+Global:
+GlobalExport::
+.loop:
+Global.local:
+: nop
+
+---
+
+(source_file
+  (global_label_block
+    (label))
+  (global_label_block
+    (label)
+    (local_label_block
+      (local))
+    (local_label_block
+      (local)
+      (anonymous_label)
+      (instruction_list
+        (instruction
+          (instruction_name))))))
+
+================================================================================
 Labels: global, local, anonymous
 ================================================================================
 
-; Global labels
+;; Global labels
 Start:
 MainLoop::
 
@@ -10,7 +36,8 @@ MainLoop::
 Init:
 .loop:
     jr .loop
-.done
+.mid nop
+.done ; no : !
 
 AnotherGlobal:
 AnotherGlobal.local:
@@ -24,66 +51,55 @@ AnotherGlobal.local:
 ---
 
 (source_file
-  (inline_comment
-    (comment))
-  (label_definition
-    (global_label
-      (identifier)))
-  (label_definition
-    (global_label
-      (identifier)))
-  (inline_comment
-    (comment))
-  (label_definition
-    (global_label
-      (identifier)))
-  (label_definition
-    (local_label
-      (local_identifier)))
-  (instruction_line
-    (instruction_list
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (local_identifier))))))
-  (label_definition
-    (local_label
-      (local_identifier)))
-  (label_definition
-    (global_label
-      (identifier)))
-  (label_definition
-    (local_label
-      (local_identifier)))
-  (inline_comment
-    (comment))
-  (instruction_line
-    (instruction_list
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (anonymous_label_ref))))))
-  (instruction_line
-    (label_definition
-      (anonymous_label))
-    (instruction_list
-      (instruction
-        (identifier))))
-  (instruction_line
-    (instruction_list
-      (instruction
-        (identifier)
-        (operand_list
-          (operand
-            (anonymous_label_ref))))))
-  (instruction_line
-    (label_definition
-      (anonymous_label))
-    (instruction_list
-      (instruction
-        (identifier)))))
+  (inline_comment)
+  (global_label_block
+    (label))
+  (global_label_block
+    (label)
+    (inline_comment))
+  (global_label_block
+    (label)
+    (local_label_block
+      (local)
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (expression
+              (local))))))
+    (local_label_block
+      (local)
+      (instruction_list
+        (instruction
+          (instruction_name))))
+    (local_label_block
+      (local)
+      (inline_comment)))
+  (global_label_block
+    (label)
+    (local_label_block
+      (local)
+      (inline_comment)
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (expression
+              (anonymous_label_ref)))))
+      (anonymous_label)
+      (instruction_list
+        (instruction
+          (instruction_name)))
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (expression
+              (anonymous_label_ref)))))
+      (anonymous_label)
+      (instruction_list
+        (instruction
+          (instruction_name))))))
 
 ================================================================================
 Labels: whitespace sensitivity (no space vs space before colon)
@@ -106,22 +122,18 @@ Loop::
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (global_label_block
-    (global_label
-      name: (symbol))
+    name: (label)
     (instruction_list
       (instruction
         opcode: (instruction_name))))
   (global_label_block
-    (global_label
-      name: (symbol))
+    name: (label)
     (instruction_list
       (instruction
         opcode: (instruction_name)))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (anonymous_label)
     (instruction_list
       (instruction
@@ -133,8 +145,7 @@ Loop::
           (register)
           (expression
             (number_literal)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (instruction_list
       (instruction
         opcode: (instruction_name))
@@ -157,22 +168,16 @@ DEF x = #load + #LOAD
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (global_label_block
-    (global_label
-      (raw_identifier)))
+    (raw_identifier))
   (global_label_block
-    (global_label
-      (raw_identifier)))
+    (raw_identifier))
   (global_label_block
-    (global_label
-      (raw_identifier)))
+    (raw_identifier))
   (global_label_block
-    (global_label
-      (raw_identifier))
-    (inline_comment
-      (comment))
+    (raw_identifier)
+    (inline_comment)
     (directive
       (def_directive
         (directive_keyword)

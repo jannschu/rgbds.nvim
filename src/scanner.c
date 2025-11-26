@@ -6,7 +6,14 @@
 #include <string.h>
 
 enum TokenType {
-  SYMBOL_TOKEN,               // Identifier immediately followed by : (no space)
+  // Non-reserved identifier, neither a label nor a keyword.
+  //
+  // Special case: . and .. _are_ treated as SYMBOL_TOKEN
+  SYMBOL_TOKEN,
+  // Global label ends with ':', e.g. "Start:"
+  LABEL_TOKEN,
+  // Local label with a dot, e.g. "Start.loop" or ".loop"
+  LOCAL_TOKEN,
 };
 
 typedef struct {
@@ -34,9 +41,9 @@ void tree_sitter_rgbasm_external_scanner_deserialize(void *payload, const char *
 }
 
 static inline bool is_identifier_char(int32_t c) {
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
-         (c >= '0' && c <= '9') || c == '_' || c == '#' || 
-         c == '@' || c == '$';
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+         (c >= '0' && c <= '9') || c == '_' || c == '.' ||
+         c == '#' || c == '@' || c == '$';
 }
 
 static inline void advance(TSLexer *lexer) {
@@ -56,16 +63,52 @@ static inline bool is_newline(int32_t c) {
 }
 
 static inline bool is_identifier_start(int32_t c) {
-  // Do NOT treat '.' or '#' as identifier starts here:
-  // - '.' is reserved for local identifiers (.loop, .string) handled by internal lexer
-  // - '#' is reserved for raw identifiers (#load, #IF, etc.) handled by internal lexer
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  // Include '.' for local labels (.loop, .local, etc.)
+  // '#' is still reserved for raw identifiers handled by internal lexer
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+         c == '_' || c == '.';
+}
+
+static inline bool matches_any(const char *input, size_t len, const char *const *words, size_t count) {
+  for (size_t i = 0; i < count; i++) {
+    const char *kw = words[i];
+    const size_t kw_len = strlen(kw);
+    if (kw_len > len) {
+      break;
+    }
+    if (strlen(kw) == len && memcmp(input, kw, len) == 0) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // Reserved directive / block keywords that should NOT be treated as
 // generic identifiers by the external scanner. These are handled by
 // the main grammar (directive_keyword, def_directive, if_block, etc.).
 static bool is_reserved_word(const char *name, size_t len) {
+  static const char *const constants[] = {
+    "@",
+    ".",
+    "..",
+    "_RS",
+    "_NARG",
+    "__SCOPE__",
+    "__UTC_DAY__",
+    "__UTC_HOUR__",
+    "__RGBDS_RC__",
+    "__UTC_YEAR__",
+    "__UTC_MONTH__",
+    "__UTC_MINUTE__",
+    "__UTC_SECOND__",
+    "__RGBDS_MAJOR__",
+    "__RGBDS_MINOR__",
+    "__RGBDS_PATCH__",
+    "__ISO_8601_UTC__",
+    "__RGBDS_VERSION__",
+    "__ISO_8601_LOCAL__",
+  };
+
   static const char *const reserved[] = {
     // 1
     "A", "B", "C", "D", "E", "H", "L", "Z", 
@@ -108,6 +151,10 @@ static bool is_reserved_word(const char *name, size_t len) {
     "SETCHARMAP", "STATIC_ASSERT"
   };
 
+  if (matches_any(name, len, constants, sizeof(constants) / sizeof(constants[0]))) {
+    return true;
+  }
+
   const size_t count = sizeof(reserved) / sizeof(reserved[0]);
   const size_t max_len = strlen(reserved[count - 1]);
   if (len == 0 || len >= max_len) {
@@ -118,42 +165,44 @@ static bool is_reserved_word(const char *name, size_t len) {
   for (size_t i = 0; i < len; i++) {
     char c = name[i];
     c = (c >= 'a' && c <= 'z') ? (char)(c - 32) : c;
-    if (c < 'A' || c > 'Z') {
+    if ((c < 'A' || c > 'Z') && (c < '0' || c > '9')) {
       return false;
     }
     upper[i] = c;
   }
   upper[len] = '\0';
 
-  for (size_t i = 0; i < count; i++) {
-    const char *kw = reserved[i];
-    const size_t kw_len = strlen(kw);
-    if (kw_len > len) {
-      break;
-    }
-    if (strlen(kw) == len && memcmp(upper, kw, len) == 0) {
-      return true;
-    }
-  }
 
-  return false;
+  return matches_any(upper, len, reserved, count);
 }
 
-// Scan an identifier and determine if it's a non-reserved symbol
-static bool scan_symbol_token(TSLexer *lexer, const bool *valid_symbols) {
+// Scan an identifier and classify as SYMBOL, LOCAL, or LABEL
+static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   // Must start with valid identifier start character
   if (!is_identifier_start(lexer->lookahead)) {
     return false;
   }
 
+  // Track dot state
+  bool has_dot = (lexer->lookahead == '.');
+  bool all_dots = (lexer->lookahead == '.');
+
   // Scan the identifier into a buffer
   size_t len = 0;
   char name[32];
   while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
-    name[len++] = (char)lexer->lookahead;
+    char c = (char)lexer->lookahead;
+    name[len++] = c;
+
+    if (c == '.') {
+      has_dot = true;
+    } else {
+      all_dots = false;
+    }
+
     advance(lexer);
   }
-  
+
   name[len] = '\0';
 
   // Check what follows the identifier
@@ -162,119 +211,68 @@ static bool scan_symbol_token(TSLexer *lexer, const bool *valid_symbols) {
   // Mark end of token BEFORE checking conditions
   lexer->mark_end(lexer);
 
-  // Don't produce SYMBOL_TOKEN if:
+  // Don't produce token if:
   // 1. Followed by '{' - this is part of interpolatable_identifier
   // 2. It's a reserved word - let grammar's keyword rules handle it
   if (next == '{' || is_reserved_word(name, len)) {
     return false;
   }
 
-  // Not reserved, not interpolation - produce SYMBOL_TOKEN
-  lexer->result_symbol = SYMBOL_TOKEN;
-  return true;
-}
-
-static void skip_line_comment(TSLexer *lexer) {
-  while (!lexer->eof(lexer) && !is_newline(lexer->lookahead)) {
-    advance(lexer);
-  }
-}
-
-static void skip_block_comment(TSLexer *lexer) {
-  int depth = 1;
-  advance(lexer); // consume '*'
-  while (depth > 0 && !lexer->eof(lexer)) {
-    if (lexer->lookahead == '/' ) {
-      advance(lexer);
-      if (lexer->lookahead == '*') {
-        advance(lexer);
-        depth++;
-      }
-    } else if (lexer->lookahead == '*') {
-      advance(lexer);
-      if (lexer->lookahead == '/') {
-        advance(lexer);
-        depth--;
-      }
-    } else {
-      advance(lexer);
-    }
-  }
-}
-
-static void read_string_like(TSLexer *lexer, bool is_raw, bool *has_content) {
-  // Entered with lookahead at '"'; raw prefix (if any) has already been consumed
-  advance(lexer); // consume '"'
-
-  bool triple = false;
-  if (lexer->lookahead == '"' ) {
-    advance(lexer);
-    if (lexer->lookahead == '"') {
-      advance(lexer);
-      triple = true;
-    } else {
-      // Two quotes were part of content; mark as content so trimming keeps them
-      *has_content = true;
-      lexer->mark_end(lexer);
-    }
-  }
-
-  *has_content = true;
-  lexer->mark_end(lexer); // include opening quotes as content
-
-  while (!lexer->eof(lexer)) {
-    int32_t c = lexer->lookahead;
-
-    if (!triple && is_newline(c)) {
-      // Unterminated single-line string; stop to avoid crossing lines
-      return;
-    }
-
-    if (c == '"' ) {
-      advance(lexer);
-      if (triple) {
-        if (lexer->lookahead == '"' ) {
-          advance(lexer);
-          if (lexer->lookahead == '"') {
-            advance(lexer);
-            lexer->mark_end(lexer);
-            return;
-          }
+  // Classify token based on RGBDS rules
+  if (all_dots) {
+    // Special case: only '.' or '..' are valid SYMBOL_TOKEN (scope references)
+    if (len == 1 || len == 2) {
+      // Check if followed by ':' - if so, ONLY try LABEL
+      if (next == ':') {
+        if (valid_symbols[LABEL_TOKEN]) {
+          lexer->result_symbol = LABEL_TOKEN;
+          return true;
         }
-      } else {
-        lexer->mark_end(lexer);
-        return;
+        // Don't fall through to SYMBOL - ':' makes this a label context
+        return false;
       }
-      lexer->mark_end(lexer);
-      continue;
-    }
-
-    if (!is_raw && c == '\\') {
-      advance(lexer);
-      if (lexer->eof(lexer)) {
-        return;
+      // Not followed by ':', try SYMBOL
+      if (valid_symbols[SYMBOL_TOKEN]) {
+        lexer->result_symbol = SYMBOL_TOKEN;
+        return true;
       }
-      advance(lexer); // consume escaped char
-      lexer->mark_end(lexer);
-      continue;
     }
-
-    advance(lexer);
-    lexer->mark_end(lexer);
+    // Invalid: three or more dots, or not expected
+    return false;
+  } else if (has_dot) {
+    // Contains dot(s) → LOCAL_TOKEN (can be label without colon)
+    if (valid_symbols[LOCAL_TOKEN]) {
+      lexer->result_symbol = LOCAL_TOKEN;
+      return true;
+    }
+    return false;
+  } else if (next == ':' && valid_symbols[LABEL_TOKEN]) {
+    // No dots, followed by colon → LABEL_TOKEN (colon not included)
+    lexer->result_symbol = LABEL_TOKEN;
+    return true;
+  } else {
+    // No dots, not followed by colon → SYMBOL_TOKEN
+    if (valid_symbols[SYMBOL_TOKEN]) {
+      lexer->result_symbol = SYMBOL_TOKEN;
+      return true;
+    }
+    return false;
   }
 }
-
 
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
                                                const bool *valid_symbols) {
   ScannerState *state = (ScannerState *)payload;
-  
+
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
 
-  // Try to match symbol token
-  if (valid_symbols[SYMBOL_TOKEN] && scan_symbol_token(lexer, valid_symbols)) {
+  // Try to match identifier token (symbol, local, or label)
+  if ((valid_symbols[SYMBOL_TOKEN] ||
+       valid_symbols[LOCAL_TOKEN] ||
+       valid_symbols[LABEL_TOKEN]) &&
+      scan_identifier_token(lexer, valid_symbols)) {
     return true;
   }
 

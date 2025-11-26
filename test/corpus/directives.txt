@@ -19,8 +19,7 @@ RSSET 10
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (section_block
     (section_directive
       keyword: (directive_keyword)
@@ -31,37 +30,35 @@ RSSET 10
       keyword: (directive_keyword)
       (string_literal)
       (section_type))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (directive
-      (db_directive
+      (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal))
-          (primary_expression
+          (expression
             (number_literal)))))
     (directive
-      (dw_directive
+      (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (primary_expression
+          (expression
             (number_literal)))))
     (directive
-      (ds_directive
+      (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (primary_expression
+          (expression
             (number_literal)))))
-    (inline_comment
-      (comment))
+    (inline_comment)
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (identifier)
-        value: (primary_expression
+        name: (symbol)
+        value: (expression
           (number_literal))))
     (directive
       (simple_directive
@@ -70,7 +67,7 @@ RSSET 10
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (primary_expression
+          (expression
             (number_literal)))))))
 
 ================================================================================
@@ -93,8 +90,7 @@ DEF x ^= $FF
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -185,8 +181,7 @@ DEF str_word RW 2
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -205,8 +200,7 @@ DEF str_word RW 2
       (symbol)
       (expression
         (number_literal))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -221,16 +215,14 @@ DEF str_word RW 2
       (directive_keyword)
       (expression
         (number_literal))))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (directive_keyword)
       (string_literal)))
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -257,28 +249,27 @@ DEF struct_byte RB 1
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
-      (primary_expression
+      (symbol)
+      (expression
         (number_literal)))))
 
 ================================================================================
@@ -296,88 +287,90 @@ STATIC_ASSERT .end - .start < 100, "Section too big"
 ; Assertions with severity (comma required after severity level)
 ASSERT WARN, x != 0
 ASSERT FAIL, y > 0, "Must be positive"
-STATIC_ASSERT FATAL, z == 42
+STATIC_ASSERT FATAL, foo == 42
 
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)
-      (binary_expression
-        (primary_expression
-          (function_call
-            (identifier)
-            (primary_expression
-              (identifier))))
-        (primary_expression
-          (number_literal)))))
-  (directive
-    (assert_directive
-      (directive_keyword)
-      (binary_expression
-        (primary_expression
-          (function_call
-            (identifier)
-            (primary_expression
-              (identifier))))
-        (primary_expression
-          (number_literal)))))
-  (inline_comment
-    (comment))
-  (directive
-    (assert_directive
-      (directive_keyword)
-      (binary_expression
-        (primary_expression
-          (identifier))
-        (primary_expression
-          (number_literal)))
-      (string_literal)))
-  (directive
-    (assert_directive
-      (directive_keyword)
-      (binary_expression
+      (expression
         (binary_expression
-          (primary_expression
-            (local_identifier))
-          (primary_expression
-            (local_identifier)))
-        (primary_expression
-          (number_literal)))
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (symbol))))
+          (expression
+            (number_literal))))))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (expression
+        (binary_expression
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (symbol))))
+          (expression
+            (number_literal))))))
+  (inline_comment)
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (expression
+        (binary_expression
+          (expression
+            (symbol))
+          (expression
+            (number_literal))))
       (string_literal)))
-  (inline_comment
-    (comment))
   (directive
     (assert_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (identifier))
-        (primary_expression
-          (number_literal)))))
+      (expression
+        (binary_expression
+          (expression
+            (binary_expression
+              (expression
+                (local))
+              (expression
+                (local))))
+          (expression
+            (number_literal))))
+      (string_literal)))
+  (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (identifier))
-        (primary_expression
-          (number_literal)))
+      (expression
+        (binary_expression
+          (expression
+            (symbol))
+          (expression
+            (number_literal))))))
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (expression
+        (binary_expression
+          (expression
+            (symbol))
+          (expression
+            (number_literal))))
       (string_literal)))
   (directive
     (assert_directive
       (directive_keyword)
-      (identifier)
-      (binary_expression
-        (primary_expression
-          (identifier))
-        (primary_expression
-          (number_literal))))))
+      (expression
+        (binary_expression
+          (expression
+            (symbol))
+          (expression
+            (number_literal)))))))
 
 ================================================================================
 Directives: stack operations
@@ -401,34 +394,43 @@ POPC
 ---
 
 (source_file
-  (inline_comment
-    (comment))
-  (directive
-    (simple_directive
-      (directive_keyword)))
+  (inline_comment)
+  (instruction_list
+    (instruction
+      (instruction_name)
+      (operand_list
+        (expression
+          (symbol)))))
   (directive
     (opt_directive
       (directive_keyword)
       (opt_arg
         (raw_string))))
-  (directive
-    (simple_directive
-      (directive_keyword)))
-  (inline_comment
-    (comment))
-  (directive
-    (simple_directive
-      (directive_keyword)))
+  (instruction_list
+    (instruction
+      (instruction_name)
+      (operand_list
+        (expression
+          (symbol)))))
+  (inline_comment)
+  (instruction_list
+    (instruction
+      (instruction_name)
+      (operand_list
+        (expression
+          (symbol)))))
   (section_block
     (section_directive
       (directive_keyword)
       (string_literal)
       (section_type))
-    (directive
-      (simple_directive
-        (directive_keyword)))
-    (inline_comment
-      (comment))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (expression
+            (symbol)))))
+    (inline_comment)
     (directive
       (simple_directive
         (directive_keyword)))
@@ -436,8 +438,8 @@ POPC
       (simple_directive
         (directive_keyword)
         (argument_list
-          (primary_expression
-            (identifier)))))
+          (expression
+            (symbol)))))
     (directive
       (simple_directive
         (directive_keyword)))))
@@ -466,51 +468,61 @@ EXPORT SingleSymbol
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
-    (include_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)))
+      (argument_list
+        (expression
+          (string_literal)))))
   (directive
-    (include_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)))
-  (inline_comment
-    (comment))
+      (argument_list
+        (expression
+          (string_literal)))))
+  (inline_comment)
   (directive
-    (incbin_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)))
-  (inline_comment
-    (comment))
+      (argument_list
+        (expression
+          (string_literal)))))
+  (inline_comment)
   (directive
-    (incbin_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (expression
-        (number_literal))))
-  (inline_comment
-    (comment))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
+  (inline_comment)
   (directive
-    (incbin_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))))
-  (inline_comment
-    (comment))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal)))))
+  (inline_comment)
   (directive
     (export_directive
       (directive_keyword)
-      (symbol)
-      (symbol)))
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol)))))
   (directive
     (export_directive
       (directive_keyword)
-      (symbol))))
+      (argument_list
+        (expression
+          (symbol))))))
 
 ================================================================================
 Directives: SECTION with BANK option
@@ -787,52 +799,67 @@ POPC
 
 (source_file
   (directive
-    (charmap_directive
+    (simple_directive
       (directive_keyword)
-      (string_literal)
-      (primary_expression
-        (number_literal))))
-  (directive
-    (charmap_directive
-      (directive_keyword)
-      (string_literal)
-      (primary_expression
-        (number_literal))))
-  (directive
-    (charmap_directive
-      (directive_keyword)
-      (string_literal)
-      (primary_expression
-        (number_literal))
-      (primary_expression
-        (number_literal))))
-  (directive
-    (charmap_directive
-      (directive_keyword)
-      (string_literal)
-      (primary_expression
-        (number_literal))))
-  (directive
-    (charmap_directive
-      (directive_keyword)
-      (char_literal)
-      (primary_expression
-        (number_literal))))
-  (directive
-    (newcharmap_directive
-      (directive_keyword)
-      (identifier)
-      (identifier)))
-  (directive
-    (setcharmap_directive
-      (directive_keyword)
-      (identifier)))
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
-          (identifier)))))
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (char_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (symbol)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (symbol)))))
   (directive
     (simple_directive
       (directive_keyword))))
@@ -855,7 +882,7 @@ REDEF n EQU 1
       value: (expression
         (number_literal))))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol)
       assign_type: (directive_keyword)
@@ -879,7 +906,7 @@ REDEF s EQUS "{s}world!"
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol)
       assign_type: (directive_keyword)
@@ -904,7 +931,7 @@ REDEF x = 20
       value: (expression
         (number_literal))))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol)
       value: (expression
@@ -927,7 +954,7 @@ REDEF counter += 1
       value: (expression
         (number_literal))))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol)
       value: (expression
@@ -940,7 +967,7 @@ Directives: REDEF in macro (typical use case)
 MACRO add_item
     REDEF NUM_ITEMS EQU NUM_ITEMS + 1
     DEF CURRENT_ITEM EQU \1
-ENDM
+ENDM ;
 
 ---
 
@@ -984,7 +1011,7 @@ REDEF struct_b RW
       value: (expression
         (number_literal))))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol))))
 
@@ -1005,7 +1032,7 @@ REDEF {LIST_NAME} EQUS "["
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (interpolatable_identifier
         (interpolation
@@ -1031,7 +1058,7 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
       value: (expression
         (number_literal))))
   (directive
-    (redef_directive
+    (def_directive
       keyword: (directive_keyword)
       name: (symbol)
       assign_type: (directive_keyword)
@@ -1142,9 +1169,9 @@ SECTION "test", ROM0
 Section "test2", Rom0
 section "test3", rom0
 
-DEF X EQU 1
-Def Y Equ 2
-def z equ 3
+DEF varX EQU 1
+Def varY Equ 2
+def varz equ 3
 
 MACRO Test
 EndM
@@ -1160,78 +1187,80 @@ DB HiGh(100)
 ---
 
 (source_file
-  (inline_comment
-    (comment))
-  (directive
+  (inline_comment)
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
       (section_type)))
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
       (section_type)))
-  (directive
+  (section_block
     (section_directive
       keyword: (directive_keyword)
       (string_literal)
-      (section_type)))
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      assign_type: (directive_keyword)
-      value: (primary_expression
-        (number_literal))))
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      assign_type: (directive_keyword)
-      value: (primary_expression
-        (number_literal))))
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      assign_type: (directive_keyword)
-      value: (primary_expression
-        (number_literal))))
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    end: (directive_keyword))
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    end: (directive_keyword))
-  (inline_comment
-    (comment))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (function_call
-            function: (identifier)
-            (primary_expression
-              (number_literal)))))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (function_call
-            function: (identifier)
-            (primary_expression
-              (number_literal)))))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (function_call
-            function: (identifier)
-            (primary_expression
-              (number_literal))))))))
+      (section_type))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (symbol)
+        assign_type: (directive_keyword)
+        value: (expression
+          (number_literal))))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (symbol)
+        assign_type: (directive_keyword)
+        value: (expression
+          (number_literal))))
+    (directive
+      (def_directive
+        keyword: (directive_keyword)
+        name: (symbol)
+        assign_type: (directive_keyword)
+        value: (expression
+          (number_literal))))
+    (directive
+      (macro_definition
+        keyword: (directive_keyword)
+        (expression
+          (symbol))
+        end: (directive_keyword)))
+    (directive
+      (macro_definition
+        keyword: (directive_keyword)
+        (expression
+          (symbol))
+        end: (directive_keyword)))
+    (inline_comment)
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (number_literal)))))))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (number_literal)))))))
+    (directive
+      (simple_directive
+        keyword: (directive_keyword)
+        (argument_list
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (number_literal)))))))))
