@@ -107,10 +107,11 @@ module.exports = grammar({
 
     // ----- Section statements -----
 
-    // FIXME: move $._eol out of statements, into repeat/seq wrappers
     _statement: $ => choice(
       seq($.instruction_list, optional($.inline_comment), $._eol),
       seq($.directive, optional($.inline_comment), $._eol),
+      $.load_block,
+      $.pushs_block,
       seq($.block_comment, $._eol),
       $.anonymous_label,
       seq($.inline_comment, $._eol),
@@ -182,6 +183,27 @@ module.exports = grammar({
         ']'
       ),
 
+    load_block: $ =>
+      seq(
+        field('keyword', alias(ci('LOAD'), $.directive_keyword)),
+        $._section_args,
+        optional($.inline_comment),
+        $._eol,
+        repeat($._statement),
+        repeat($.global_label_block),
+        field('end', alias($._load_end, $.directive_keyword)),
+      ),
+
+    pushs_block: $ =>
+      seq(
+        field('keyword', alias(ci('PUSHS'), $.directive_keyword)),
+        $._section_args,
+        optional($.inline_comment),
+        $._eol,
+        repeat($._statement),
+        repeat($.global_label_block),
+        field('end', alias(ci('POPS'), $.directive_keyword)),
+      ),
 
     // ----- Directives -----
 
@@ -195,23 +217,9 @@ module.exports = grammar({
         $.if_block,
         $.for_block,
         $.macro_invocation,
-        $.load_block,
         $.macro_definition,
         $.rept_block,
         $.union_block,
-      ),
-
-    load_block: $ =>
-      seq(
-        field('keyword', alias(ci('LOAD'), $.directive_keyword)),
-        $._section_args,
-        optional($.inline_comment),
-        $._eol,
-        repeat($._statement),
-        repeat($.global_label_block),
-        // FIXME: implement the implicit end tokens
-        alias($._load_end, $.directive_keyword),
-        // alias(ci('ENDL'), $.directive_keyword),
       ),
 
     union_block: $ =>
@@ -340,8 +348,6 @@ module.exports = grammar({
           'RSRESET',
           // TODO: 'PUSHO',
           // TODO: 'POPO',
-          // TODO: 'PUSHS',
-          // TODO: 'POPS',
           'NEWCHARMAP',
           'SETCHARMAP',
           'CHARMAP',
@@ -386,7 +392,6 @@ module.exports = grammar({
       seq(
         // Macros must not be nested, so we do not allow \@ affix here
         $.symbol,
-        // FIXME: allow "raw mode"
         optional(
           alias(
             seq(

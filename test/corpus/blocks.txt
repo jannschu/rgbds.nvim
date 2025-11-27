@@ -501,14 +501,409 @@ LOAD "RAM code", WRAM0
       ld hl, .string
       ld de, $9864
       jr [[ db 1 ]]
-;  .string
-;      db "Hello"
+  .string
+      db "Hello"
 ENDL
-
-;LOAD "Another section", VRAM
-;nop
-;SECTION "Main", ROM0
 
 ---
 
-(foo)
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (load_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (global_label_block
+        (label)
+        (instruction_list
+          (instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (expression
+                (local)))))
+        (instruction_list
+          (instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (expression
+                (number_literal)))))
+        (instruction_list
+          (instruction
+            (instruction_name)
+            (operand_list
+              (expression
+                (fragment_literal
+                  (directive
+                    (simple_directive
+                      (directive_keyword)
+                      (argument_list
+                        (expression
+                          (number_literal))))))))))
+        (local_label_block
+          (local)
+          (directive
+            (simple_directive
+              (directive_keyword)
+              (argument_list
+                (expression
+                  (string_literal)))))))
+      (directive_keyword))))
+
+================================================================================
+Blocks: LOAD closed by SECTION
+================================================================================
+
+LOAD "Another section", VRAM
+nop
+SECTION "Main", ROM0
+
+---
+
+(source_file
+  (load_block
+    (directive_keyword)
+    (string_literal)
+    (section_type)
+    (instruction_list
+      (instruction
+        (instruction_name)))
+    (directive_keyword))
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))))
+
+================================================================================
+Blocks: PUSHS / POPS basic usage
+================================================================================
+
+SECTION "Code", ROM0
+PUSHS "Data", ROM0
+    db $FF
+POPS
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (pushs_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (number_literal)))))
+      (directive_keyword))))
+
+================================================================================
+Blocks: PUSHS with label blocks
+================================================================================
+
+SECTION "Main", ROM0
+PUSHS "Variables", WRAM0
+wAnswer: db
+wQuestion:
+    ds 10
+POPS
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (pushs_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (global_label_block
+        (label)
+        (directive
+          (simple_directive
+            (directive_keyword))))
+      (global_label_block
+        (label)
+        (directive
+          (simple_directive
+            (directive_keyword)
+            (argument_list
+              (expression
+                (number_literal))))))
+      (directive_keyword))))
+
+================================================================================
+Blocks: PUSHS with section attributes (BANK, ALIGN)
+================================================================================
+
+SECTION "Code", ROMX, BANK[1]
+PUSHS "Graphics", ROMX[$4000], BANK[2]
+    INCBIN "tiles.bin"
+POPS
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_options
+        (section_option
+          (bank_option
+            (expression
+              (number_literal))))))
+    (pushs_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (section_address
+        (expression
+          (number_literal)))
+      (section_options
+        (section_option
+          (bank_option
+            (expression
+              (number_literal)))))
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (string_literal)))))
+      (directive_keyword))))
+
+================================================================================
+Blocks: Nested PUSHS blocks
+================================================================================
+
+SECTION "A", ROM0
+PUSHS "B", ROM0
+    db 1
+    PUSHS "C", ROM0
+        db 2
+    POPS
+    db 3
+POPS
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (pushs_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (number_literal)))))
+      (pushs_block
+        (directive_keyword)
+        (string_literal)
+        (section_type)
+        (directive
+          (simple_directive
+            (directive_keyword)
+            (argument_list
+              (expression
+                (number_literal)))))
+        (directive_keyword))
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (number_literal)))))
+      (directive_keyword))))
+
+================================================================================
+Blocks: PUSHS outside of section (pushes no-section context)
+================================================================================
+
+PUSHS "Test", ROM0
+    db 1
+POPS
+
+---
+
+(source_file
+  (pushs_block
+    (directive_keyword)
+    (string_literal)
+    (section_type)
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (expression
+            (number_literal)))))
+    (directive_keyword)))
+
+================================================================================
+Blocks: PUSHS with instructions and local labels
+================================================================================
+
+SECTION "Code", ROM0
+Function:
+    ld a, 42
+    PUSHS "Variables", WRAM0
+wAnswer: db
+    POPS
+    ld [wAnswer], a
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (global_label_block
+      (label)
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (register)
+            (expression
+              (number_literal)))))
+      (pushs_block
+        (directive_keyword)
+        (string_literal)
+        (section_type)
+        (global_label_block
+          (label)
+          (directive
+            (simple_directive
+              (directive_keyword))))
+        (directive_keyword))
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (address
+              (expression
+                (symbol)))
+            (register)))))))
+
+================================================================================
+Blocks: PUSHS within LOAD block
+================================================================================
+
+SECTION "ROM CODE", ROM0
+    ds $80
+LOAD "RAM CODE", SRAM
+PUSHS "HRAM", HRAM
+    ds 1
+POPS
+ENDL
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (expression
+            (number_literal)))))
+    (load_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (pushs_block
+        (directive_keyword)
+        (string_literal)
+        (section_type)
+        (directive
+          (simple_directive
+            (directive_keyword)
+            (argument_list
+              (expression
+                (number_literal)))))
+        (directive_keyword))
+      (directive_keyword))))
+
+================================================================================
+Blocks: PUSHS with IF/REPT nested blocks
+================================================================================
+
+SECTION "Main", ROM0
+PUSHS "Data", ROM0
+    IF DEF(DEBUG)
+        db "Debug data"
+    ENDC
+    REPT 3
+        db 0
+    ENDR
+POPS
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (pushs_block
+      (directive_keyword)
+      (string_literal)
+      (section_type)
+      (directive
+        (if_block
+          (directive_keyword)
+          (expression
+            (function_call
+              (function_name)
+              (expression
+                (symbol))))
+          (directive
+            (simple_directive
+              (directive_keyword)
+              (argument_list
+                (expression
+                  (string_literal)))))
+          (directive_keyword)))
+      (directive
+        (rept_block
+          (directive_keyword)
+          (expression
+            (number_literal))
+          (directive
+            (simple_directive
+              (directive_keyword)
+              (argument_list
+                (expression
+                  (number_literal)))))
+          (directive_keyword)))
+      (directive_keyword))))
