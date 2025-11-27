@@ -342,6 +342,14 @@
           ]
         },
         {
+          "type": "SYMBOL",
+          "name": "load_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "pushs_block"
+        },
+        {
           "type": "SEQ",
           "members": [
             {
@@ -667,59 +675,6 @@
         }
       ]
     },
-    "directive": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "assert_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "def_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "export_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "opt_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "simple_directive"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "if_block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "for_block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "macro_invocation"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "load_block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "macro_definition"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "rept_block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "union_block"
-        }
-      ]
-    },
     "load_block": {
       "type": "SEQ",
       "members": [
@@ -771,13 +726,131 @@
           }
         },
         {
-          "type": "ALIAS",
+          "type": "FIELD",
+          "name": "end",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_load_end"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
+        }
+      ]
+    },
+    "pushs_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "keyword",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x70\\x50][\\x75\\x55][\\x73\\x53][\\x68\\x48][\\x73\\x53]"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_section_args"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "inline_comment"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_eol"
+        },
+        {
+          "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
-            "name": "_load_end"
-          },
-          "named": true,
-          "value": "directive_keyword"
+            "name": "_statement"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "global_label_block"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "end",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x70\\x50][\\x6f\\x4f][\\x70\\x50][\\x73\\x53]"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
+        }
+      ]
+    },
+    "directive": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "assert_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "def_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "export_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "opt_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "simple_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "if_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "macro_invocation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "macro_definition"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rept_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "union_block"
         }
       ]
     },

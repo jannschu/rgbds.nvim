@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_IDENTIFIER_LENGTH 256
+#define MAX_IDENTIFIER_LENGTH 255
 
 enum TokenType {
   // Non-reserved identifier, neither a label nor a keyword.
@@ -191,9 +191,10 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return false;
   }
 
+  lexer->mark_end(lexer);
+
   // Track dot state
   bool has_dot = false;
-
   // Scan the identifier into a buffer
   size_t len = 0;
   char name[MAX_IDENTIFIER_LENGTH + 1];
@@ -210,11 +211,7 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
 
     advance(lexer);
   }
-
   name[len] = '\0';
-
-  // Mark end of token BEFORE checking conditions
-  lexer->mark_end(lexer);
 
   // Check what follows the identifier
   int32_t next = lexer->lookahead;
@@ -224,16 +221,42 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return false;
   }
 
-  // If it is a reserved word let grammar rules handle it
+  bool marked = false;
+  if (next == '\\') {
+    // this will not become a LOAD_END_TOKEN
+    // and we do not want to include the potential \@
+    lexer->mark_end(lexer);
+    marked = true;
+  }
   const bool had_affix = swallow_uniqueness_affix(lexer);
   if (had_affix) {
     next = lexer->lookahead;
   }
-  // println("name: %s, affix: %d\n", name, had_affix);
   if (!had_affix && is_reserved_word(name, len)) {
+    // Check if we might scan a LOAD_END_TOKEN
+    if (valid_symbols[LOAD_END_TOKEN]) {
+      const size_t match = matches_any(
+        name,
+        len, 
+        (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 
+        4
+      );
+      if (match != -1) {
+        lexer->result_symbol = LOAD_END_TOKEN;
+        // if ENDL, consume it
+        if (match == 0) {
+          lexer->mark_end(lexer);
+        }
+        return true;
+      }
+    }
     return false;
   }
 
+  if (!marked) {
+    lexer->mark_end(lexer);
+  }
+  
   // Classify token based on RGBDS rules
   if (has_dot) {
     // Contains dot(s) → LOCAL_TOKEN (can be label without colon)
@@ -259,49 +282,6 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
-static inline bool scan_load_end_token(TSLexer *lexer) {
-  // Mark end position FIRST
-  lexer->mark_end(lexer);
-
-  // EOF
-  if (lexer->eof(lexer)) {
-    // FIXME: this clashes with EOL_TOKEN!
-    return true;
-  }
-
-  // try to read an symbol token
-  char name[MAX_IDENTIFIER_LENGTH + 1];
-  size_t len = 0;
-  while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
-    char c = (char)lexer->lookahead;
-    // if (!(c >= 'A' && c <= 'Z') && !(c >= 'a' && c <= 'z')) {
-    //   return false;
-    // }
-    name[len++] = c;
-    advance(lexer);
-  }
-
-  name[len] = '\0';
-
-  const size_t match = matches_any(
-    name,
-    len, 
-    (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 
-    4
-  );
-  if (match != -1) {
-    printf("Matched LOAD_END token: %s\n", name);
-    lexer->result_symbol = LOAD_END_TOKEN;
-    // if ENDL, consume
-    if (match == 0) {
-      lexer->mark_end(lexer);
-    }
-    return true;
-  }
-
-  return false;
-}
-
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
                                                const bool *valid_symbols) {
   if (valid_symbols[ERROR]) {
@@ -314,8 +294,6 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
 
   // Check for EOL token: newline, EOF, or before ]]
   if (valid_symbols[EOL_TOKEN]) {
-    TSLexer start_state = *lexer;
-
     // Mark end position FIRST (like tree-sitter-javascript automatic semicolon)
     lexer->mark_end(lexer);
     lexer->result_symbol = EOL_TOKEN;
@@ -326,11 +304,7 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
     // Before ']]' (fragment literal end)
     else if (lexer->lookahead == ']') {
       advance(lexer);
-      if (lexer->lookahead == ']') {
-        // Found ']]' - EOL is valid (marked before ']]')
-        return true;
-      }
-      // Not ']]' - not an EOL
+      return lexer->lookahead == ']';
     }
     // Physical newline
     else if (lexer->lookahead == '\r') {
@@ -340,31 +314,18 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
           lexer->mark_end(lexer);
           return true;
       }
+      return false;
     } else if (lexer->lookahead == '\n') {
       advance(lexer);
       lexer->mark_end(lexer);
       return true;
     }
-
-    // No EOL match
-    *lexer = start_state;
-  }
-
-  if (valid_symbols[LOAD_END_TOKEN]) {
-    TSLexer start_state = *lexer;
-
-    // Mark end position FIRST
-    if (scan_load_end_token(lexer)) {
-      return true;
-    }
-
-    // No LOAD_END match
-    *lexer = start_state;
   }
 
   // Try to match identifier token (symbol, local, or label)
   if ((valid_symbols[SYMBOL_TOKEN] ||
        valid_symbols[LOCAL_TOKEN] ||
+       valid_symbols[LOAD_END_TOKEN] ||
        valid_symbols[LABEL_TOKEN]) &&
       scan_identifier_token(lexer, valid_symbols)) {
     return true;
