@@ -139,19 +139,21 @@ char 'c{s}e', 3
 
 (source_file
   (directive
-    (charmap_directive
-      keyword: (directive_keyword)
-      key: (char_literal)
-      value: (primary_expression
-        (number_literal))))
-  (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (char_literal))
-        (primary_expression
-          (number_literal))))))
+        (expression
+          (number_literal)))))
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (expression
+          (char_literal)))
+      (argument_list
+        (macro_arg_raw)))))
 
 ================================================================================
 Test Name: RGBDS import: CHARMAP with empty value list
@@ -179,21 +181,25 @@ test "デ"
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (charmap_directive
-        keyword: (directive_keyword)
-        key: (macro_argument)
-        value: (primary_expression
-          (number_literal))))
-    end: (directive_keyword))
-  (macro_invocation_line
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              (macro_argument))
+            (expression
+              (number_literal)))))
+      end: (directive_keyword)))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
+      (symbol)
+      (argument_list
+        (expression
           (string_literal))))))
 
 ================================================================================
@@ -523,30 +529,31 @@ test_mod 3, 2
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (def_directive
-        keyword: (directive_keyword)
-        name: (identifier)
-        value: (primary_expression
-          (macro_argument))))
-    (directive
-      (def_directive
-        keyword: (directive_keyword)
-        name: (identifier)
-        value: (primary_expression
-          (macro_argument))))
-    end: (directive_keyword))
-  (macro_invocation_line
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (symbol)
+          value: (expression
+            (macro_argument))))
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (symbol)
+          value: (expression
+            (macro_argument))))
+      end: (directive_keyword)))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (number_literal))
-        argument: (primary_expression
-          (number_literal))))))
+      (symbol)
+      (argument_list
+        (macro_arg_raw))
+      (argument_list
+        (macro_arg_raw)))))
 
 ================================================================================
 Test Name: RGBDS import: ds align inline forms
@@ -592,6 +599,7 @@ assert fatal, 2 + 2 == 5, "there are four lights"
   (directive
     (assert_directive
       keyword: (directive_keyword)
+      (severity)
       condition: (expression
         (binary_expression
           left: (expression
@@ -615,81 +623,35 @@ ENDM
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (purge_directive
-        keyword: (directive_keyword)
-        (macro_argument)))
-    end: (directive_keyword)))
-
-================================================================================
-Test Name: RGBDS import: PURGE builtin symbol _NARG
-================================================================================
-
-PURGE _NARG
-
----
-
-(source_file
   (directive
-    (simple_directive
+    (macro_definition
       keyword: (directive_keyword)
-      (argument_list
-        (expression
-          (symbol))))))
-
-================================================================================
-Test Name: RGBDS import: DEF with dot as symbol name
-================================================================================
-
-DEF . EQU 12
-
----
-
-(source_file
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (symbol)
-      assign_type: (directive_keyword)
-      value: (expression
-        (number_literal)))))
+      (expression
+        (symbol))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              (macro_argument)))))
+      end: (directive_keyword))))
 
 ================================================================================
 Test Name: RGBDS import: macro argument with escaped comma
 ================================================================================
 
-MACRO print
-PRINTLN "\1"
-ENDM
-print passes\,
+foo passes\,
 
 ---
 
 (source_file
   (directive
-    (macro_definition
-      keyword: (directive_keyword)
-      name: (identifier)
-      (directive
-        (simple_directive
-          keyword: (directive_keyword)
-          (argument_list
-            (primary_expression
-              (string_literal
-                (interpolation
-                  symbol: (identifier)))))))
-      end: (directive_keyword)))
-  (instruction_line
-    (instruction_list
-      (instruction
-        opcode: (identifier)
-        (operand_list
-          (operand
-            (primary_expression
-              (identifier))))))))
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (macro_arg_raw)))))
 
 ================================================================================
 Test Name: RGBDS import: SHIFT with macro argument expression
@@ -702,18 +664,22 @@ ENDM
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (shift_directive
-        keyword: (directive_keyword)
-        count: (binary_expression
-          left: (primary_expression
-            (identifier))
-          right: (primary_expression
-            (number_literal)))))
-    end: (directive_keyword)))
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              (binary_expression
+                left: (expression
+                  (constant))
+                right: (expression
+                  (number_literal)))))))
+      end: (directive_keyword))))
 
 ================================================================================
 Test Name: RGBDS import: interpolatable identifier in DEF

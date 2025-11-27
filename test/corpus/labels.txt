@@ -25,6 +25,33 @@ Global.local:
           (instruction_name))))))
 
 ================================================================================
+Labels: Lonely
+================================================================================
+
+; lonely labels
+.bare
+.ok: ; no instruction + inline comment
+.done ; no colon + inline comment
+:
+: ; anonymous label + inline comment
+
+---
+
+(source_file
+  (inline_comment)
+  (local_label_block
+    (local))
+  (local_label_block
+    (local)
+    (inline_comment))
+  (local_label_block
+    (local)
+    (inline_comment)
+    (anonymous_label)
+    (anonymous_label)
+    (inline_comment)))
+
+================================================================================
 Labels: global, local, anonymous
 ================================================================================
 
@@ -37,7 +64,6 @@ Init:
 .loop:
     jr .loop
 .mid nop
-.done ; no : !
 
 AnotherGlobal:
 AnotherGlobal.local:
@@ -71,10 +97,7 @@ AnotherGlobal.local:
       (local)
       (instruction_list
         (instruction
-          (instruction_name))))
-    (local_label_block
-      (local)
-      (inline_comment)))
+          (instruction_name)))))
   (global_label_block
     (label)
     (local_label_block

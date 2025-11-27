@@ -2,73 +2,65 @@
 Macros: no arguments
 ================================================================================
 
-macrowithoutargs
-anothermacro
+foo_macro
+bar_macro
+spam_macro ;
 
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)))
-  (macro_invocation_line
+      (symbol)))
+  (directive
     (macro_invocation
-      name: (identifier))))
-
-================================================================================
-Macros: no arguments with comments
-================================================================================
-
-macrowithoutargs ; trailing comment
-testmacro ; another comment
-
----
-
-(source_file
-  (macro_invocation_line
+      (symbol)))
+  (directive
     (macro_invocation
-      name: (identifier)))
-  (inline_comment
-    (comment))
-  (macro_invocation_line
-    (macro_invocation
-      name: (identifier)))
-  (inline_comment
-    (comment)))
+      (symbol)
+      (inline_comment))))
 
 ================================================================================
 Macros: expression arguments with numbers
 ================================================================================
 
+parens (0)
 mymacro 1, 2, 3
-calcmacro (A + 1) << 2
+calcmacro (FOO + 1) << 2
 
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (number_literal))
-        argument: (primary_expression
-          (number_literal))
-        argument: (primary_expression
-          (number_literal)))))
-  (macro_invocation_line
+      (symbol)
+      (argument_list
+        (expression
+          (expression
+            (number_literal))))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (binary_expression
-          left: (primary_expression
-            (binary_expression
-              left: (primary_expression
-                (register))
-              right: (primary_expression
-                (number_literal))))
-          right: (primary_expression
-            (number_literal)))))))
+      (symbol)
+      (argument_list
+        (macro_arg_raw))
+      (argument_list
+        (macro_arg_raw)
+        (macro_arg_raw))))
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (expression
+          (binary_expression
+            left: (expression
+              (expression
+                (binary_expression
+                  left: (expression
+                    (symbol))
+                  right: (expression
+                    (number_literal)))))
+            right: (expression
+              (number_literal))))))))
 
 ================================================================================
 Macros: expression arguments with strings
@@ -80,19 +72,20 @@ print_pair "foo", "bar"
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
+      (symbol)
+      (argument_list
+        (expression
           (string_literal)))))
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (string_literal))
-        argument: (primary_expression
+      (symbol)
+      (argument_list
+        (expression
+          (string_literal)))
+      (argument_list
+        (expression
           (string_literal))))))
 
 ================================================================================
@@ -105,18 +98,28 @@ debug_macro some words here
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      arguments: (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw)))))
-  (macro_invocation_line
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol)))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      arguments: (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))))))
 
 ================================================================================
 Macros: RAW arguments with multiple words
@@ -128,18 +131,32 @@ log_macro Processing file data now
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      arguments: (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw)))))
-  (macro_invocation_line
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol)))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      arguments: (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))))))
 
 ================================================================================
 Macros: comment only (no RAW mode)
@@ -151,16 +168,14 @@ testmacro ; another comment
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)))
-  (inline_comment
-    (comment))
-  (macro_invocation_line
+      (symbol)
+      (inline_comment)))
+  (directive
     (macro_invocation
-      name: (identifier)))
-  (inline_comment
-    (comment)))
+      (symbol)
+      (inline_comment))))
 
 ================================================================================
 Macros: block comment then RAW text
@@ -172,18 +187,28 @@ debug_log /* note */ Processing data
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw)))))
-  (macro_invocation_line
+      (symbol)
+      (block_comment)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol)))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (symbol)
+      (block_comment)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))))))
 
 ================================================================================
 Macros: expression arguments with identifiers
@@ -197,20 +222,18 @@ simple_call A
 ---
 
 (source_file
-  (inline_comment
-    (comment))
-  (macro_invocation_line
+  (inline_comment)
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (identifier)))))
-  (macro_invocation_line
+      (symbol)
+      (argument_list
+        (expression
+          (symbol)))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (register))))))
+      (symbol)
+      (argument_list
+        (macro_arg_raw)))))
 
 ================================================================================
 Macros: mixed string and number arguments
@@ -222,21 +245,21 @@ format_msg "Hello", 123, "World"
 ---
 
 (source_file
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (string_literal))
-        argument: (primary_expression
-          (number_literal)))))
-  (macro_invocation_line
+      (symbol)
+      (argument_list
+        (expression
+          (string_literal)))
+      (argument_list
+        (macro_arg_raw))))
+  (directive
     (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (string_literal))
-        argument: (primary_expression
-          (number_literal))
-        argument: (primary_expression
+      (symbol)
+      (argument_list
+        (expression
+          (string_literal)))
+      (argument_list
+        (macro_arg_raw)
+        (expression
           (string_literal))))))

@@ -1,17 +1,33 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+function _top_level_statements($) {
+  return seq(
+    // we allow statements outside sections/labels
+    // to support macro generated code we can not see and files that are included
+    repeat($._statement),
+    repeat($.local_label_block),
+    repeat($.global_label_block),
+    repeat($.section_block),
+  );
+}
+
 module.exports = grammar({
   name: 'rgbasm',
 
   externals: $ => [
     $.symbol,
-    $.label,
-    $.local,
+    $._label,
+    $._local,
+    $._eol,  // End-of-line token: injected before ']]' and at EOF
+    $._load_end,
+    $._error_sentinel,
   ],
 
   conflicts: $ => [
     [$.condition_code, $.register],  // both accept 'C'
+    [$.macro_invocation],
+    [$.interpolatable_identifier],
   ],
 
   extras: $ => [
@@ -22,26 +38,35 @@ module.exports = grammar({
     /\\[ \t]*\r?\n/,  // Line continuation: backslash + optional spaces + newline
   ],
 
-  supertypes: $ => [
-    // $.expression,
-  ],
+  supertypes: $ => [],
 
-  // TODO: test inputs without trailing newlines
+  inline: $ => [],
 
   rules: {
-    source_file: $ => seq(
-      // we allow statements outside sections/labels
-      // to support macro generated code we can not see and files that are included
-      repeat($._statement),
-      repeat($.local_label_block),
-      repeat($.global_label_block),
-      repeat($.section_block),
+    source_file: $ => _top_level_statements($),
+
+
+    local: $ => seq(
+      $._local,
+      field('uniqueness_affix', optional(token.immediate('\\@'))),
+    ),
+
+    label: $ => seq(
+      $._label,
+      field('uniqueness_affix', optional(token.immediate('\\@'))),
+    ),
+
+    _symbol_with_opt_affix: $ => seq(
+      $.symbol,
+      field('uniqueness_affix', optional(token.immediate('\\@'))),
     ),
 
     // Section blocks: SECTION directive and its contents
     section_block: $ =>
       seq(
-        $._section_header,
+        $.section_directive,
+        optional($.inline_comment),
+        $._eol,
         repeat($._statement),
         repeat($.global_label_block),
         optional(seq(
@@ -49,12 +74,6 @@ module.exports = grammar({
         )),
       ),
 
-    _section_header: $ =>
-      seq(
-        $.section_directive,
-        optional($.inline_comment),
-        /\r?\n/
-      ),
 
     // Global label blocks: global label and its contents
     global_label_block: $ =>
@@ -88,25 +107,32 @@ module.exports = grammar({
 
     // ----- Section statements -----
 
+    // FIXME: move $._eol out of statements, into repeat/seq wrappers
     _statement: $ => choice(
-      seq($.instruction_list, optional($.inline_comment), /\r?\n/),
-      seq($.directive, optional($.inline_comment), /\r?\n/),
-      seq($.block_comment, /\r?\n/),
+      seq($.instruction_list, optional($.inline_comment), $._eol),
+      seq($.directive, optional($.inline_comment), $._eol),
+      seq($.block_comment, $._eol),
       $.anonymous_label,
-      // Blank line or line with only comment
-      seq(optional($.inline_comment), /\r?\n/),
+      seq($.inline_comment, $._eol),
+      // Empty line
+      /\s*\r?\n/,
     ),
 
     // ----- Section -----
 
-    section_directive: $ =>
+    _section_args: $ =>
       seq(
-        field('keyword', alias(ci('SECTION'), $.directive_keyword)),
         optional(field('fragment', alias(ci('FRAGMENT'), $.directive_keyword))),
         optional(field('union', alias(ci('UNION'), $.directive_keyword))),
         $.string_literal,
         optional(seq(',', $.section_type, optional($.section_address))),
         optional($.section_options)
+      ),
+
+    section_directive: $ =>
+      seq(
+        field('keyword', alias(ci('SECTION'), $.directive_keyword)),
+        $._section_args,
       ),
 
     section_type: $ =>
@@ -168,21 +194,57 @@ module.exports = grammar({
         $.simple_directive,
         $.if_block,
         $.for_block,
-        // TODO: $.macro_invocation_line
-        // TODO: $.load_block,
+        $.macro_invocation,
+        $.load_block,
         $.macro_definition,
         $.rept_block,
-        // TODO: $.union_block,
+        $.union_block,
+      ),
+
+    load_block: $ =>
+      seq(
+        field('keyword', alias(ci('LOAD'), $.directive_keyword)),
+        $._section_args,
+        optional($.inline_comment),
+        $._eol,
+        repeat($._statement),
+        repeat($.global_label_block),
+        // FIXME: implement the implicit end tokens
+        alias($._load_end, $.directive_keyword),
+        // alias(ci('ENDL'), $.directive_keyword),
+      ),
+
+    union_block: $ =>
+      seq(
+        field('keyword', alias(ci('UNION'), $.directive_keyword)),
+        optional($.inline_comment),
+        $._eol,
+        _top_level_statements($),
+        repeat($.nextu_block),
+        field('end', alias(ci('ENDU'), $.directive_keyword)),
+      ),
+
+    nextu_block: $ =>
+      seq(
+        field('keyword', alias(ci('NEXTU'), $.directive_keyword)),
+        optional($.inline_comment),
+        $._eol,
+        _top_level_statements($),
       ),
 
     def_directive: $ =>
       seq(
         field('keyword', alias(ci('DEF', 'REDEF'), $.directive_keyword)),
-        field('name', choice(
-          $.interpolatable_identifier,
-          $.raw_identifier,
-          $.symbol,
-        )),
+        field('name',
+          seq(
+            choice(
+              $.interpolatable_identifier,
+              $.raw_identifier,
+              $.symbol,
+            ),
+            field('uniqueness_affix', optional(token.immediate('\\@'))),
+          ),
+        ),
         choice(
           // String constant: DEF name EQUS "value" or #"value"
           seq(
@@ -207,12 +269,14 @@ module.exports = grammar({
         ),
       ),
 
+    severity: $ => ci('FAIL', 'WARN', 'FATAL'),
+
     assert_directive: $ =>
       prec.right(seq(
         field('keyword', alias(ci('ASSERT', 'STATIC_ASSERT'), $.directive_keyword)),
         // Optional severity with REQUIRED comma: ASSERT [severity,] condition [, message]
         optional(seq(
-          field('severity', ci('FAIL', 'WARN', 'FATAL')),
+          $.severity,
           ','
         )),
         field('condition', $.expression),
@@ -292,19 +356,49 @@ module.exports = grammar({
         repeat(seq(',', $.expression))
       ),
 
-
-    // ----- Macro definition -----
+    // ----- Macros -----
 
     macro_definition: $ =>
       seq(
         field('keyword', alias(ci('MACRO'), $.directive_keyword)),
         $.expression,
         optional($.inline_comment),
-        /\r?\n/,
-        repeat($._statement),
+        $._eol,
+        _top_level_statements($),
         field('end', alias(ci('ENDM'), $.directive_keyword)),
+      ),
+
+    macro_arg_raw: $ => token(choice(
+      /[a-zA-Z_\.@#*/\-\d]+/,
+      /\\./,
+    )),
+
+    _macro_arg: $ => repeat1(choice(
+      $._operand,
+      $.section_type,
+      $.section_option,
+      $.severity,
+      // Allow raw tokens that are not valid macro args
+      prec(-2, $.macro_arg_raw),
+    )),
+
+    macro_invocation: $ =>
+      seq(
+        // Macros must not be nested, so we do not allow \@ affix here
+        $.symbol,
+        // FIXME: allow "raw mode"
+        optional(
+          alias(
+            seq(
+              $._macro_arg,
+              repeat(seq(',', $._macro_arg))
+            ),
+            $.argument_list,
+          ),
+        ),
         optional($.inline_comment),
-        /\r?\n/,
+        // $._eol,
+        // /\r?\n/,
       ),
 
     // ----- Control structures -----
@@ -314,13 +408,11 @@ module.exports = grammar({
         field('keyword', alias(ci('IF'), $.directive_keyword)),
         field('condition', $.expression),
         optional($.inline_comment),
-        /\r?\n/,
-        repeat($._statement),
+        $._eol,
+        _top_level_statements($),
         repeat($.elif_clause),
         optional($.else_clause),
         field('end', alias(ci('ENDC'), $.directive_keyword)),
-        optional($.inline_comment),
-        /\r?\n/,
       ),
 
     elif_clause: $ =>
@@ -328,16 +420,16 @@ module.exports = grammar({
         alias(ci('ELIF'), $.directive_keyword),
         $.expression,
         optional($.inline_comment),
-        /\r\n?/,
-        repeat($._statement)
+        $._eol,
+        _top_level_statements($),
       ),
 
     else_clause: $ =>
       seq(
         alias(ci('ELSE'), $.directive_keyword),
         optional($.inline_comment),
-        /\r\n?/,
-        repeat($._statement),
+        $._eol,
+        _top_level_statements($),
       ),
 
     rept_block: $ =>
@@ -345,11 +437,9 @@ module.exports = grammar({
         field('keyword', alias(ci('REPT'), $.directive_keyword)),
         field('count', $.expression),
         optional($.inline_comment),
-        /\r?\n/,
-        repeat($._statement),
+        $._eol,
+        _top_level_statements($),
         field('end', alias(ci('ENDR'), $.directive_keyword)),
-        optional($.inline_comment),
-        /\r?\n/,
       ),
 
     for_block: $ =>
@@ -363,11 +453,9 @@ module.exports = grammar({
           ),
         ),
         optional($.inline_comment),
-        /\r?\n/,
-        repeat($._statement),
+        $._eol,
+        _top_level_statements($),
         alias(ci('ENDR'), $.directive_keyword),
-        optional($.inline_comment),
-        /\r?\n/,
       ),
 
     // ----- Comments -----
@@ -401,7 +489,6 @@ module.exports = grammar({
       )),
 
     // ----- Instructions -----
-
 
     instruction_name: $ => ci(
       'ADC',
@@ -503,7 +590,7 @@ module.exports = grammar({
         $.condition_code,
         $.address,
         $.register,
-        $.expression
+        $.expression,
       ),
 
     address: $ =>
@@ -513,7 +600,8 @@ module.exports = grammar({
           $.register,
           alias(ci('HLD', 'HL-', 'HLI', 'HL+'), $.register),
         ),
-        ']'),
+        ']',
+      ),
 
     // ----- Expressions -----
 
@@ -527,17 +615,23 @@ module.exports = grammar({
         $.graphics_literal,
         $.char_literal,
         $.anonymous_label_ref,
+        $.local,
         $.constant,
-        // TODO: $.fragment_literal,
-        // TODO: add interpolatable_identifier
-        // TODO: add macro paramater
+        $.fragment_literal,
+        $.interpolatable_identifier,
         $.macro_argument,
         $.macro_arguments_spread,
         $.function_call,
-        $.symbol,
-        $.local,
+        $._symbol_with_opt_affix,
         $.raw_identifier,
         seq('(', $.expression, ')')
+      ),
+
+    fragment_literal: $ =>
+      seq(
+        '[[',
+        _top_level_statements($),
+        ']]'
       ),
 
     function_name: $ => ci(

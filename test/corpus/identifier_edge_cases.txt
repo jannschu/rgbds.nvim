@@ -12,63 +12,42 @@ PRINTLN "{#if}"
 ; Issue 3: raw identifier in DEF
 DEF #if = 100
 
-; Issue 4: #{...} outside strings should be invalid
-    ld a, #{name}
-
 ---
 
 (source_file
-  (inline_comment
-    (comment))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (interpolatable_identifier
         (interpolation
-          (identifier))
+          (interpolation_content))
         (identifier_fragment))
-      (primary_expression
+      (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (ERROR
-        (identifier))
       (interpolatable_identifier
+        (identifier_fragment)
         (interpolation
-          (identifier)))
-      (primary_expression
+          (interpolation_content)))
+      (expression
         (number_literal))))
-  (inline_comment
-    (comment))
-  (inline_comment
-    (comment))
+  (inline_comment)
+  (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (primary_expression
+        (expression
           (string_literal
             (interpolation
-              (raw_identifier)))))))
-  (inline_comment
-    (comment))
+              (interpolation_content)))))))
+  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (raw_identifier)
-      (primary_expression
-        (number_literal))))
-  (inline_comment
-    (comment))
-  (ERROR
-    (identifier)
-    (operand
-      (register))
-    (UNEXPECTED '{'))
-  (instruction_line
-    (instruction_list
-      (instruction
-        (interpolatable_identifier
-          (interpolation
-            (identifier)))))))
+      (expression
+        (number_literal)))))

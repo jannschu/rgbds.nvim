@@ -20,6 +20,22 @@ SECTION "Test", ROM0
           (register))))))
 
 ================================================================================
+Instructions: Label EOF expression
+================================================================================
+
+PRINTLN .loop
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (local))))))
+
+================================================================================
 Instructions: arithmetic A with register, immediate, or memory
 ================================================================================
 
