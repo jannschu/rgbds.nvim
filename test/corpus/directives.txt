@@ -395,6 +395,28 @@ STATIC_ASSERT FATAL, foo == 42
             (number_literal)))))))
 
 ================================================================================
+Directives: PUSHS and SECTION
+================================================================================
+
+PUSHS "temp", WRAM0
+SECTION "temp", WRAM0
+POPS
+
+---
+
+(source_file
+  (pushs_block
+    (directive_keyword)
+    (string_literal)
+    (section_type)
+    (section_block
+      (section_directive
+        (directive_keyword)
+        (string_literal)
+        (section_type)))
+    (directive_keyword)))
+
+================================================================================
 Directives: stack operations
 ================================================================================
 
@@ -402,11 +424,6 @@ Directives: stack operations
 PUSHO
 OPT g.oOX
 POPO
-
-; Section stack
-PUSHS
-SECTION "temp", WRAM0
-POPS
 
 ; Charmap stack
 PUSHC
@@ -417,54 +434,29 @@ POPC
 
 (source_file
   (inline_comment)
-  (instruction_list
-    (instruction
-      (instruction_name)
-      (operand_list
-        (expression
-          (symbol)))))
+  (directive
+    (pusho_directive
+      (directive_keyword)))
   (directive
     (opt_directive
       (directive_keyword)
-      (opt_arg
-        (raw_string))))
-  (instruction_list
-    (instruction
-      (instruction_name)
-      (operand_list
-        (expression
-          (symbol)))))
+      (opt_arg)))
+  (directive
+    (popo_directive
+      (directive_keyword)))
   (inline_comment)
-  (instruction_list
-    (instruction
-      (instruction_name)
-      (operand_list
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
         (expression
           (symbol)))))
-  (section_block
-    (section_directive
-      (directive_keyword)
-      (string_literal)
-      (section_type))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (symbol)))))
-    (inline_comment)
-    (directive
-      (simple_directive
-        (directive_keyword)))
-    (directive
-      (simple_directive
-        (directive_keyword)
-        (argument_list
-          (expression
-            (symbol)))))
-    (directive
-      (simple_directive
-        (directive_keyword))))
+  (directive
+    (simple_directive
+      (directive_keyword))))
 
 ================================================================================
 Directives: INCLUDE, INCBIN, EXPORT
@@ -1498,3 +1490,114 @@ DS ALIGN[8, $00], $AA, $BB
         (number_literal))
       value: (expression
         (number_literal)))))
+
+================================================================================
+Directives: PUSHO and POPO basic
+================================================================================
+
+OPT b.X
+PUSHO
+OPT g.oOX
+POPO
+
+---
+
+(source_file
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (directive
+    (pusho_directive
+      keyword: (directive_keyword)))
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (directive
+    (popo_directive
+      keyword: (directive_keyword))))
+
+================================================================================
+Directives: PUSHO with options
+================================================================================
+
+PUSHO b.X, g.oOX
+POPO
+
+---
+
+(source_file
+  (directive
+    (pusho_directive
+      keyword: (directive_keyword)
+      (opt_arg)
+      (opt_arg)))
+  (directive
+    (popo_directive
+      keyword: (directive_keyword))))
+
+================================================================================
+Directives: PUSHO nested (stack-based)
+================================================================================
+
+OPT b.X
+PUSHO
+OPT g.oOX
+PUSHO
+OPT p123
+POPO
+POPO
+
+---
+
+(source_file
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (directive
+    (pusho_directive
+      keyword: (directive_keyword)))
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (directive
+    (pusho_directive
+      keyword: (directive_keyword)))
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (directive
+    (popo_directive
+      keyword: (directive_keyword)))
+  (directive
+    (popo_directive
+      keyword: (directive_keyword))))
+
+================================================================================
+Directives: PUSHO/POPO with inline comments
+================================================================================
+
+PUSHO ; save current options
+OPT b.X ; change to binary .X format
+POPO ; restore options
+
+---
+
+(source_file
+  (directive
+    (pusho_directive
+      keyword: (directive_keyword)))
+  (inline_comment)
+  (directive
+    (opt_directive
+      keyword: (directive_keyword)
+      (opt_arg)))
+  (inline_comment)
+  (directive
+    (popo_directive
+      keyword: (directive_keyword)))
+  (inline_comment))

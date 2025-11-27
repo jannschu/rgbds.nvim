@@ -203,6 +203,7 @@ module.exports = grammar({
         $._eol,
         repeat($._statement),
         repeat($.global_label_block),
+        repeat($.section_block),
         field('end', alias(ci('POPS'), $.directive_keyword)),
       ),
 
@@ -214,6 +215,8 @@ module.exports = grammar({
         $.def_directive,
         $.export_directive,
         $.opt_directive,
+        $.pusho_directive,
+        $.popo_directive,
         $.ds_directive,
         $.simple_directive,
         $.if_block,
@@ -326,6 +329,20 @@ module.exports = grammar({
         ))
       ),
 
+    pusho_directive: $ =>
+      seq(
+        field('keyword', alias(ci('PUSHO'), $.directive_keyword)),
+        optional(seq(
+          $.opt_arg,
+          repeat(seq(',', $.opt_arg))
+        ))
+      ),
+
+    popo_directive: $ =>
+      seq(
+        field('keyword', alias(ci('POPO'), $.directive_keyword))
+      ),
+
     // OPT arguments are parsed in RAW mode by RGBDS - similar to macro arguments
     // They can contain:
     // - Raw option text (g.oOX, Wdiv, Wtruncation=256, -Wall)
@@ -362,8 +379,6 @@ module.exports = grammar({
           'SHIFT',
           'RSSET',
           'RSRESET',
-          // TODO: 'PUSHO',
-          // TODO: 'POPO',
           'NEWCHARMAP',
           'SETCHARMAP',
           'CHARMAP',

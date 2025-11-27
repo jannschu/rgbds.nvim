@@ -440,6 +440,14 @@
           "named": true
         },
         {
+          "type": "popo_directive",
+          "named": true
+        },
+        {
+          "type": "pusho_directive",
+          "named": true
+        },
+        {
           "type": "rept_block",
           "named": true
         },
@@ -1536,6 +1544,48 @@
     }
   },
   {
+    "type": "popo_directive",
+    "named": true,
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "pusho_directive",
+    "named": true,
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "opt_arg",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "pushs_block",
     "named": true,
     "fields": {
@@ -1618,6 +1668,10 @@
         },
         {
           "type": "section_address",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         },
         {
