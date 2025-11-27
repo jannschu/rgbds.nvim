@@ -273,6 +273,26 @@ DEF struct_byte RB 1
         (number_literal)))))
 
 ================================================================================
+Directives: STATIC_ASSERT regression
+================================================================================
+
+STATIC_ASSERT FATAL, foo == 42
+
+---
+
+(source_file
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (severity)
+      (expression
+        (binary_expression
+          (expression
+            (symbol))
+          (expression
+            (number_literal)))))))
+
+================================================================================
 Directives: ASSERT and STATIC_ASSERT
 ================================================================================
 
@@ -300,9 +320,10 @@ STATIC_ASSERT FATAL, foo == 42
         (binary_expression
           (expression
             (function_call
-              (function_name)
-              (expression
-                (symbol))))
+              (high_low_function
+                (function_name)
+                (expression
+                  (symbol)))))
           (expression
             (number_literal))))))
   (directive
@@ -346,6 +367,7 @@ STATIC_ASSERT FATAL, foo == 42
   (directive
     (assert_directive
       (directive_keyword)
+      (severity)
       (expression
         (binary_expression
           (expression
@@ -355,6 +377,7 @@ STATIC_ASSERT FATAL, foo == 42
   (directive
     (assert_directive
       (directive_keyword)
+      (severity)
       (expression
         (binary_expression
           (expression
@@ -365,6 +388,7 @@ STATIC_ASSERT FATAL, foo == 42
   (directive
     (assert_directive
       (directive_keyword)
+      (severity)
       (expression
         (binary_expression
           (expression
@@ -868,7 +892,7 @@ POPC
 Directives: REDEF with EQU (redefine numeric constant)
 ================================================================================
 
-DEF n EQU 0
+DEF n\@ EQU 0
 REDEF n EQU 1
 
 ---
@@ -972,27 +996,31 @@ ENDM ;
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (redef_directive
-        keyword: (directive_keyword)
-        name: (identifier)
-        assign_type: (directive_keyword)
-        value: (binary_expression
-          left: (primary_expression
-            (identifier))
-          right: (primary_expression
-            (number_literal)))))
-    (directive
-      (def_directive
-        keyword: (directive_keyword)
-        name: (identifier)
-        assign_type: (directive_keyword)
-        value: (primary_expression
-          (macro_argument))))
-    end: (directive_keyword)))
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (symbol)
+          assign_type: (directive_keyword)
+          value: (expression
+            (binary_expression
+              left: (expression
+                (symbol))
+              right: (expression
+                (number_literal))))))
+      (directive
+        (def_directive
+          keyword: (directive_keyword)
+          name: (symbol)
+          assign_type: (directive_keyword)
+          value: (expression
+            (macro_argument))))
+      end: (directive_keyword)))
+  (inline_comment))
 
 ================================================================================
 Directives: REDEF with RS offset constants
@@ -1098,67 +1126,20 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
 Directives: Fragment literals
 ================================================================================
 
-[[
-    db 1
-    jp End
-]]
-
-DW [[ db 2 ]]
-
-[[
-    db 3
-    [[
-        db 4
-    ]]
-]]
+add [[ nop ]]
 
 ---
 
 (source_file
-  (directive
-    (fragment_literal
-      (directive
-        (simple_directive
-          keyword: (directive_keyword)
-          (argument_list
-            (primary_expression
-              (number_literal)))))
-      (instruction_line
-        (instruction_list
-          (instruction
-            opcode: (identifier)
-            (operand_list
-              (operand
-                (primary_expression
-                  (identifier)))))))))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
+  (instruction_list
+    (instruction
+      (instruction_name)
+      (operand_list
+        (expression
           (fragment_literal
-            (directive
-              (simple_directive
-                keyword: (directive_keyword)
-                (argument_list
-                  (primary_expression
-                    (number_literal))))))))))
-  (directive
-    (fragment_literal
-      (directive
-        (simple_directive
-          keyword: (directive_keyword)
-          (argument_list
-            (primary_expression
-              (number_literal)))))
-      (directive
-        (fragment_literal
-          (directive
-            (simple_directive
-              keyword: (directive_keyword)
-              (argument_list
-                (primary_expression
-                  (number_literal))))))))))
+            (instruction_list
+              (instruction
+                (instruction_name)))))))))
 
 ================================================================================
 Directives: Case-insensitivity (RGBASM spec compliance)
@@ -1243,24 +1224,27 @@ DB HiGh(100)
         (argument_list
           (expression
             (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))
+              (high_low_function
+                (function_name)
+                (expression
+                  (number_literal))))))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
           (expression
             (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))
+              (high_low_function
+                (function_name)
+                (expression
+                  (number_literal))))))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
           (expression
             (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))))
+              (high_low_function
+                (function_name)
+                (expression
+                  (number_literal))))))))))

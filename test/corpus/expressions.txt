@@ -363,9 +363,10 @@ DEF TZ = TZCOUNT(8)
       (symbol)
       (expression
         (function_call
-          (function_name)
-          (expression
-            (symbol))))))
+          (sizeof_function
+            (function_name)
+            (expression
+              (symbol)))))))
   (directive
     (def_directive
       (directive_keyword)

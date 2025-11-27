@@ -108,7 +108,7 @@ PURGE {prefix}
   (directive
     (def_directive
       (directive_keyword)
-      (identifier)
+      (symbol)
       (directive_keyword)
       (string_literal)))
   (directive
@@ -116,31 +116,35 @@ PURGE {prefix}
       (directive_keyword)
       (interpolatable_identifier
         (interpolation
-          (identifier)))
-      (primary_expression
+          (interpolation_content)))
+      (expression
         (number_literal))))
-  (for_block
-    (directive_keyword)
-    (interpolatable_identifier
-      (interpolation
-        (identifier)))
-    (primary_expression
-      (number_literal))
-    (primary_expression
-      (number_literal))
-    (directive
-      (simple_directive
-        (directive_keyword)
-        (argument_list
-          (primary_expression
-            (string_literal)))))
-    (directive_keyword))
   (directive
-    (purge_directive
+    (for_block
       (directive_keyword)
-      (interpolatable_identifier
-        (interpolation
-          (identifier))))))
+      (expression
+        (interpolatable_identifier
+          (interpolation
+            (interpolation_content))))
+      (expression
+        (number_literal))
+      (expression
+        (number_literal))
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (string_literal)))))
+      (directive_keyword)))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (interpolatable_identifier
+            (interpolation
+              (interpolation_content))))))))
 
 ================================================================================
 Interpolation: raw identifier inside braces
@@ -197,15 +201,14 @@ Invalid: # followed by { outside string
 ---
 
 (source_file
-  (instruction_line
-    (instruction_list
-      (instruction
-        opcode: (identifier)
-        (operand_list
-          (operand
-            (primary_expression
-              (register)))))))
-  (ERROR
-    (UNEXPECTED '{')
-    (ERROR)
-    (macro_argument_raw)))
+  (instruction_list
+    (instruction
+      opcode: (instruction_name)
+      (operand_list
+        (register)
+        (ERROR
+          (UNEXPECTED '{'))
+        (expression
+          (interpolatable_identifier
+            (interpolation
+              name: (interpolation_content))))))))

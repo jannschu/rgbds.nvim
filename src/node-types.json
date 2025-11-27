@@ -53,7 +53,35 @@
       "required": true,
       "types": [
         {
+          "type": "address",
+          "named": true
+        },
+        {
+          "type": "condition_code",
+          "named": true
+        },
+        {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "macro_arg_raw",
+          "named": true
+        },
+        {
+          "type": "register",
+          "named": true
+        },
+        {
+          "type": "section_option",
+          "named": true
+        },
+        {
+          "type": "section_type",
+          "named": true
+        },
+        {
+          "type": "severity",
           "named": true
         }
       ]
@@ -93,6 +121,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "severity",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -331,6 +369,16 @@
           }
         ]
       },
+      "uniqueness_affix": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "\\@",
+            "named": false
+          }
+        ]
+      },
       "value": {
         "multiple": false,
         "required": false,
@@ -380,7 +428,15 @@
           "named": true
         },
         {
+          "type": "load_block",
+          "named": true
+        },
+        {
           "type": "macro_definition",
+          "named": true
+        },
+        {
+          "type": "macro_invocation",
           "named": true
         },
         {
@@ -393,6 +449,10 @@
         },
         {
           "type": "simple_directive",
+          "named": true
+        },
+        {
+          "type": "union_block",
           "named": true
         }
       ]
@@ -427,11 +487,23 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -462,11 +534,23 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -505,7 +589,18 @@
   {
     "type": "expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "uniqueness_affix": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "\\@",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
@@ -531,11 +626,19 @@
           "named": true
         },
         {
+          "type": "fragment_literal",
+          "named": true
+        },
+        {
           "type": "function_call",
           "named": true
         },
         {
           "type": "graphics_literal",
+          "named": true
+        },
+        {
+          "type": "interpolatable_identifier",
           "named": true
         },
         {
@@ -606,11 +709,66 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "fragment_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -785,11 +943,23 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -902,6 +1072,124 @@
     }
   },
   {
+    "type": "label",
+    "named": true,
+    "fields": {
+      "uniqueness_affix": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "\\@",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "load_block",
+    "named": true,
+    "fields": {
+      "fragment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "union": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "directive_keyword",
+          "named": true
+        },
+        {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "section_address",
+          "named": true
+        },
+        {
+          "type": "section_options",
+          "named": true
+        },
+        {
+          "type": "section_type",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "local",
+    "named": true,
+    "fields": {
+      "uniqueness_affix": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "\\@",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "local_label_block",
     "named": true,
     "fields": {
@@ -989,11 +1277,100 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "macro_invocation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "argument_list",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "symbol",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "nextu_block",
+    "named": true,
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -1132,11 +1509,23 @@
           "named": true
         },
         {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
           "type": "inline_comment",
           "named": true
         },
         {
           "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -1299,6 +1688,11 @@
     "fields": {}
   },
   {
+    "type": "severity",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "simple_directive",
     "named": true,
     "fields": {
@@ -1443,6 +1837,74 @@
       "types": [
         {
           "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "union_block",
+    "named": true,
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "anonymous_label",
+          "named": true
+        },
+        {
+          "type": "block_comment",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "global_label_block",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "instruction_list",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
+          "type": "nextu_block",
+          "named": true
+        },
+        {
+          "type": "section_block",
           "named": true
         }
       ]
@@ -1609,7 +2071,19 @@
     "named": false
   },
   {
+    "type": "[[",
+    "named": false
+  },
+  {
+    "type": "\\@",
+    "named": false
+  },
+  {
     "type": "]",
+    "named": false
+  },
+  {
+    "type": "]]",
     "named": false
   },
   {
@@ -1659,11 +2133,7 @@
     "extra": true
   },
   {
-    "type": "label",
-    "named": true
-  },
-  {
-    "type": "local",
+    "type": "macro_arg_raw",
     "named": true
   },
   {

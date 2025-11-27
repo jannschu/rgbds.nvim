@@ -5,40 +5,41 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_IDENTIFIER_LENGTH 256
+
 enum TokenType {
   // Non-reserved identifier, neither a label nor a keyword.
-  //
-  // Special case: . and .. _are_ treated as SYMBOL_TOKEN
   SYMBOL_TOKEN,
   // Global label ends with ':', e.g. "Start:"
   LABEL_TOKEN,
   // Local label with a dot, e.g. "Start.loop" or ".loop"
   LOCAL_TOKEN,
+  // End of line: physical newline, or synthetic (before ']]', at EOF)
+  EOL_TOKEN,
+  // A LOAD _may_ be ended by each of the following:
+  // - <eof>
+  // - ENDL token
+  //
+  // Additionally, the following tokens of other section related blocks
+  // will also implicitly end a LOAD block:
+  // - ENDSECTION 
+  // - SECTION
+  // - POPS
+  LOAD_END_TOKEN,
+  ERROR,
 };
 
-typedef struct {
-  bool in_raw_macro_mode;
-} ScannerState;
-
 void *tree_sitter_rgbasm_external_scanner_create() {
-  ScannerState *state = calloc(1, sizeof(ScannerState));
-  return state;
+  return NULL;
 }
 
-void tree_sitter_rgbasm_external_scanner_destroy(void *payload) {
-  free(payload);
-}
+void tree_sitter_rgbasm_external_scanner_destroy(void *payload) { }
 
 unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload, char *buffer) {
-  ScannerState *state = (ScannerState *)payload;
-  buffer[0] = state->in_raw_macro_mode ? 1 : 0;
-  return 1;
+  return 0;
 }
 
-void tree_sitter_rgbasm_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
-  ScannerState *state = (ScannerState *)payload;
-  state->in_raw_macro_mode = (length > 0 && buffer[0] != 0);
-}
+void tree_sitter_rgbasm_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) { }
 
 static inline bool is_identifier_char(int32_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
@@ -58,10 +59,6 @@ static inline bool is_blank(int32_t c) {
   return c == ' ' || c == '\t';
 }
 
-static inline bool is_newline(int32_t c) {
-  return c == '\n' || c == '\r';
-}
-
 static inline bool is_identifier_start(int32_t c) {
   // Include '.' for local labels (.loop, .local, etc.)
   // '#' is still reserved for raw identifiers handled by internal lexer
@@ -69,7 +66,7 @@ static inline bool is_identifier_start(int32_t c) {
          c == '_' || c == '.';
 }
 
-static inline bool matches_any(const char *input, size_t len, const char *const *words, size_t count) {
+static inline int matches_any(const char *input, size_t len, const char *const *words, size_t count) {
   for (size_t i = 0; i < count; i++) {
     const char *kw = words[i];
     const size_t kw_len = strlen(kw);
@@ -77,10 +74,10 @@ static inline bool matches_any(const char *input, size_t len, const char *const 
       break;
     }
     if (strlen(kw) == len && memcmp(input, kw, len) == 0) {
-      return true;
+      return (int)i;
     }
   }
-  return false;
+  return -1;
 }
 
 // Reserved directive / block keywords that should NOT be treated as
@@ -151,21 +148,21 @@ static bool is_reserved_word(const char *name, size_t len) {
     "SETCHARMAP", "STATIC_ASSERT"
   };
 
-  if (matches_any(name, len, constants, sizeof(constants) / sizeof(constants[0]))) {
+  if (matches_any(name, len, constants, sizeof(constants) / sizeof(constants[0])) != -1) {
     return true;
   }
 
   const size_t count = sizeof(reserved) / sizeof(reserved[0]);
   const size_t max_len = strlen(reserved[count - 1]);
-  if (len == 0 || len >= max_len) {
+  if (len == 0 || len > max_len) {
     return false;
   }
 
-  char upper[32];
+  char upper[MAX_IDENTIFIER_LENGTH + 1];
   for (size_t i = 0; i < len; i++) {
     char c = name[i];
     c = (c >= 'a' && c <= 'z') ? (char)(c - 32) : c;
-    if ((c < 'A' || c > 'Z') && (c < '0' || c > '9')) {
+    if (!(c >= 'A' || c <= 'Z') && !(c >= '0' || c <= '9') && c != '_') {
       return false;
     }
     upper[i] = c;
@@ -173,7 +170,18 @@ static bool is_reserved_word(const char *name, size_t len) {
   upper[len] = '\0';
 
 
-  return matches_any(upper, len, reserved, count);
+  return matches_any(upper, len, reserved, count) != -1;
+}
+
+static inline bool swallow_uniqueness_affix(TSLexer *lexer) {
+  if (lexer->lookahead == '\\') {
+    advance(lexer);
+    if (lexer->lookahead == '@') {
+      advance(lexer);
+      return true;
+    }
+  }
+  return false;
 }
 
 // Scan an identifier and classify as SYMBOL, LOCAL, or LABEL
@@ -184,20 +192,20 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   }
 
   // Track dot state
-  bool has_dot = (lexer->lookahead == '.');
-  bool all_dots = (lexer->lookahead == '.');
+  bool has_dot = false;
 
   // Scan the identifier into a buffer
   size_t len = 0;
-  char name[32];
+  char name[MAX_IDENTIFIER_LENGTH + 1];
   while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
     char c = (char)lexer->lookahead;
     name[len++] = c;
 
     if (c == '.') {
+      if (has_dot) {
+        return false;
+      }
       has_dot = true;
-    } else {
-      all_dots = false;
     }
 
     advance(lexer);
@@ -205,51 +213,42 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
 
   name[len] = '\0';
 
-  // Check what follows the identifier
-  int32_t next = lexer->lookahead;
-
   // Mark end of token BEFORE checking conditions
   lexer->mark_end(lexer);
 
-  // Don't produce token if:
-  // 1. Followed by '{' - this is part of interpolatable_identifier
-  // 2. It's a reserved word - let grammar's keyword rules handle it
-  if (next == '{' || is_reserved_word(name, len)) {
+  // Check what follows the identifier
+  int32_t next = lexer->lookahead;
+
+  // If followed by '{'  this is part of interpolatable_identifier
+  if (next == '{') {
+    return false;
+  }
+
+  // If it is a reserved word let grammar rules handle it
+  const bool had_affix = swallow_uniqueness_affix(lexer);
+  if (had_affix) {
+    next = lexer->lookahead;
+  }
+  // println("name: %s, affix: %d\n", name, had_affix);
+  if (!had_affix && is_reserved_word(name, len)) {
     return false;
   }
 
   // Classify token based on RGBDS rules
-  if (all_dots) {
-    // Special case: only '.' or '..' are valid SYMBOL_TOKEN (scope references)
-    if (len == 1 || len == 2) {
-      // Check if followed by ':' - if so, ONLY try LABEL
-      if (next == ':') {
-        if (valid_symbols[LABEL_TOKEN]) {
-          lexer->result_symbol = LABEL_TOKEN;
-          return true;
-        }
-        // Don't fall through to SYMBOL - ':' makes this a label context
-        return false;
-      }
-      // Not followed by ':', try SYMBOL
-      if (valid_symbols[SYMBOL_TOKEN]) {
-        lexer->result_symbol = SYMBOL_TOKEN;
-        return true;
-      }
-    }
-    // Invalid: three or more dots, or not expected
-    return false;
-  } else if (has_dot) {
+  if (has_dot) {
     // Contains dot(s) → LOCAL_TOKEN (can be label without colon)
     if (valid_symbols[LOCAL_TOKEN]) {
       lexer->result_symbol = LOCAL_TOKEN;
       return true;
     }
     return false;
-  } else if (next == ':' && valid_symbols[LABEL_TOKEN]) {
-    // No dots, followed by colon → LABEL_TOKEN (colon not included)
-    lexer->result_symbol = LABEL_TOKEN;
-    return true;
+  } else if (next == ':') {
+    if (valid_symbols[LABEL_TOKEN]) {
+      // No dots, followed by colon → LABEL_TOKEN (colon not included)
+      lexer->result_symbol = LABEL_TOKEN;
+      return true;
+    }
+    return false;
   } else {
     // No dots, not followed by colon → SYMBOL_TOKEN
     if (valid_symbols[SYMBOL_TOKEN]) {
@@ -260,12 +259,107 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
+static inline bool scan_load_end_token(TSLexer *lexer) {
+  // Mark end position FIRST
+  lexer->mark_end(lexer);
+
+  // EOF
+  if (lexer->eof(lexer)) {
+    // FIXME: this clashes with EOL_TOKEN!
+    return true;
+  }
+
+  // try to read an symbol token
+  char name[MAX_IDENTIFIER_LENGTH + 1];
+  size_t len = 0;
+  while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
+    char c = (char)lexer->lookahead;
+    // if (!(c >= 'A' && c <= 'Z') && !(c >= 'a' && c <= 'z')) {
+    //   return false;
+    // }
+    name[len++] = c;
+    advance(lexer);
+  }
+
+  name[len] = '\0';
+
+  const size_t match = matches_any(
+    name,
+    len, 
+    (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 
+    4
+  );
+  if (match != -1) {
+    printf("Matched LOAD_END token: %s\n", name);
+    lexer->result_symbol = LOAD_END_TOKEN;
+    // if ENDL, consume
+    if (match == 0) {
+      lexer->mark_end(lexer);
+    }
+    return true;
+  }
+
+  return false;
+}
+
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
                                                const bool *valid_symbols) {
-  ScannerState *state = (ScannerState *)payload;
+  if (valid_symbols[ERROR]) {
+    return false;
+  }
 
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
+  }
+
+  // Check for EOL token: newline, EOF, or before ]]
+  if (valid_symbols[EOL_TOKEN]) {
+    TSLexer start_state = *lexer;
+
+    // Mark end position FIRST (like tree-sitter-javascript automatic semicolon)
+    lexer->mark_end(lexer);
+    lexer->result_symbol = EOL_TOKEN;
+
+    if (lexer->eof(lexer)) {
+      return false;
+    }
+    // Before ']]' (fragment literal end)
+    else if (lexer->lookahead == ']') {
+      advance(lexer);
+      if (lexer->lookahead == ']') {
+        // Found ']]' - EOL is valid (marked before ']]')
+        return true;
+      }
+      // Not ']]' - not an EOL
+    }
+    // Physical newline
+    else if (lexer->lookahead == '\r') {
+      advance(lexer);
+      if (lexer->lookahead == '\n') {
+          advance(lexer);
+          lexer->mark_end(lexer);
+          return true;
+      }
+    } else if (lexer->lookahead == '\n') {
+      advance(lexer);
+      lexer->mark_end(lexer);
+      return true;
+    }
+
+    // No EOL match
+    *lexer = start_state;
+  }
+
+  if (valid_symbols[LOAD_END_TOKEN]) {
+    TSLexer start_state = *lexer;
+
+    // Mark end position FIRST
+    if (scan_load_end_token(lexer)) {
+      return true;
+    }
+
+    // No LOAD_END match
+    *lexer = start_state;
   }
 
   // Try to match identifier token (symbol, local, or label)
