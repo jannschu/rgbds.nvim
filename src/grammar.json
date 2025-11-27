@@ -791,6 +791,13 @@
           }
         },
         {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "section_block"
+          }
+        },
+        {
           "type": "FIELD",
           "name": "end",
           "content": {
@@ -823,6 +830,14 @@
         {
           "type": "SYMBOL",
           "name": "opt_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "pusho_directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "popo_directive"
         },
         {
           "type": "SYMBOL",
@@ -1534,6 +1549,75 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "pusho_directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "keyword",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x70\\x50][\\x75\\x55][\\x73\\x53][\\x68\\x48][\\x6f\\x4f]"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "opt_arg"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "opt_arg"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "popo_directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "keyword",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x70\\x50][\\x6f\\x4f][\\x70\\x50][\\x6f\\x4f]"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
         }
       ]
     },
