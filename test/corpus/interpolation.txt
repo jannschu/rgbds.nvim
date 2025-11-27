@@ -205,7 +205,8 @@ Invalid: # followed by { outside string
     (instruction
       opcode: (instruction_name)
       (operand_list
-        (register)
+        (expression
+          (register))
         (ERROR
           (UNEXPECTED '{'))
         (expression

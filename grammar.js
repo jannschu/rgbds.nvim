@@ -28,6 +28,7 @@ module.exports = grammar({
     [$.condition_code, $.register],  // both accept 'C'
     [$.macro_invocation],
     [$.interpolatable_identifier],
+    [$.ds_directive],
   ],
 
   extras: $ => [
@@ -213,6 +214,7 @@ module.exports = grammar({
         $.def_directive,
         $.export_directive,
         $.opt_directive,
+        $.ds_directive,
         $.simple_directive,
         $.if_block,
         $.for_block,
@@ -220,6 +222,21 @@ module.exports = grammar({
         $.macro_definition,
         $.rept_block,
         $.union_block,
+      ),
+
+    ds_directive: $ =>
+      seq(
+        field('keyword', alias(ci('DS'), $.directive_keyword)),
+        choice(
+          seq(
+            $.align_option,
+            optional(seq(',', field('size', $.expression))),
+          ),
+          seq(
+            field('size', $.expression),
+          ),
+        ),
+        optional(seq(',', field('value', $.expression))),
       ),
 
     union_block: $ =>
@@ -309,19 +326,19 @@ module.exports = grammar({
         ))
       ),
 
-    // OPT arguments are parsed in RAW mode by RGBDS - they can be string literals
-    // or raw text that looks like identifiers but may contain special characters
+    // OPT arguments are parsed in RAW mode by RGBDS - similar to macro arguments
+    // They can contain:
+    // - Raw option text (g.oOX, Wdiv, Wtruncation=256, -Wall)
+    // - Macro argument references (\1, \<1>, \@)
+    // - Escaped commas (\,)
     opt_arg: $ =>
-      choice(
-        $.string_literal,
-        $.raw_string_literal,
-        alias($.opt_raw_string, $.raw_string)
-      ),
-
-    // Raw string token for OPT arguments - matches RGBDS LEXER_RAW behavior
-    // Excludes quotes to allow string_literal to match first
-    opt_raw_string: $ =>
-      token(/[^\s,"][^\r\n,]*/),
+      repeat1(choice(
+        // Raw option text: letters, digits, dots, dashes, etc.
+        // Excludes unescaped commas (those are argument separators)
+        token(/[a-zA-Z0-9_\.@#*/\-+=]+/),
+        // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
+        token(/\\./),
+      )),
 
     simple_directive: $ =>
       seq(
@@ -340,7 +357,6 @@ module.exports = grammar({
           'PRINTLN',
           'PURGE',
           'READFILE',
-          'DS',
           'DB',
           'DW',
           'SHIFT',
@@ -353,6 +369,9 @@ module.exports = grammar({
           'CHARMAP',
           'PUSHC',
           'POPC',
+          'WARN',
+          'FAIL',
+          'FATAL',
         )
       ),
 
@@ -374,10 +393,14 @@ module.exports = grammar({
         field('end', alias(ci('ENDM'), $.directive_keyword)),
       ),
 
-    macro_arg_raw: $ => token(choice(
-      /[a-zA-Z_\.@#*/\-\d]+/,
-      /\\./,
-    )),
+    macro_arg_raw: $ => token(
+      repeat1(choice(
+        // Raw option text: letters, digits, dots, dashes, etc.
+        // Excludes unescaped commas (those are argument separators)
+        /[a-zA-Z0-9_\.@#*/\-+=?]+/,
+        // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
+        /\\./,
+      ))),
 
     _macro_arg: $ => repeat1(choice(
       $._operand,
@@ -513,7 +536,9 @@ module.exports = grammar({
       'JP',
       'JR',
       'LD',
+      'LDD',
       'LDH',
+      'LDI',
       'NOP',
       'OR',
       'POP',
@@ -565,7 +590,7 @@ module.exports = grammar({
         '__RGBDS_VERSION__',
       ),
 
-    register: $ => ci('A', 'B', 'C', 'D', 'E', 'H', 'L', 'BC', 'DE', 'HL', 'SP'),
+    register: $ => ci('A', 'B', 'C', 'D', 'E', 'H', 'L', 'AF', 'BC', 'DE', 'HL', 'SP'),
 
     instruction_list: $ =>
       seq(
@@ -594,7 +619,6 @@ module.exports = grammar({
       choice(
         $.condition_code,
         $.address,
-        $.register,
         $.expression,
       ),
 
@@ -602,7 +626,6 @@ module.exports = grammar({
       seq('[',
         choice(
           $.expression,
-          $.register,
           alias(ci('HLD', 'HL-', 'HLI', 'HL+'), $.register),
         ),
         ']',
@@ -622,6 +645,7 @@ module.exports = grammar({
         $.anonymous_label_ref,
         $.local,
         $.constant,
+        $.register,
         $.fragment_literal,
         $.interpolatable_identifier,
         $.macro_argument,
@@ -657,9 +681,8 @@ module.exports = grammar({
       "DIV",
       "FLOOR",
       "FMOD",
-      // handled specially, accepts a register
-      // "HIGH",
-      // "LOW",
+      "HIGH",
+      "LOW",
       "INCHARMAP",
       "ISCONST",
       "LOG",
@@ -670,9 +693,8 @@ module.exports = grammar({
       "ROUND",
       "SECTION",
       "SIN",
-      // handled specially, accepts a register or section type
-      // "SIZEOF",
       // handled specially, accepts a section type
+      // "SIZEOF",
       // "STARTOF",
       "STRBYTE",
       "STRCAT",
@@ -688,12 +710,16 @@ module.exports = grammar({
       "STRUPR",
       "TAN",
       "TZCOUNT",
+      // deprecated
+      "CHARSUB",
+      "STRIN",
+      "STRRIN",
+      "STRSUB",
     ),
 
     function_call: $ =>
       choice(
         $.startof_function,
-        $.high_low_function,
         $.sizeof_function,
         seq(
           $.function_name,
@@ -716,19 +742,11 @@ module.exports = grammar({
         ')',
       ),
 
-    high_low_function: $ =>
-      seq(
-        alias(ci('HIGH', 'LOW'), $.function_name),
-        '(',
-        choice($.register, $.expression),
-        ')',
-      ),
-
     sizeof_function: $ =>
       seq(
         alias(ci('SIZEOF'), $.function_name),
         '(',
-        choice($.section_type, $.register, $.expression),
+        choice($.section_type, $.expression),
         ')',
       ),
 

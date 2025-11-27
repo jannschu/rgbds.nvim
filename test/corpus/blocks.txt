@@ -36,7 +36,8 @@ ENDM
         (instruction
           (instruction_name)
           (operand_list
-            (register)
+            (expression
+              (register))
             (expression
               (number_literal)))))
       (elif_clause
@@ -47,7 +48,8 @@ ENDM
           (instruction
             (instruction_name)
             (operand_list
-              (register)
+              (expression
+                (register))
               (expression
                 (number_literal))))))
       (else_clause
@@ -56,7 +58,8 @@ ENDM
           (instruction
             (instruction_name)
             (operand_list
-              (register)
+              (expression
+                (register))
               (expression
                 (number_literal))))))
       (directive_keyword)))
@@ -93,7 +96,8 @@ ENDM
         (instruction
           (instruction_name)
           (operand_list
-            (register)
+            (expression
+              (register))
             (expression
               (symbol)))))
       (directive_keyword))))
@@ -523,14 +527,16 @@ ENDL
           (instruction
             (instruction_name)
             (operand_list
-              (register)
+              (expression
+                (register))
               (expression
                 (local)))))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
-              (register)
+              (expression
+                (register))
               (expression
                 (number_literal)))))
         (instruction_list
@@ -640,11 +646,10 @@ POPS
       (global_label_block
         (label)
         (directive
-          (simple_directive
+          (ds_directive
             (directive_keyword)
-            (argument_list
-              (expression
-                (number_literal))))))
+            (expression
+              (number_literal)))))
       (directive_keyword))))
 
 ================================================================================
@@ -788,7 +793,8 @@ wAnswer: db
         (instruction
           (instruction_name)
           (operand_list
-            (register)
+            (expression
+              (register))
             (expression
               (number_literal)))))
       (pushs_block
@@ -808,7 +814,8 @@ wAnswer: db
             (address
               (expression
                 (symbol)))
-            (register)))))))
+            (expression
+              (register))))))))
 
 ================================================================================
 Blocks: PUSHS within LOAD block
@@ -831,11 +838,10 @@ ENDL
       (string_literal)
       (section_type))
     (directive
-      (simple_directive
+      (ds_directive
         (directive_keyword)
-        (argument_list
-          (expression
-            (number_literal)))))
+        (expression
+          (number_literal))))
     (load_block
       (directive_keyword)
       (string_literal)
@@ -845,11 +851,10 @@ ENDL
         (string_literal)
         (section_type)
         (directive
-          (simple_directive
+          (ds_directive
             (directive_keyword)
-            (argument_list
-              (expression
-                (number_literal)))))
+            (expression
+              (number_literal))))
         (directive_keyword))
       (directive_keyword))))
 

@@ -325,18 +325,17 @@ DEF TZ = TZCOUNT(8)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
-            (expression
-              (number_literal)))))))
+          (function_name)
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -344,10 +343,9 @@ DEF TZ = TZCOUNT(8)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
-            (expression
-              (number_literal)))))))
+          (function_name)
+          (expression
+            (number_literal))))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1153,8 +1151,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -1162,8 +1160,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -1171,8 +1169,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -1180,8 +1178,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -1189,17 +1187,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (symbol)
       (expression
         (function_call
-          (high_low_function
-            (function_name)
-            (register))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
+          (function_name)
+          (expression
             (register))))))
   (directive
     (def_directive
@@ -1209,7 +1198,18 @@ DEF FILE_PART = READFILE("data.bin", 256)
         (function_call
           (sizeof_function
             (function_name)
-            (register))))))
+            (expression
+              (register)))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
+            (expression
+              (register)))))))
   (inline_comment)
   (directive
     (def_directive

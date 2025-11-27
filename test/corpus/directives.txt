@@ -48,11 +48,10 @@ RSSET 10
           (expression
             (number_literal)))))
     (directive
-      (simple_directive
+      (ds_directive
         keyword: (directive_keyword)
-        (argument_list
-          (expression
-            (number_literal)))))
+        size: (expression
+          (number_literal))))
     (inline_comment)
     (directive
       (def_directive
@@ -320,10 +319,9 @@ STATIC_ASSERT FATAL, foo == 42
         (binary_expression
           (expression
             (function_call
-              (high_low_function
-                (function_name)
-                (expression
-                  (symbol)))))
+              (function_name)
+              (expression
+                (symbol))))
           (expression
             (number_literal))))))
   (directive
@@ -466,7 +464,7 @@ POPC
             (symbol)))))
     (directive
       (simple_directive
-        (directive_keyword)))))
+        (directive_keyword))))
 
 ================================================================================
 Directives: INCLUDE, INCBIN, EXPORT
@@ -1224,27 +1222,279 @@ DB HiGh(100)
         (argument_list
           (expression
             (function_call
-              (high_low_function
-                (function_name)
-                (expression
-                  (number_literal))))))))
+              (function_name)
+              (expression
+                (number_literal)))))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
           (expression
             (function_call
-              (high_low_function
-                (function_name)
-                (expression
-                  (number_literal))))))))
+              (function_name)
+              (expression
+                (number_literal)))))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
           (expression
             (function_call
-              (high_low_function
-                (function_name)
-                (expression
-                  (number_literal))))))))))
+              (function_name)
+              (expression
+                (number_literal)))))))))
+
+================================================================================
+Directives: OPT with escaped comma
+================================================================================
+
+; Escaped comma should be part of single argument
+OPT g.oOX\,Wdiv
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (opt_directive
+      (directive_keyword)
+      (opt_arg))))
+
+================================================================================
+Directives: OPT with macro arguments
+================================================================================
+
+MACRO set_options
+  OPT \1
+  OPT \1, \2
+ENDM
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (opt_directive
+          (directive_keyword)
+          (opt_arg)))
+      (directive
+        (opt_directive
+          (directive_keyword)
+          (opt_arg)
+          (opt_arg)))
+      (directive_keyword))))
+
+================================================================================
+Directives: OPT with complex arguments
+================================================================================
+
+OPT Wtruncation=256
+OPT -Wall
+OPT b.X, g.oOX, Wdiv
+
+---
+
+(source_file
+  (directive
+    (opt_directive
+      (directive_keyword)
+      (opt_arg)))
+  (directive
+    (opt_directive
+      (directive_keyword)
+      (opt_arg)))
+  (directive
+    (opt_directive
+      (directive_keyword)
+      (opt_arg)
+      (opt_arg)
+      (opt_arg))))
+
+================================================================================
+Directives: WARN
+================================================================================
+
+WARN "This is a warning message"
+WARN "Value is {d:x}"
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal
+            (interpolation
+              format: (format_spec)
+              name: (interpolation_content))))))))
+
+================================================================================
+Directives: FAIL
+================================================================================
+
+FAIL "This causes an error"
+FAIL "Invalid argument: {d:arg}"
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal
+            (interpolation
+              format: (format_spec)
+              name: (interpolation_content))))))))
+
+================================================================================
+Directives: FATAL
+================================================================================
+
+FATAL "Critical error - aborting"
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))))))
+
+================================================================================
+Directives: ALIGN
+================================================================================
+
+ALIGN 8
+ALIGN 4, 0
+ALIGN 8, $C2
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (number_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (number_literal))
+        (expression
+          (number_literal))))))
+
+================================================================================
+Directives: INCBIN
+================================================================================
+
+INCBIN "data.bin"
+INCBIN "tileset.bin", 0
+INCBIN "music.bin", 16, 256
+
+---
+
+(source_file
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal)))))
+  (directive
+    (simple_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal))))))
+
+================================================================================
+Directives: DS ALIGN
+================================================================================
+
+DS ALIGN[8]
+DS ALIGN[8, $C2]
+DS ALIGN[4], $FF
+DS ALIGN[8, $00], $AA, $BB
+
+---
+
+(source_file
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (expression
+          (number_literal)))))
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (expression
+          (number_literal))
+        offset: (expression
+          (number_literal)))))
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (expression
+          (number_literal)))
+      size: (expression
+        (number_literal))))
+  (directive
+    (ds_directive
+      keyword: (directive_keyword)
+      (align_option
+        align: (expression
+          (number_literal))
+        offset: (expression
+          (number_literal)))
+      size: (expression
+        (number_literal))
+      value: (expression
+        (number_literal)))))

@@ -165,7 +165,8 @@ Loop::
       (instruction
         opcode: (instruction_name)
         (operand_list
-          (register)
+          (expression
+            (register))
           (expression
             (number_literal)))))
     (inline_comment)

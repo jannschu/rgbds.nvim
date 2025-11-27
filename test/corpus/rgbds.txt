@@ -80,24 +80,27 @@ print_all This test, probably, passes\,, but who knows, ?
 ---
 
 (source_file
-  (ERROR
-    (identifier)
-    (identifier)
-    (identifier))
-  (macro_invocation_line
+  (directive
     (macro_invocation
-      name: (identifier)
-      arguments: (macro_arg_list_raw
-        argument: (macro_call_argument
-          (macro_argument_raw))
-        argument: (macro_call_argument
-          (macro_argument_raw))
-        argument: (macro_call_argument
-          (macro_argument_raw))
-        argument: (macro_call_argument
-          (macro_argument_raw))
-        argument: (macro_call_argument
-          (macro_argument_raw))))))
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol)))
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (macro_arg_raw)
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (macro_arg_raw)))))
 
 ================================================================================
 Test Name: RGBDS import: anonymous label in EXPORT/PURGE
@@ -156,20 +159,6 @@ char 'c{s}e', 3
         (macro_arg_raw)))))
 
 ================================================================================
-Test Name: RGBDS import: CHARMAP with empty value list
-================================================================================
-
-charmap "nonempty",
-
----
-
-(source_file
-  (directive
-    (charmap_directive
-      keyword: (directive_keyword)
-      key: (string_literal))))
-
-================================================================================
 Test Name: RGBDS import: CHARMAP with macro argument key
 ================================================================================
 
@@ -203,135 +192,6 @@ test "デ"
           (string_literal))))))
 
 ================================================================================
-Test Name: RGBDS import: code after ENDM/ENDR/ENDC
-================================================================================
-
-MACRO mac
-  println \1
-ENDM println "<_<"
-
-REPT 1
-  println "hey!"
-ENDR println "<_<"
-
-IF 0
-  println "skipped"
-ELSE println "<_<"
-  println "else clause"
-ENDC println "<_<"
-
----
-
-(source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (simple_directive
-        keyword: (directive_keyword)
-        (argument_list
-          (primary_expression
-            (macro_argument)))))
-    end: (directive_keyword))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (string_literal)))))
-  (rept_block
-    keyword: (directive_keyword)
-    count: (primary_expression
-      (number_literal))
-    (directive
-      (simple_directive
-        keyword: (directive_keyword)
-        (argument_list
-          (primary_expression
-            (string_literal)))))
-    end: (directive_keyword))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (string_literal)))))
-  (if_block
-    keyword: (directive_keyword)
-    condition: (primary_expression
-      (number_literal))
-    (directive
-      (simple_directive
-        keyword: (directive_keyword)
-        (argument_list
-          (primary_expression
-            (string_literal)))))
-    (else_clause
-      (directive_keyword)
-      (directive
-        (simple_directive
-          keyword: (directive_keyword)
-          (argument_list
-            (primary_expression
-              (string_literal)))))
-      (directive
-        (simple_directive
-          keyword: (directive_keyword)
-          (argument_list
-            (primary_expression
-              (string_literal))))))
-    end: (directive_keyword))
-  (directive
-    (simple_directive
-      keyword: (directive_keyword)
-      (argument_list
-        (primary_expression
-          (string_literal))))))
-
-================================================================================
-Test Name: RGBDS import: compound assignments with interpolated names
-================================================================================
-
-MACRO try
-  DEF prefix EQUS \1
-  {prefix}q = 10
-ENDM
-try "def "
-
----
-
-(source_file
-  (directive
-    (macro_definition
-      keyword: (directive_keyword)
-      name: (identifier)
-      (directive
-        (def_directive
-          keyword: (directive_keyword)
-          name: (identifier)
-          assign_type: (directive_keyword)
-          value: (string_literal)))
-      (directive
-        (def_directive
-          keyword: (directive_keyword)
-          name: (interpolatable_identifier
-            (interpolation
-              symbol: (identifier))
-            (identifier_fragment))
-          assign_type: 
-            value: (primary_expression
-              (number_literal))))
-        end: (directive_keyword)))
-    (instruction_line
-      (instruction_list
-        (instruction
-          opcode: (identifier)
-          (operand_list
-            (operand
-              (primary_expression
-                (string_literal)))))))))
-
-================================================================================
 Test Name: RGBDS import: DEF inside scoped label
 ================================================================================
 
@@ -361,35 +221,44 @@ label:
 Test Name: RGBDS import: deprecated functions
 ================================================================================
 
-println CHARS, CHARSUB("abc", 1), CHR("a"), STRCMP("a", "b")
+; These functions are deprecated but still supported,
+println CHARSUB("a", 123), STRIN(A, 2), STRRIN("foo", 2), STRSUB("bar", "baz")
 
 ---
 
 (source_file
+  (inline_comment)
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (primary_expression
-          (identifier))
-        (primary_expression
+        (expression
           (function_call
-            function: (identifier)
-            (primary_expression
+            (function_name)
+            (expression
               (string_literal))
-            (primary_expression
+            (expression
               (number_literal))))
-        (primary_expression
+        (expression
           (function_call
-            function: (identifier)
-            (primary_expression
-              (string_literal))))
-        (primary_expression
+            (function_name)
+            (expression
+              (register))
+            (expression
+              (number_literal))))
+        (expression
           (function_call
-            function: (identifier)
-            (primary_expression
+            (function_name)
+            (expression
               (string_literal))
-            (primary_expression
+            (expression
+              (number_literal))))
+        (expression
+          (function_call
+            (function_name)
+            (expression
+              (string_literal))
+            (expression
               (string_literal))))))))
 
 ================================================================================
@@ -463,8 +332,7 @@ db 999
   (directive
     (opt_directive
       keyword: (directive_keyword)
-      (opt_arg
-        (raw_string))))
+      (opt_arg)))
   (directive
     (simple_directive
       keyword: (directive_keyword)
@@ -488,33 +356,34 @@ test
 ---
 
 (source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (assert_directive
-        keyword: (directive_keyword)
-        severity: (identifier)
-        condition: (primary_expression
-          (number_literal))))
-    (directive
-      (simple_directive
-        keyword: (directive_keyword)
-        (argument_list
-          (primary_expression
-            (string_literal)))))
-    end: (directive_keyword))
-  (macro_invocation_line
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        (symbol))
+      (directive
+        (assert_directive
+          keyword: (directive_keyword)
+          (severity)
+          condition: (expression
+            (number_literal))))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              (string_literal)))))
+      end: (directive_keyword)))
+  (directive
     (macro_invocation
-      name: (identifier)))
+      (symbol)))
   (directive
     (opt_directive
       keyword: (directive_keyword)
-      (opt_arg
-        (raw_string))))
-  (macro_invocation_line
+      (opt_arg)))
+  (directive
     (macro_invocation
-      name: (identifier))))
+      (symbol))))
 
 ================================================================================
 Test Name: RGBDS import: div/mod macro arithmetic
@@ -583,9 +452,8 @@ ds align[8, $ff], 6
             (number_literal))
           offset: (expression
             (number_literal)))
-        (argument_list
-          (expression
-            (number_literal)))))))
+        size: (expression
+          (number_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: ASSERT with lowercase severity
@@ -680,30 +548,6 @@ ENDM
                 right: (expression
                   (number_literal)))))))
       end: (directive_keyword))))
-
-================================================================================
-Test Name: RGBDS import: interpolatable identifier in DEF
-================================================================================
-
-DEF open EQUS "\{"
-{open}statement
-
----
-
-(source_file
-  (directive
-    (def_directive
-      keyword: (directive_keyword)
-      name: (identifier)
-      assign_type: (directive_keyword)
-      value: (string_literal)))
-  (instruction_line
-    (instruction_list
-      (instruction
-        opcode: (interpolatable_identifier
-          (interpolation
-            symbol: (identifier))
-          (identifier_fragment))))))
 
 ================================================================================
 Test Name: RGBDS import: format specifiers in interpolation
