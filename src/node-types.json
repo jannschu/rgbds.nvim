@@ -69,10 +69,6 @@
           "named": true
         },
         {
-          "type": "register",
-          "named": true
-        },
-        {
           "type": "section_option",
           "named": true
         },
@@ -416,6 +412,10 @@
           "named": true
         },
         {
+          "type": "ds_directive",
+          "named": true
+        },
+        {
           "type": "export_directive",
           "named": true
         },
@@ -449,6 +449,52 @@
         },
         {
           "type": "union_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "ds_directive",
+    "named": true,
+    "fields": {
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "size": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "align_option",
           "named": true
         }
       ]
@@ -678,6 +724,10 @@
           "named": true
         },
         {
+          "type": "register",
+          "named": true
+        },
+        {
           "type": "string_literal",
           "named": true
         },
@@ -819,10 +869,6 @@
           "named": true
         },
         {
-          "type": "high_low_function",
-          "named": true
-        },
-        {
           "type": "sizeof_function",
           "named": true
         },
@@ -891,29 +937,6 @@
         },
         {
           "type": "pushs_block",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "high_low_function",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "function_name",
-          "named": true
-        },
-        {
-          "type": "register",
           "named": true
         }
       ]
@@ -1477,10 +1500,6 @@
         {
           "type": "expression",
           "named": true
-        },
-        {
-          "type": "register",
-          "named": true
         }
       ]
     }
@@ -1488,25 +1507,7 @@
   {
     "type": "opt_arg",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "raw_string",
-          "named": true
-        },
-        {
-          "type": "raw_string_literal",
-          "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "opt_directive",
@@ -1930,10 +1931,6 @@
         },
         {
           "type": "function_name",
-          "named": true
-        },
-        {
-          "type": "register",
           "named": true
         },
         {
@@ -2364,10 +2361,6 @@
   },
   {
     "type": "raw_identifier",
-    "named": true
-  },
-  {
-    "type": "raw_string",
     "named": true
   },
   {

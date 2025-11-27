@@ -96,6 +96,8 @@ Line continuation: in instruction
     (instruction
       (instruction_name)
       (operand_list
-        (register)
+        (expression
+          (register))
         (address
-          (register))))))
+          (expression
+            (register)))))))
