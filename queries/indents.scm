@@ -26,7 +26,7 @@
 
 ; Union separator branches
 (union_block
-  separator: (directive_keyword)) @indent.branch
+  (directive_keyword)) @indent.branch
 
 ; Parentheses and brackets alignment - use primary_expression for parentheses
 ; Note: RGBASM grammar handles parentheses within primary_expression
@@ -48,10 +48,10 @@
   end: (directive_keyword) @indent.end)
 
 (for_block
-  end: (directive_keyword) @indent.end)
+  (directive_keyword) @indent.end)
 
 (union_block
-  end: (directive_keyword) @indent.end)
+  (directive_keyword) @indent.end)
 
 (load_block
   end: (directive_keyword) @indent.end)
@@ -62,4 +62,4 @@
 ] @indent.zero
 
 ; Comments and subsequent labels preserve indentation
-(comment) @indent.auto
+(inline_comment) @indent.auto
