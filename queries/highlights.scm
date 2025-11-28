@@ -8,7 +8,7 @@
   "::")
 
 (global_label_block
-  name: (raw_identifier) @module.builtin
+  (raw_identifier) @module.builtin
   "::")
 
 ; Global label names - non-exported (:)
@@ -17,7 +17,7 @@
   ":")
 
 (global_label_block
-  name: (raw_identifier) @module
+  (raw_identifier) @module
   ":")
 
 ; Export marker :: for global labels
