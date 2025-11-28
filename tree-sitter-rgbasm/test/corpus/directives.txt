@@ -892,6 +892,7 @@ REDEF n EQU 1
     (def_directive
       keyword: (directive_keyword)
       name: (symbol)
+      name: (uniqueness_affix)
       assign_type: (directive_keyword)
       value: (expression
         (number_literal))))
@@ -990,7 +991,7 @@ ENDM ;
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (def_directive
           keyword: (directive_keyword)
@@ -999,7 +1000,7 @@ ENDM ;
           value: (expression
             (binary_expression
               left: (expression
-                (symbol))
+                name: (symbol))
               right: (expression
                 (number_literal))))))
       (directive
@@ -1083,7 +1084,7 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
       value: (expression
         (binary_expression
           left: (expression
-            (symbol))
+            name: (symbol))
           right: (expression
             (number_literal)))))))
 
@@ -1199,13 +1200,13 @@ DB HiGh(100)
       (macro_definition
         keyword: (directive_keyword)
         (expression
-          (symbol))
+          name: (symbol))
         end: (directive_keyword)))
     (directive
       (macro_definition
         keyword: (directive_keyword)
         (expression
-          (symbol))
+          name: (symbol))
         end: (directive_keyword)))
     (inline_comment)
     (directive

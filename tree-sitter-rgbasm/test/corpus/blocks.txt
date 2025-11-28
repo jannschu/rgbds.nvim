@@ -114,11 +114,14 @@ if\@:
 
 (source_file
   (global_label_block
-    (label)
+    name: (label)
+    (uniqueness_affix)
     (local_label_block
-      (local))
+      name: (local)
+      (uniqueness_affix))
     (local_label_block
-      (local))))
+      name: (local)
+      (uniqueness_affix))))
 
 ================================================================================
 Blocks: macro arguments and escapes
@@ -142,12 +145,12 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      (directive_keyword)
+      keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (instruction_list
         (instruction
-          (instruction_name)
+          opcode: (instruction_name)
           (operand_list
             (expression
               (macro_argument))
@@ -156,43 +159,49 @@ ENDM
                 (macro_argument))))))
       (directive
         (simple_directive
-          (directive_keyword)
+          keyword: (directive_keyword)
           (argument_list
             (expression
               (macro_argument))
             (expression
               (macro_argument)))))
       (global_label_block
-        (label)
+        name: (label)
+        (uniqueness_affix)
         (local_label_block
-          (local)
+          name: (local)
+          (uniqueness_affix)
           (directive
             (simple_directive
-              (directive_keyword)
+              keyword: (directive_keyword)
               (argument_list
                 (expression
-                  (symbol)))))
+                  name: (symbol)
+                  (uniqueness_affix)))))
           (directive
             (simple_directive
-              (directive_keyword)
+              keyword: (directive_keyword)
               (argument_list
                 (expression
-                  (local))))))
+                  name: (local)
+                  (uniqueness_affix))))))
         (local_label_block
-          (local)
+          name: (local)
+          (uniqueness_affix)
           (instruction_list
             (instruction
-              (instruction_name)
+              opcode: (instruction_name)
               (operand_list
                 (expression
-                  (local)))))
+                  name: (local)
+                  (uniqueness_affix)))))
           (directive
             (simple_directive
-              (directive_keyword)
+              keyword: (directive_keyword)
               (argument_list
                 (expression
                   (macro_arguments_spread)))))))
-      (directive_keyword))))
+      end: (directive_keyword))))
 
 ================================================================================
 Blocks: SHIFT directive in macros and REPT

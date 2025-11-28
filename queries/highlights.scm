@@ -40,6 +40,8 @@
 (global_label_block ":" @punctuation.delimiter)
 (local_label_block ":" @punctuation.delimiter)
 
+(uniqueness_affix) @punctuation.special
+
 ; ==============================================================================
 ; Instructions
 ; ==============================================================================

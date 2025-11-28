@@ -56,7 +56,7 @@ calcmacro (FOO + 1) << 2
               (expression
                 (binary_expression
                   left: (expression
-                    (symbol))
+                    name: (symbol))
                   right: (expression
                     (number_literal)))))
             right: (expression

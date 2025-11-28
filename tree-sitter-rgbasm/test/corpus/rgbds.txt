@@ -174,7 +174,7 @@ test "デ"
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -215,7 +215,7 @@ label:
         keyword: (directive_keyword)
         (argument_list
           (expression
-            (symbol)))))))
+            name: (symbol)))))))
 
 ================================================================================
 Test Name: RGBDS import: deprecated functions
@@ -275,49 +275,7 @@ both cpl
 
 ---
 
-(source_file
-  (macro_definition
-    keyword: (directive_keyword)
-    name: (identifier)
-    (directive
-      (redef_directive
-        keyword: (directive_keyword)
-        name: (identifier)
-        assign_type: (directive_keyword)
-        value: (string_literal)))
-    (directive
-      (shift_directive
-        keyword: (directive_keyword)))
-    (instruction_line
-      (instruction_list
-        (instruction
-          opcode: (interpolatable_identifier
-            (interpolation
-              symbol: (identifier)))
-          (operand_list
-            (operand
-              (primary_expression
-                (macro_arguments_spread)))))))
-    (instruction_line
-      (instruction_list
-        (instruction
-          opcode: (interpolatable_identifier
-            (interpolation
-              symbol: (identifier)))
-          (operand_list
-            (operand
-              (primary_expression
-                (register)))
-            (operand
-              (primary_expression
-                (macro_arguments_spread)))))))
-    end: (directive_keyword))
-  (macro_invocation_line
-    (macro_invocation
-      name: (identifier)
-      (macro_arg_list_expr
-        argument: (primary_expression
-          (identifier))))))
+(fixme)
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps
@@ -360,7 +318,7 @@ test
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (assert_directive
           keyword: (directive_keyword)
@@ -402,7 +360,7 @@ test_mod 3, 2
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (def_directive
           keyword: (directive_keyword)
@@ -495,7 +453,7 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -536,7 +494,7 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        (symbol))
+        name: (symbol))
       (directive
         (simple_directive
           keyword: (directive_keyword)

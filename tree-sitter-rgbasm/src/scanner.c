@@ -12,8 +12,10 @@ enum TokenType {
   SYMBOL_TOKEN,
   // Global label ends with ':', e.g. "Start:"
   LABEL_TOKEN,
-  // Local label with a dot, e.g. "Start.loop" or ".loop"
+  // Unqualified local label starting with dot, e.g. ".loop"
   LOCAL_TOKEN,
+  // Qualified local label with dot (not starting with dot), e.g. "Start.local"
+  QUALIFIED_LOCAL_TOKEN,
   // End of line: physical newline, or synthetic (before ']]', at EOF)
   EOL_TOKEN,
   // A LOAD _may_ be ended by each of the following:
@@ -22,7 +24,7 @@ enum TokenType {
   //
   // Additionally, the following tokens of other section related blocks
   // will also implicitly end a LOAD block:
-  // - ENDSECTION 
+  // - ENDSECTION
   // - SECTION
   // - POPS
   LOAD_END_TOKEN,
@@ -200,15 +202,16 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   char name[MAX_IDENTIFIER_LENGTH + 1];
   while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
     char c = (char)lexer->lookahead;
-    name[len++] = c;
-
     if (c == '.') {
       if (has_dot) {
         return false;
       }
+      if (len > 0 && is_reserved_word(name, len)) {
+        return false;
+      }
       has_dot = true;
     }
-
+    name[len++] = c;
     advance(lexer);
   }
   name[len] = '\0';
@@ -232,7 +235,13 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   if (had_affix) {
     next = lexer->lookahead;
   }
-  if (!had_affix && is_reserved_word(name, len)) {
+  if (
+    // presence of an affix means this is not a reserved word
+    !had_affix &&
+    // presence of dot means this is not a reserved word, they do not contain dots
+    !has_dot &&
+    is_reserved_word(name, len)
+  ) {
     // Check if we might scan a LOAD_END_TOKEN
     if (valid_symbols[LOAD_END_TOKEN]) {
       const size_t match = matches_any(
@@ -256,15 +265,28 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   if (!marked) {
     lexer->mark_end(lexer);
   }
-  
+
   // Classify token based on RGBDS rules
   if (has_dot) {
-    // Contains dot(s) → LOCAL_TOKEN (can be label without colon)
-    if (valid_symbols[LOCAL_TOKEN]) {
-      lexer->result_symbol = LOCAL_TOKEN;
-      return true;
+    if (name[len - 1] == '.') {
+      // Ends with dot → invalid
+      return false;
     }
-    return false;
+    if (name[0] == '.') {
+      // Starts with dot → LOCAL_TOKEN
+      if (valid_symbols[LOCAL_TOKEN]) {
+        lexer->result_symbol = LOCAL_TOKEN;
+        return true;
+      }
+      return false;
+    } else {
+      // Contains dot (not starting with) → QUALIFIED_LOCAL_TOKEN
+      if (valid_symbols[QUALIFIED_LOCAL_TOKEN]) {
+        lexer->result_symbol = QUALIFIED_LOCAL_TOKEN;
+        return true;
+      }
+      return false;
+    }
   } else if (next == ':') {
     if (valid_symbols[LABEL_TOKEN]) {
       // No dots, followed by colon → LABEL_TOKEN (colon not included)
@@ -322,9 +344,10 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  // Try to match identifier token (symbol, local, or label)
+  // Try to match identifier token (symbol, local, qualified local, or label)
   if ((valid_symbols[SYMBOL_TOKEN] ||
        valid_symbols[LOCAL_TOKEN] ||
+       valid_symbols[QUALIFIED_LOCAL_TOKEN] ||
        valid_symbols[LOAD_END_TOKEN] ||
        valid_symbols[LABEL_TOKEN]) &&
       scan_identifier_token(lexer, valid_symbols)) {

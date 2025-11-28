@@ -348,7 +348,7 @@
         ]
       },
       "name": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -362,16 +362,10 @@
           {
             "type": "symbol",
             "named": true
-          }
-        ]
-      },
-      "uniqueness_affix": {
-        "multiple": false,
-        "required": false,
-        "types": [
+          },
           {
-            "type": "\\@",
-            "named": false
+            "type": "uniqueness_affix",
+            "named": true
           }
         ]
       },
@@ -656,20 +650,24 @@
     "type": "expression",
     "named": true,
     "fields": {
-      "uniqueness_affix": {
+      "name": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "\\@",
-            "named": false
+            "type": "local",
+            "named": true
+          },
+          {
+            "type": "symbol",
+            "named": true
           }
         ]
       }
     },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "anonymous_label_ref",
@@ -708,10 +706,6 @@
           "named": true
         },
         {
-          "type": "local",
-          "named": true
-        },
-        {
           "type": "macro_argument",
           "named": true
         },
@@ -740,11 +734,11 @@
           "named": true
         },
         {
-          "type": "symbol",
+          "type": "unary_expression",
           "named": true
         },
         {
-          "type": "unary_expression",
+          "type": "uniqueness_affix",
           "named": true
         }
       ]
@@ -898,14 +892,10 @@
     "fields": {
       "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "label",
-            "named": true
-          },
-          {
-            "type": "raw_identifier",
             "named": true
           }
         ]
@@ -945,6 +935,14 @@
         },
         {
           "type": "pushs_block",
+          "named": true
+        },
+        {
+          "type": "raw_identifier",
+          "named": true
+        },
+        {
+          "type": "uniqueness_affix",
           "named": true
         }
       ]
@@ -1147,22 +1145,6 @@
     }
   },
   {
-    "type": "label",
-    "named": true,
-    "fields": {
-      "uniqueness_affix": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "\\@",
-            "named": false
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "load_block",
     "named": true,
     "fields": {
@@ -1240,6 +1222,10 @@
           "named": true
         },
         {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
           "type": "pushs_block",
           "named": true
         },
@@ -1263,28 +1249,12 @@
     }
   },
   {
-    "type": "local",
-    "named": true,
-    "fields": {
-      "uniqueness_affix": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "\\@",
-            "named": false
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "local_label_block",
     "named": true,
     "fields": {
       "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "local",
@@ -1323,6 +1293,10 @@
         },
         {
           "type": "pushs_block",
+          "named": true
+        },
+        {
+          "type": "uniqueness_affix",
           "named": true
         }
       ]
@@ -1663,6 +1637,10 @@
           "named": true
         },
         {
+          "type": "local_label_block",
+          "named": true
+        },
+        {
           "type": "pushs_block",
           "named": true
         },
@@ -1830,6 +1808,10 @@
         },
         {
           "type": "load_block",
+          "named": true
+        },
+        {
+          "type": "local_label_block",
           "named": true
         },
         {
@@ -2340,10 +2322,6 @@
     "named": false
   },
   {
-    "type": "\\@",
-    "named": false
-  },
-  {
     "type": "]",
     "named": false
   },
@@ -2398,6 +2376,14 @@
     "extra": true
   },
   {
+    "type": "label",
+    "named": true
+  },
+  {
+    "type": "local",
+    "named": true
+  },
+  {
     "type": "macro_arg_raw",
     "named": true
   },
@@ -2423,6 +2409,10 @@
   },
   {
     "type": "symbol",
+    "named": true
+  },
+  {
+    "type": "uniqueness_affix",
     "named": true
   },
   {

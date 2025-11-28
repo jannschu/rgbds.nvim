@@ -3,6 +3,7 @@ Labels: basic usage
 ================================================================================
 
 Global:
+foo.b:
 GlobalExport::
 .loop:
 Global.local:
@@ -12,7 +13,9 @@ Global.local:
 
 (source_file
   (global_label_block
-    (label))
+    (label)
+    (local_label_block
+      (local)))
   (global_label_block
     (label)
     (local_label_block
@@ -212,3 +215,323 @@ DEF x = #load + #LOAD
               (raw_identifier))
             (expression
               (raw_identifier))))))))
+
+================================================================================
+Qualified local labels: outside global scope with colon
+================================================================================
+
+SECTION "Main", ROM0
+Start.local:
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (instruction_list
+        (instruction
+          (instruction_name))))))
+
+================================================================================
+Qualified local labels: outside global scope without colon
+================================================================================
+
+SECTION "Main", ROM0
+Start.local
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (instruction_list
+        (instruction
+          (instruction_name))))))
+
+================================================================================
+Qualified local labels: mix with global and unqualified local
+================================================================================
+
+SECTION "Main", ROM0
+Global:
+.unqualified
+  nop
+Global.qualified:
+  nop
+Other.qualified
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (global_label_block
+      (label)
+      (local_label_block
+        (local)
+        (instruction_list
+          (instruction
+            (instruction_name))))
+      (local_label_block
+        (local)
+        (instruction_list
+          (instruction
+            (instruction_name))))
+      (local_label_block
+        (local)
+        (instruction_list
+          (instruction
+            (instruction_name)))))))
+
+================================================================================
+Qualified local labels: reference from different scope
+================================================================================
+
+SECTION "Main", ROM0
+Global1:
+.local:
+  nop
+Global2:
+  jr Global1.local
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (global_label_block
+      (label)
+      (local_label_block
+        (local)
+        (instruction_list
+          (instruction
+            (instruction_name)))))
+    (global_label_block
+      (label)
+      (instruction_list
+        (instruction
+          (instruction_name)
+          (operand_list
+            (expression
+              (local))))))))
+
+================================================================================
+Qualified local labels: can be exported
+================================================================================
+
+SECTION "Test", ROM0
+MyFunc.entry::
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (anonymous_label)
+      (instruction_list
+        (instruction
+          (instruction_name))))))
+
+================================================================================
+Qualified local labels: multiple in sequence
+================================================================================
+
+SECTION "Test", ROM0
+Table.header:
+  db "HDR"
+Table.data:
+  db 1, 2, 3
+Table.footer:
+  db "END"
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (string_literal))))))
+    (local_label_block
+      (local))
+    (local_label_block
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (number_literal))
+            (expression
+              (number_literal))
+            (expression
+              (number_literal))))))
+    (local_label_block
+      (local))
+    (local_label_block
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (string_literal))))))))
+
+================================================================================
+Qualified local labels: used in expressions and directives
+================================================================================
+
+SECTION "Data", ROM0
+Table.start:
+  db 1, 2, 3
+Table.end:
+DEF TABLE_SIZE = Table.end - Table.start
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (directive
+        (simple_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (number_literal))
+            (expression
+              (number_literal))
+            (expression
+              (number_literal))))))
+    (local_label_block
+      (local))
+    (local_label_block
+      (directive
+        (def_directive
+          (directive_keyword)
+          (symbol)
+          (expression
+            (binary_expression
+              (expression
+                (local))
+              (expression
+                (local)))))))))
+
+================================================================================
+Invalid: qualified local starting with keyword (EXPORT)
+================================================================================
+
+SECTION "Test", ROM0
+Export.foo:
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (ERROR
+      (directive
+        (export_directive
+          (directive_keyword)
+          (argument_list
+            (expression
+              (local))))))
+    (instruction_list
+      (instruction
+        (instruction_name)))))
+
+================================================================================
+Invalid: qualified local starting with keyword (INCLUDE)
+================================================================================
+
+SECTION "Test", ROM0
+Include.path
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (directive
+      (simple_directive
+        (directive_keyword)
+        (argument_list
+          (expression
+            (local)))))
+    (instruction_list
+      (instruction
+        (instruction_name)))))
+
+================================================================================
+Invalid: unqualified local after qualified local (no scope change)
+================================================================================
+
+SECTION "Test", ROM0
+Qualified.local:
+.foo
+  nop
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (local_label_block
+      (local))
+    (local_label_block
+      (ERROR
+        (identifier_fragment))
+      (instruction_list
+        (instruction
+          (instruction_name))))))

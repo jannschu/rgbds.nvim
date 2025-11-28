@@ -17,8 +17,9 @@ module.exports = grammar({
 
   externals: $ => [
     $.symbol,
-    $._label,
-    $._local,
+    $._label_token,
+    $._local_label,
+    $._qualified_local_label,
     $._eol,  // End-of-line token: injected before ']]' and at EOF
     $._load_end,
     $._error_sentinel,
@@ -46,20 +47,29 @@ module.exports = grammar({
   rules: {
     source_file: $ => _top_level_statements($),
 
+    // ----- Labels -----
 
-    local: $ => seq(
-      $._local,
-      field('uniqueness_affix', optional(token.immediate('\\@'))),
+    uniqueness_affix: $ => token.immediate('\\@'),
+
+    _any_local: $ =>
+      seq(
+        field('name', alias(choice($._qualified_local_label, $._local_label), $.local)),
+        optional($.uniqueness_affix),
+      ),
+
+    _qualified_local: $ => seq(
+      field('name', alias($._qualified_local_label, $.local)),
+      optional($.uniqueness_affix),
     ),
 
-    label: $ => seq(
-      $._label,
-      field('uniqueness_affix', optional(token.immediate('\\@'))),
+    _label: $ => seq(
+      field('name', alias($._label_token, $.label)),
+      optional($.uniqueness_affix),
     ),
 
     _symbol_with_opt_affix: $ => seq(
-      $.symbol,
-      field('uniqueness_affix', optional(token.immediate('\\@'))),
+      field('name', $.symbol),
+      optional($.uniqueness_affix),
     ),
 
     // Section blocks: SECTION directive and its contents
@@ -69,6 +79,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
+        repeat($._qualified_label_block),
         repeat($.global_label_block),
         optional(seq(
           alias(ci('ENDSECTION'), $.directive_keyword),
@@ -86,7 +97,7 @@ module.exports = grammar({
 
     _global_label_header: $ =>
       seq(
-        field('name', choice($.label, $.raw_identifier)),
+        choice($._label, $.raw_identifier),
         choice(token.immediate('::'), token.immediate(':')),
       ),
 
@@ -99,11 +110,24 @@ module.exports = grammar({
 
     _local_label_header: $ =>
       seq(
-        field('name', $.local),
+        // FIXME: are thre "raw" local labels?
+        $._any_local,
         optional(token.immediate(':')),
-        // TODO: remove, ensure tests cover this
-        // optional($.inline_comment),
-        // /\r?\n/
+      ),
+
+    _qualified_label_block: $ =>
+      alias(
+        seq(
+          $._qualified_label_header,
+          repeat($._statement)
+        ),
+        $.local_label_block,
+      ),
+
+    _qualified_label_header: $ =>
+      seq(
+        $._qualified_local,
+        optional(token.immediate(':')),
       ),
 
     // ----- Section statements -----
@@ -191,6 +215,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
+        repeat($._qualified_label_block),
         repeat($.global_label_block),
         field('end', alias($._load_end, $.directive_keyword)),
       ),
@@ -202,6 +227,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
+        repeat($._qualified_label_block),
         repeat($.global_label_block),
         repeat($.section_block),
         field('end', alias(ci('POPS'), $.directive_keyword)),
@@ -270,7 +296,7 @@ module.exports = grammar({
               $.raw_identifier,
               $.symbol,
             ),
-            field('uniqueness_affix', optional(token.immediate('\\@'))),
+            optional($.uniqueness_affix),
           ),
         ),
         choice(
@@ -658,7 +684,7 @@ module.exports = grammar({
         $.graphics_literal,
         $.char_literal,
         $.anonymous_label_ref,
-        $.local,
+        $._any_local,
         $.constant,
         $.register,
         $.fragment_literal,
