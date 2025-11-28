@@ -246,6 +246,7 @@ module.exports = grammar({
         $.pusho_directive,
         $.popo_directive,
         $.ds_directive,
+        $.include_directive,
         $.simple_directive,
         $.if_block,
         $.for_block,
@@ -403,13 +404,19 @@ module.exports = grammar({
         optional($.argument_list),
       ),
 
+    include_directive: $ =>
+      seq(
+        field('keyword', alias(ci('INCLUDE'), $.directive_keyword)),
+        optional(alias('?', $.quiet)),
+        optional($.argument_list),
+      ),
+
     directive_keyword: $ =>
       token(
         ci(
           'ALIGN',
           'BREAK',
           'INCBIN',
-          'INCLUDE',
           'PRINT',
           'PRINTLN',
           'PURGE',
@@ -441,6 +448,7 @@ module.exports = grammar({
     macro_definition: $ =>
       seq(
         field('keyword', alias(ci('MACRO'), $.directive_keyword)),
+        optional(alias('?', $.quiet)),
         $.expression,
         optional($.inline_comment),
         $._eol,
@@ -470,6 +478,7 @@ module.exports = grammar({
       seq(
         // Macros must not be nested, so we do not allow \@ affix here
         $.symbol,
+        optional(alias(token.immediate('?'), $.quiet)),
         optional(
           alias(
             seq(
@@ -518,6 +527,7 @@ module.exports = grammar({
     rept_block: $ =>
       seq(
         field('keyword', alias(ci('REPT'), $.directive_keyword)),
+        optional(alias('?', $.quiet)),
         field('count', $.expression),
         optional($.inline_comment),
         $._eol,
@@ -528,6 +538,7 @@ module.exports = grammar({
     for_block: $ =>
       seq(
         alias(ci('FOR'), $.directive_keyword),
+        optional(alias('?', $.quiet)),
         $.expression,
         repeat(
           seq(

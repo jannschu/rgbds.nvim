@@ -1,0 +1,253 @@
+================================================================================
+Quiet macro definition
+================================================================================
+
+MACRO? test_macro
+    nop
+ENDM
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (quiet)
+      (expression
+        name: (symbol))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword))))
+
+================================================================================
+Quiet macro definition with space
+================================================================================
+
+MACRO ? test_macro
+    nop
+ENDM
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (quiet)
+      (expression
+        name: (symbol))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword))))
+
+================================================================================
+Quiet macro invocation (no space)
+================================================================================
+
+SECTION "Test", ROM0
+    my_macro?
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type))
+    (directive
+      (macro_invocation
+        (symbol)
+        (quiet)))))
+
+================================================================================
+Macro invocation with space before ? (treated as macro argument)
+================================================================================
+
+SECTION "Test", ROM0
+    my_macro ?
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type))
+    (directive
+      (macro_invocation
+        (symbol)
+        (argument_list
+          (macro_arg_raw))))))
+
+================================================================================
+Quiet REPT block
+================================================================================
+
+REPT? 3
+    nop
+ENDR
+
+---
+
+(source_file
+  (directive
+    (rept_block
+      keyword: (directive_keyword)
+      (quiet)
+      count: (expression
+        (number_literal))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword))))
+
+================================================================================
+Quiet REPT with space
+================================================================================
+
+REPT ? 3
+    nop
+ENDR
+
+---
+
+(source_file
+  (directive
+    (rept_block
+      keyword: (directive_keyword)
+      (quiet)
+      count: (expression
+        (number_literal))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword))))
+
+================================================================================
+Quiet FOR block
+================================================================================
+
+FOR? i, 1, 10
+    db i
+ENDR
+
+---
+
+(source_file
+  (directive
+    (for_block
+      (directive_keyword)
+      (quiet)
+      (expression
+        name: (symbol))
+      (expression
+        (number_literal))
+      (expression
+        (number_literal))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              name: (symbol)))))
+      (directive_keyword))))
+
+================================================================================
+Quiet INCLUDE directive
+================================================================================
+
+INCLUDE? "file.inc"
+
+---
+
+(source_file
+  (directive
+    (include_directive
+      keyword: (directive_keyword)
+      (quiet)
+      (argument_list
+        (expression
+          (string_literal))))))
+
+================================================================================
+Quiet INCLUDE with space
+================================================================================
+
+INCLUDE ? "file.inc"
+
+---
+
+(source_file
+  (directive
+    (include_directive
+      keyword: (directive_keyword)
+      (quiet)
+      (argument_list
+        (expression
+          (string_literal))))))
+
+================================================================================
+Non-quiet directives (normal usage)
+================================================================================
+
+MACRO normal_macro
+    nop
+ENDM
+
+REPT 5
+    nop
+ENDR
+
+FOR i, 1, 3
+    db i
+ENDR
+
+INCLUDE "file.inc"
+
+---
+
+(source_file
+  (directive
+    (macro_definition
+      keyword: (directive_keyword)
+      (expression
+        name: (symbol))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword)))
+  (directive
+    (rept_block
+      keyword: (directive_keyword)
+      count: (expression
+        (number_literal))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      end: (directive_keyword)))
+  (directive
+    (for_block
+      (directive_keyword)
+      (expression
+        name: (symbol))
+      (expression
+        (number_literal))
+      (expression
+        (number_literal))
+      (directive
+        (simple_directive
+          keyword: (directive_keyword)
+          (argument_list
+            (expression
+              name: (symbol)))))
+      (directive_keyword)))
+  (directive
+    (include_directive
+      keyword: (directive_keyword)
+      (argument_list
+        (expression
+          (string_literal))))))

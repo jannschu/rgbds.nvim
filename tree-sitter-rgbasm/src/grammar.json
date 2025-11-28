@@ -951,6 +951,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "include_directive"
+        },
+        {
+          "type": "SYMBOL",
           "name": "simple_directive"
         },
         {
@@ -1791,6 +1795,53 @@
         }
       ]
     },
+    "include_directive": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "keyword",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x69\\x49][\\x6e\\x4e][\\x63\\x43][\\x6c\\x4c][\\x75\\x55][\\x64\\x44][\\x65\\x45]"
+            },
+            "named": true,
+            "value": "directive_keyword"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "?"
+              },
+              "named": true,
+              "value": "quiet"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "argument_list"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
     "directive_keyword": {
       "type": "TOKEN",
       "content": {
@@ -1807,10 +1858,6 @@
           {
             "type": "PATTERN",
             "value": "[\\x69\\x49][\\x6e\\x4e][\\x63\\x43][\\x62\\x42][\\x69\\x49][\\x6e\\x4e]"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[\\x69\\x49][\\x6e\\x4e][\\x63\\x43][\\x6c\\x4c][\\x75\\x55][\\x64\\x44][\\x65\\x45]"
           },
           {
             "type": "PATTERN",
@@ -1923,6 +1970,23 @@
             "named": true,
             "value": "directive_keyword"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "?"
+              },
+              "named": true,
+              "value": "quiet"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -2049,6 +2113,26 @@
         {
           "type": "SYMBOL",
           "name": "symbol"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "IMMEDIATE_TOKEN",
+                "content": {
+                  "type": "STRING",
+                  "value": "?"
+                }
+              },
+              "named": true,
+              "value": "quiet"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -2356,6 +2440,23 @@
           }
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "?"
+              },
+              "named": true,
+              "value": "quiet"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "FIELD",
           "name": "count",
           "content": {
@@ -2438,6 +2539,23 @@
           },
           "named": true,
           "value": "directive_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "STRING",
+                "value": "?"
+              },
+              "named": true,
+              "value": "quiet"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",

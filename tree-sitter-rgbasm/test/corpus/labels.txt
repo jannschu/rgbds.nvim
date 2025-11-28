@@ -589,15 +589,15 @@ INCLUDE.local
 (source_file
   (inline_comment)
   (directive
-    (simple_directive
-      (directive_keyword)))
+    (include_directive
+      keyword: (directive_keyword)))
   (inline_comment)
   (directive
-    (simple_directive
-      (directive_keyword)
+    (include_directive
+      keyword: (directive_keyword)
       (argument_list
         (expression
-          (local)))))
+          name: (local)))))
   (ERROR))
 
 ================================================================================

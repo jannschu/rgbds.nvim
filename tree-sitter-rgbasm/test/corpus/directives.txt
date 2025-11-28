@@ -484,13 +484,13 @@ EXPORT SingleSymbol
 (source_file
   (inline_comment)
   (directive
-    (simple_directive
+    (include_directive
       (directive_keyword)
       (argument_list
         (expression
           (string_literal)))))
   (directive
-    (simple_directive
+    (include_directive
       (directive_keyword)
       (argument_list
         (expression

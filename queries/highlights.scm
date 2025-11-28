@@ -168,11 +168,15 @@
 (simple_directive
   keyword: (directive_keyword) @keyword.directive)
 
+; Include directive keyword as preprocessor
+(include_directive
+  keyword: (directive_keyword) @keyword.directive.include)
+
 ; Include paths
 ((simple_directive
    keyword: (directive_keyword) @_kw
    (argument_list (expression (string_literal) @string.special)))
-  (#any-of? @_kw "INCLUDE" "INCBIN"))
+  (#any-of? @_kw "INCBIN"))
 
 ; ==============================================================================
 ; Macros
@@ -285,6 +289,9 @@
 
 ; Instruction separator
 "::" @punctuation.delimiter
+
+; Quiet token for suppressing error backtraces
+(quiet) @punctuation.special
 
 ; ==============================================================================
 ; Fragment Literals
