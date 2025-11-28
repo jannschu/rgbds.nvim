@@ -28,6 +28,10 @@
 (local_label_block
   name: (local) @label)
 
+; Local label references in expressions
+(expression
+  (local) @variable.member)
+
 ; Anonymous labels
 (anonymous_label) @label
 (anonymous_label_ref) @label
@@ -96,6 +100,10 @@
 (section_directive
   union: (directive_keyword) @keyword.directive)
 
+; ENDSECTION keyword
+(section_block
+  (directive_keyword) @markup.heading)
+
 ; Section name highlighting
 (section_directive
   (string_literal) @module)
@@ -112,11 +120,11 @@
 
 (load_block
   keyword: (directive_keyword) @markup.heading
-  end: (directive_keyword) @keyword.directive)
+  end: (directive_keyword) @markup.heading)
 
 (pushs_block
   keyword: (directive_keyword) @markup.heading
-  end: (directive_keyword) @keyword.directive)
+  end: (directive_keyword) @markup.heading)
 
 (union_block
   keyword: (directive_keyword) @keyword.directive
