@@ -473,42 +473,177 @@ Export.foo:
       (directive_keyword)
       (string_literal)
       (section_type))
-    (ERROR
-      (directive
-        (export_directive
-          (directive_keyword)
-          (argument_list
-            (expression
-              (local))))))
+    (ERROR)
     (instruction_list
       (instruction
         (instruction_name)))))
 
 ================================================================================
-Invalid: qualified local starting with keyword (INCLUDE)
+Invalid: qualified local starting with keyword (uniqueness_affix)
 ================================================================================
 
-SECTION "Test", ROM0
-Include.path
-  nop
+; A qualified local label cannot start with a keyword before the dot,
+; even if a uniqueness affix is used. This might be a bug in rgbasm though
+IF.error\@
 
 ---
 
 (source_file
-  (section_block
-    (section_directive
+  (inline_comment)
+  (inline_comment)
+  (ERROR
+    (uniqueness_affix)))
+
+================================================================================
+Invalid: qualified local label must not start with DS
+================================================================================
+
+; DS + expr
+DS .local
+DS.local
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (ds_directive
       (directive_keyword)
-      (string_literal)
-      (section_type))
-    (directive
-      (simple_directive
-        (directive_keyword)
-        (argument_list
-          (expression
-            (local)))))
-    (instruction_list
-      (instruction
-        (instruction_name)))))
+      (expression
+        (local))))
+  (ERROR))
+
+================================================================================
+Invalid: qualified local label must not start with ASSERT
+================================================================================
+
+; ASSERT + expr
+ASSERT .local
+ASSERT.local
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (assert_directive
+      (directive_keyword)
+      (expression
+        (local))))
+  (ERROR))
+
+================================================================================
+Invalid: qualified local label must not start with EXPORT
+================================================================================
+
+; EXPORT + expr
+EXPORT\@
+EXPORT.local
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (macro_arg_raw))))
+  (ERROR))
+
+================================================================================
+Invalid: qualified local label must not be parsed as OPT args
+================================================================================
+
+PUSHO ; no conflict with inline comment
+OPT\@ local
+OPT.local
+
+---
+
+(source_file
+  (directive
+    (pusho_directive
+      (directive_keyword)))
+  (inline_comment)
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (macro_arg_raw)
+        (expression
+          (symbol)))))
+  (ERROR))
+
+================================================================================
+Invalid: qualified local label must not start with simple directives
+================================================================================
+
+; simple directive + expr
+INCLUDE ; no conflict with inline comment
+INCLUDE .local
+INCLUDE.local
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (simple_directive
+      (directive_keyword)))
+  (inline_comment)
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (local)))))
+  (ERROR))
+
+================================================================================
+Invalid: qualified local label must not merge with RB
+================================================================================
+
+DEF x = 5 RB.local
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (ERROR
+        (expression
+          (number_literal)))
+      (expression
+        (local)))))
+
+================================================================================
+Invalid: label must not merge with directive
+================================================================================
+
+INCLUDEfoo.bar
+
+---
+
+(source_file
+  (local_label_block
+    (local)))
+
+================================================================================
+Invalid: macro call + expr must not parse as qualified local label
+================================================================================
+
+; macro call + expr should parse as local label
+foo.local
+
+---
+
+(source_file
+  (inline_comment)
+  (local_label_block
+    (local)))
 
 ================================================================================
 Invalid: unqualified local after qualified local (no scope change)

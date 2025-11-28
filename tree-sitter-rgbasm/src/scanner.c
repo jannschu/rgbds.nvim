@@ -206,8 +206,22 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
       if (has_dot) {
         return false;
       }
+      // Check if we have a reserved word followed by a dot
+      // This is invalid: keywords cannot be prefixes of qualified local labels
+      // e.g., "DS.local" should be an error, not "DS" + ".local"
       if (len > 0 && is_reserved_word(name, len)) {
-        return false;
+        // Consume the rest of the identifier
+        advance(lexer);  // consume the dot
+        while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
+          advance(lexer);
+        }
+        // Mark end and return ERROR token,
+        // although this is not in valid_symbols,
+        // but we use this to fail early, otherwise things like "DS.local"
+        // will parse as DS + .local
+        lexer->mark_end(lexer);
+        lexer->result_symbol = ERROR;
+        return true;
       }
       has_dot = true;
     }

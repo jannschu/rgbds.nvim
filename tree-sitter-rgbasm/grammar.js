@@ -44,6 +44,8 @@ module.exports = grammar({
 
   inline: $ => [],
 
+  word: $ => $._local_label,
+
   rules: {
     source_file: $ => _top_level_statements($),
 
@@ -361,7 +363,7 @@ module.exports = grammar({
         optional(seq(
           $.opt_arg,
           repeat(seq(',', $.opt_arg))
-        ))
+        )),
       ),
 
     popo_directive: $ =>
@@ -375,18 +377,30 @@ module.exports = grammar({
     // - Macro argument references (\1, \<1>, \@)
     // - Escaped commas (\,)
     opt_arg: $ =>
-      repeat1(choice(
-        // Raw option text: letters, digits, dots, dashes, etc.
-        // Excludes unescaped commas (those are argument separators)
-        token(/[a-zA-Z0-9_\.@#*/\-+=]+/),
-        // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
-        token(/\\./),
-      )),
+      seq(
+        // this must not match $._local_label, so we don't allow dot prefix here
+        choice(
+          // Raw option text: letters, digits, dots, dashes, etc.
+          // Excludes unescaped commas (those are argument separators)
+          token(/[a-zA-Z0-9_@#*/\-+=]+/),
+          // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
+          token(/\\./),
+        ),
+        repeat(
+          choice(
+            // Raw option text: letters, digits, dots, dashes, etc.
+            // Excludes unescaped commas (those are argument separators)
+            token(/[a-zA-Z0-9_\.@#*/\-+=]+/),
+            // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
+            token(/\\./),
+          ),
+        ),
+      ),
 
     simple_directive: $ =>
       seq(
         field('keyword', $.directive_keyword),
-        optional($.argument_list)
+        optional($.argument_list),
       ),
 
     directive_keyword: $ =>
