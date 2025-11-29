@@ -751,7 +751,28 @@
   {
     "type": "for_block",
     "named": true,
-    "fields": {},
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      },
+      "keyword": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
@@ -766,10 +787,6 @@
         },
         {
           "type": "directive",
-          "named": true
-        },
-        {
-          "type": "directive_keyword",
           "named": true
         },
         {
@@ -814,7 +831,18 @@
   {
     "type": "fragment_literal",
     "named": true,
-    "fields": {},
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "]]",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -1177,6 +1205,22 @@
       "types": [
         {
           "type": "interpolation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "line_continuation",
+    "named": true,
+    "extra": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "inline_comment",
           "named": true
         }
       ]
@@ -1823,7 +1867,18 @@
   {
     "type": "section_block",
     "named": true,
-    "fields": {},
+    "fields": {
+      "end": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "directive_keyword",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
@@ -1838,10 +1893,6 @@
         },
         {
           "type": "directive",
-          "named": true
-        },
-        {
-          "type": "directive_keyword",
           "named": true
         },
         {

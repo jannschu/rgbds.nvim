@@ -42,8 +42,7 @@ calcmacro (FOO + 1) << 2
     (macro_invocation
       (symbol)
       (argument_list
-        (macro_arg_raw))
-      (argument_list
+        (macro_arg_raw)
         (macro_arg_raw)
         (macro_arg_raw))))
   (directive
@@ -83,8 +82,7 @@ print_pair "foo", "bar"
       (symbol)
       (argument_list
         (expression
-          (string_literal)))
-      (argument_list
+          (string_literal))
         (expression
           (string_literal))))))
 
@@ -250,16 +248,14 @@ format_msg "Hello", 123, "World"
       (symbol)
       (argument_list
         (expression
-          (string_literal)))
-      (argument_list
+          (string_literal))
         (macro_arg_raw))))
   (directive
     (macro_invocation
       (symbol)
       (argument_list
         (expression
-          (string_literal)))
-      (argument_list
+          (string_literal))
         (macro_arg_raw)
         (expression
           (string_literal))))))

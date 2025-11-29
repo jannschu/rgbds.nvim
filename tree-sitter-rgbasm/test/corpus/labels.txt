@@ -614,8 +614,7 @@ DEF x = 5 RB.local
       (directive_keyword)
       (symbol)
       (ERROR
-        (expression
-          (number_literal)))
+        (number_literal))
       (expression
         (local)))))
 
@@ -665,8 +664,13 @@ Qualified.local:
     (local_label_block
       (local))
     (local_label_block
-      (ERROR
-        (identifier_fragment))
+      (instruction_list
+        (instruction
+          (instruction_name
+            (MISSING "def_directive_token7"))
+          (operand_list
+            (expression
+              (local)))))
       (instruction_list
         (instruction
           (instruction_name))))))

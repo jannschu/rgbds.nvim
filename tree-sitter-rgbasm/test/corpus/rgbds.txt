@@ -87,8 +87,7 @@ print_all This test, probably, passes\,, but who knows, ?
         (expression
           (symbol))
         (expression
-          (symbol)))
-      (argument_list
+          (symbol))
         (expression
           (symbol))
         (expression
@@ -154,8 +153,7 @@ char 'c{s}e', 3
       (symbol)
       (argument_list
         (expression
-          (char_literal)))
-      (argument_list
+          (char_literal))
         (macro_arg_raw)))))
 
 ================================================================================
@@ -378,8 +376,7 @@ test_mod 3, 2
     (macro_invocation
       (symbol)
       (argument_list
-        (macro_arg_raw))
-      (argument_list
+        (macro_arg_raw)
         (macro_arg_raw)))))
 
 ================================================================================

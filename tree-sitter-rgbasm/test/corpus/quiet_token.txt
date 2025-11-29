@@ -140,7 +140,7 @@ ENDR
 (source_file
   (directive
     (for_block
-      (directive_keyword)
+      keyword: (directive_keyword)
       (quiet)
       (expression
         name: (symbol))
@@ -154,7 +154,7 @@ ENDR
           (argument_list
             (expression
               name: (symbol)))))
-      (directive_keyword))))
+      end: (directive_keyword))))
 
 ================================================================================
 Quiet INCLUDE directive
@@ -231,7 +231,7 @@ INCLUDE "file.inc"
       end: (directive_keyword)))
   (directive
     (for_block
-      (directive_keyword)
+      keyword: (directive_keyword)
       (expression
         name: (symbol))
       (expression
@@ -244,7 +244,7 @@ INCLUDE "file.inc"
           (argument_list
             (expression
               name: (symbol)))))
-      (directive_keyword)))
+      end: (directive_keyword)))
   (directive
     (include_directive
       keyword: (directive_keyword)

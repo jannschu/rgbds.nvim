@@ -14,6 +14,7 @@ DB 1, \
       (argument_list
         (expression
           (number_literal))
+        (line_continuation)
         (expression
           (number_literal))
         (expression
@@ -40,12 +41,14 @@ DB 1, 2, 3, \
           (number_literal))
         (expression
           (number_literal))
+        (line_continuation)
         (expression
           (number_literal))
         (expression
           (number_literal))
         (expression
           (number_literal))
+        (line_continuation)
         (expression
           (number_literal))
         (expression
@@ -77,6 +80,7 @@ DEF X = 1 + 2 + \
                     (number_literal))
                   (expression
                     (number_literal))))
+              (line_continuation)
               (expression
                 (number_literal))))
           (expression
@@ -98,6 +102,53 @@ Line continuation: in instruction
       (operand_list
         (expression
           (register))
+        (line_continuation)
         (address
           (expression
             (register)))))))
+
+================================================================================
+Line continuation: with comment
+================================================================================
+
+    foo 1 \  ; this is a comment
+       2
+    println strfmt("" \; no space
+       )
+    macro_call arg1, arg2, \; comment must not become raw arg!
+       arg3
+
+---
+
+(source_file
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (macro_arg_raw)
+        (line_continuation
+          (inline_comment))
+        (macro_arg_raw))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (function_call
+            (function_name)
+            (expression
+              (string_literal))
+            (line_continuation
+              (inline_comment)))))))
+  (directive
+    (macro_invocation
+      (symbol)
+      (argument_list
+        (expression
+          (symbol))
+        (expression
+          (symbol))
+        (line_continuation
+          (inline_comment))
+        (expression
+          (symbol))))))

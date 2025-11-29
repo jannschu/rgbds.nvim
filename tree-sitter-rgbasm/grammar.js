@@ -35,9 +35,8 @@ module.exports = grammar({
   extras: $ => [
     $.inline_comment,
     $.block_comment,
-    /[ \t\uFEFF\u2060]+/,  // Spaces and tabs only, NOT newlines
-    // FIXME: allow inline comment after \
-    /\\[ \t]*\r?\n/,  // Line continuation: backslash + optional spaces + newline
+    $.line_continuation,
+    /[ \t\uFEFF\u2060]+/,
   ],
 
   supertypes: $ => [],
@@ -48,6 +47,14 @@ module.exports = grammar({
 
   rules: {
     source_file: $ => _top_level_statements($),
+
+    line_continuation: $ =>
+      seq(
+        /\\[ \t]*/,
+        optional($.inline_comment),
+        /\r?\n/,
+      ),
+
 
     // ----- Labels -----
 
@@ -83,9 +90,7 @@ module.exports = grammar({
         repeat($._statement),
         repeat($._qualified_label_block),
         repeat($.global_label_block),
-        optional(seq(
-          alias(ci('ENDSECTION'), $.directive_keyword),
-        )),
+        optional(field('end', alias(ci('ENDSECTION'), $.directive_keyword))),
       ),
 
 
@@ -462,7 +467,8 @@ module.exports = grammar({
         // Excludes unescaped commas (those are argument separators)
         /[a-zA-Z0-9_\.@#*/\-+=?]+/,
         // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
-        /\\./,
+        // \; starts line continuation with a comment, so exclude it here
+        /\\[^; \r\n]/,
       ))),
 
     _macro_arg: $ => repeat1(choice(
@@ -474,19 +480,19 @@ module.exports = grammar({
       prec(-2, $.macro_arg_raw),
     )),
 
+    _macro_args: $ =>
+      seq(
+        $._macro_arg,
+        repeat(seq(',', $._macro_arg))
+      ),
+
     macro_invocation: $ =>
       seq(
         // Macros must not be nested, so we do not allow \@ affix here
         $.symbol,
         optional(alias(token.immediate('?'), $.quiet)),
         optional(
-          alias(
-            seq(
-              $._macro_arg,
-              repeat(seq(',', $._macro_arg))
-            ),
-            $.argument_list,
-          ),
+          alias($._macro_args, $.argument_list),
         ),
         optional($.inline_comment),
         // $._eol,
@@ -537,7 +543,7 @@ module.exports = grammar({
 
     for_block: $ =>
       seq(
-        alias(ci('FOR'), $.directive_keyword),
+        field('keyword', alias(ci('FOR'), $.directive_keyword)),
         optional(alias('?', $.quiet)),
         $.expression,
         repeat(
@@ -549,7 +555,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        alias(ci('ENDR'), $.directive_keyword),
+        field('end', alias(ci('ENDR'), $.directive_keyword)),
       ),
 
     // ----- Comments -----
@@ -726,7 +732,7 @@ module.exports = grammar({
       seq(
         '[[',
         _top_level_statements($),
-        ']]'
+        field('end', ']]')
       ),
 
     function_name: $ => ci(
