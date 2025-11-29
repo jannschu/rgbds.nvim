@@ -86,6 +86,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "_local_label"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "qualified_raw_identifier"
                 }
               ]
             },
@@ -4754,6 +4758,49 @@
         }
       ]
     },
+    "immediate_interpolation": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "STRING",
+            "value": "{"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "format",
+              "content": {
+                "type": "SYMBOL",
+                "name": "format_spec"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "interpolation_content"
+            }
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
     "interpolation_content": {
       "type": "CHOICE",
       "members": [
@@ -4997,20 +5044,40 @@
       }
     },
     "raw_identifier": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "marker",
+          "content": {
             "type": "STRING",
             "value": "#"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[A-Za-z_][A-Za-z0-9_]*(?:\\\\@)?"
           }
-        ]
-      }
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "[A-Za-z_][A-Za-z0-9_#$@]*"
+          }
+        }
+      ]
+    },
+    "qualified_raw_identifier": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "raw_identifier"
+        },
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": "\\.[A-Za-z0-9_#$@]*"
+          }
+        }
+      ]
     },
     "interpolatable_identifier": {
       "type": "SEQ",
@@ -5019,17 +5086,28 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "_identifier_fragment_initial"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_identifier_fragment_initial"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "immediate_interpolation"
+                  },
+                  "named": true,
+                  "value": "interpolation"
+                }
+              ]
             },
             {
-              "type": "BLANK"
+              "type": "SYMBOL",
+              "name": "interpolation"
             }
           ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "interpolation"
         },
         {
           "type": "REPEAT",
@@ -5050,16 +5128,21 @@
       ]
     },
     "_identifier_fragment_initial": {
-      "type": "ALIAS",
+      "type": "PREC",
+      "value": 1,
       "content": {
-        "type": "TOKEN",
-        "content": {
-          "type": "PATTERN",
-          "value": "[A-Za-z_][A-Za-z0-9_#$@]*"
-        }
-      },
-      "named": true,
-      "value": "identifier_fragment"
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "symbol"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "raw_identifier"
+          }
+        ]
+      }
     },
     "identifier_fragment": {
       "type": "IMMEDIATE_TOKEN",
@@ -5100,6 +5183,9 @@
     ],
     [
       "ds_directive"
+    ],
+    [
+      "global_label_block"
     ]
   ],
   "precedences": [],

@@ -478,6 +478,7 @@ INCBIN "sprites/hero.bin", 0, 256
 ; EXPORT directive
 EXPORT MyFunc, MyData
 EXPORT SingleSymbol
+EXPORT #if, #section
 
 ---
 
@@ -536,7 +537,59 @@ EXPORT SingleSymbol
       (directive_keyword)
       (argument_list
         (expression
-          (symbol))))))
+          (symbol)))))
+  (directive
+    (export_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (raw_identifier))
+        (expression
+          (raw_identifier))))))
+
+================================================================================
+Directives: PURGE with raw identifiers
+================================================================================
+
+; Define some symbols with keyword names
+DEF #if = 1
+DEF #section = 2
+
+; PURGE directive with raw identifiers
+PURGE #if
+PURGE #section, #else
+
+---
+
+(source_file
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (raw_identifier)
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (raw_identifier)
+      (expression
+        (number_literal))))
+  (inline_comment)
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (raw_identifier)))))
+  (directive
+    (simple_directive
+      (directive_keyword)
+      (argument_list
+        (expression
+          (raw_identifier))
+        (expression
+          (raw_identifier))))))
 
 ================================================================================
 Directives: SECTION with BANK option

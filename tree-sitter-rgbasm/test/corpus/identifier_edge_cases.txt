@@ -1,21 +1,13 @@
 ================================================================================
-Identifier and interpolation edge cases
+Interpolation: prefix vs suffix
 ================================================================================
 
-; Issue 1: interpolation prefix vs suffix
 DEF {foo}name = 1
-DEF foo{name} = 2  ; should be treated as identifier + interpolation expression, not one name
-
-; Issue 2: interpolation with raw identifier
-PRINTLN "{#if}"
-
-; Issue 3: raw identifier in DEF
-DEF #if = 100
+DEF foo{name} = 2
 
 ---
 
 (source_file
-  (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
@@ -29,13 +21,21 @@ DEF #if = 100
     (def_directive
       (directive_keyword)
       (interpolatable_identifier
-        (identifier_fragment)
+        (symbol)
         (interpolation
           (interpolation_content)))
       (expression
-        (number_literal))))
-  (inline_comment)
-  (inline_comment)
+        (number_literal)))))
+
+================================================================================
+Interpolation: raw identifier
+================================================================================
+
+PRINTLN "{#if}"
+
+---
+
+(source_file
   (directive
     (simple_directive
       (directive_keyword)
@@ -43,11 +43,61 @@ DEF #if = 100
         (expression
           (string_literal
             (interpolation
-              (interpolation_content)))))))
+              (interpolation_content))))))))
+
+================================================================================
+Interpolation: raw identifier in DEF
+================================================================================
+
+; Issue 3: raw identifier in DEF
+DEF #if = 100
+
+---
+
+(source_file
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
       (raw_identifier)
+      (expression
+        (number_literal)))))
+
+================================================================================
+Interpolation: raw identifier with interpolation
+================================================================================
+
+DEF #if{suffix} = 200
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (interpolatable_identifier
+        (raw_identifier)
+        (interpolation
+          (interpolation_content)))
+      (expression
+        (number_literal)))))
+
+===============================================================================
+Invalid: space between identifier and curly brace
+===============================================================================
+
+DEF #section {num} = 300
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (ERROR
+        (raw_identifier))
+      (interpolatable_identifier
+        (interpolation
+          (interpolation_content)))
       (expression
         (number_literal)))))

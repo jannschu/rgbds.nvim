@@ -1042,6 +1042,8 @@ DEF BANK_CUR = BANK(@)
 ; Functions that accept symbol names (raw identifiers)
 DEF IS_DEF = DEF(MySymbol)
 DEF SEC_OF = SECTION(MyLabel)
+DEF IS_DEF_RAW = DEF(#if)
+DEF BANK_RAW = BANK(#section)
 
 ; Functions that accept filenames
 DEF FILE_DATA = READFILE("data.bin")
@@ -1239,6 +1241,24 @@ DEF FILE_PART = READFILE("data.bin", 256)
           (function_name)
           (expression
             (symbol))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (raw_identifier))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (symbol)
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (raw_identifier))))))
   (inline_comment)
   (directive
     (def_directive

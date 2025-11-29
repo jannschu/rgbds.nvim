@@ -1,9 +1,9 @@
 #include "tree_sitter/parser.h"
-#include <wctype.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <wctype.h>
 
 #define MAX_IDENTIFIER_LENGTH 255
 
@@ -31,44 +31,46 @@ enum TokenType {
   ERROR,
 };
 
-void *tree_sitter_rgbasm_external_scanner_create() {
-  return NULL;
-}
+void *tree_sitter_rgbasm_external_scanner_create() { return NULL; }
 
-void tree_sitter_rgbasm_external_scanner_destroy(void *payload) { }
+void tree_sitter_rgbasm_external_scanner_destroy(void *payload) {}
 
-unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload, char *buffer) {
+unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload,
+                                                       char *buffer) {
   return 0;
 }
 
-void tree_sitter_rgbasm_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) { }
+void tree_sitter_rgbasm_external_scanner_deserialize(void *payload,
+                                                     const char *buffer,
+                                                     unsigned length) {}
 
 static inline bool is_identifier_char(int32_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-         (c >= '0' && c <= '9') || c == '_' || c == '.' ||
-         c == '#' || c == '@' || c == '$';
+         (c >= '0' && c <= '9') || c == '_' || c == '.' || c == '#' ||
+         c == '@' || c == '$';
 }
 
-static inline void advance(TSLexer *lexer) {
-  lexer->advance(lexer, false);
-}
+static inline void advance(TSLexer *lexer) { lexer->advance(lexer, false); }
 
-static inline void skip(TSLexer *lexer) {
-  lexer->advance(lexer, true);
-}
+static inline void skip(TSLexer *lexer) { lexer->advance(lexer, true); }
 
-static inline bool is_blank(int32_t c) {
-  return c == ' ' || c == '\t';
-}
+static inline bool is_blank(int32_t c) { return c == ' ' || c == '\t'; }
 
 static inline bool is_identifier_start(int32_t c) {
   // Include '.' for local labels (.loop, .local, etc.)
-  // '#' is still reserved for raw identifiers handled by internal lexer
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-         c == '_' || c == '.';
+  // '#' is NOT included here - it has context-dependent behavior:
+  //   - At identifier start (#if, #section): Raw identifier escape (handled by
+  //   internal lexer)
+  //   - After a dot (.#if, .#local): Just a regular character in the local
+  //   label name
+  //     Example: .#if creates a local label literally named "#if" (# is part of
+  //     the name)
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
+         c == '.';
 }
 
-static inline int matches_any(const char *input, size_t len, const char *const *words, size_t count) {
+static inline int matches_any(const char *input, size_t len,
+                              const char *const *words, size_t count) {
   for (size_t i = 0; i < count; i++) {
     const char *kw = words[i];
     const size_t kw_len = strlen(kw);
@@ -87,70 +89,64 @@ static inline int matches_any(const char *input, size_t len, const char *const *
 // the main grammar (directive_keyword, def_directive, if_block, etc.).
 static bool is_reserved_word(const char *name, size_t len) {
   static const char *const constants[] = {
-    "@",
-    ".",
-    "..",
-    "_RS",
-    "_NARG",
-    "__SCOPE__",
-    "__UTC_DAY__",
-    "__UTC_HOUR__",
-    "__RGBDS_RC__",
-    "__UTC_YEAR__",
-    "__UTC_MONTH__",
-    "__UTC_MINUTE__",
-    "__UTC_SECOND__",
-    "__RGBDS_MAJOR__",
-    "__RGBDS_MINOR__",
-    "__RGBDS_PATCH__",
-    "__ISO_8601_UTC__",
-    "__RGBDS_VERSION__",
-    "__ISO_8601_LOCAL__",
+      "@",
+      ".",
+      "..",
+      "_RS",
+      "_NARG",
+      "__SCOPE__",
+      "__UTC_DAY__",
+      "__UTC_HOUR__",
+      "__RGBDS_RC__",
+      "__UTC_YEAR__",
+      "__UTC_MONTH__",
+      "__UTC_MINUTE__",
+      "__UTC_SECOND__",
+      "__RGBDS_MAJOR__",
+      "__RGBDS_MINOR__",
+      "__RGBDS_PATCH__",
+      "__ISO_8601_UTC__",
+      "__RGBDS_VERSION__",
+      "__ISO_8601_LOCAL__",
   };
 
   static const char *const reserved[] = {
-    // 1
-    "A", "B", "C", "D", "E", "H", "L", "Z", 
-    // 2
-    "AF", "BC", "CP", "DB", "DE", "DI", "DL", "DS", "DW", "EI", 
-    "HL", "IF", "JP", "JR", "LD", "NC", "NZ", "OR", "RB", "RL", 
-    "RR", "RW", "SP", 
-    // 3
-    "ADC", "ADD", "AND", "BIT", "CCF", "COS", "CPL", "DAA", "DEC",
-    "DEF", "DIV", "EQU", "FOR", "HLD", "HLI", "INC", "LDD", "LDH",
-    "LDI", "LOG", "LOW", "MUL", "NOP", "OAM", "OPT", "POP", "POW",
-    "RES", "RET", "RLA", "RLC", "RRA", "RRC", "RST", "SBC", "SCF", 
-    "SET", "SIN", "SLA", "SRA", "SRL", "SUB", "TAN", "XOR", 
-    // 4
-    "ACOS", "ASIN", "ATAN", "BANK", "CALL", "CEIL", "ELIF", "ELSE", 
-    "ENDC", "ENDL", "ENDM", "ENDR", "ENDU", "EQUS", "FAIL", "FMOD", 
-    "HALT", "HIGH", "HRAM", "LOAD", "POPC", "POPO", "POPS", "PUSH",
-    "REPT", "RETI", "RLCA", "ROM0", "ROMX", "RRCA", "SRAM", "STOP", 
-    "SWAP", "VRAM", "WARN", 
-    // 5
-    "ALIGN", "ATAN2", "BREAK", "FATAL", "FLOOR", "MACRO", "NEXTU", 
-    "PRINT", "PURGE", "PUSHC", "PUSHO", "PUSHS", "REDEF", "ROUND", 
-    "RSSET", "SHIFT", "STRIN", "UNION", "WRAM0", "WRAMX",
-    // 6
-    "ASSERT", "EXPORT", "INCBIN", "SIZEOF", "STRCAT", "STRCMP", 
-    "STRFMT", "STRLEN", "STRLWR", "STRRIN", "STRRPL", "STRSUB",
-    "STRUPR", 
-    // 7
-    "BYTELEN", "CHARCMP", "CHARLEN", "CHARMAP", "CHARSUB", "CHARVAL", 
-    "INCLUDE", "ISCONST", "PRINTLN", "REVCHAR", "RSRESET", "SECTION", 
-    // 8
-    "STARTOF", "STRBYTE", "STRCHAR", "STRFIND", "TZCOUNT", 
-    // 9
-    "BITWIDTH", "CHARSIZE", "FRAGMENT", "READFILE", "STRRFIND", 
-    // 10+
-    "STRSLICE", 
-    "INCHARMAP", 
-    "ENDSECTION", 
-    "NEWCHARMAP", 
-    "SETCHARMAP", "STATIC_ASSERT"
-  };
+      // 1
+      "A", "B", "C", "D", "E", "H", "L", "Z",
+      // 2
+      "AF", "BC", "CP", "DB", "DE", "DI", "DL", "DS", "DW", "EI", "HL", "IF",
+      "JP", "JR", "LD", "NC", "NZ", "OR", "RB", "RL", "RR", "RW", "SP",
+      // 3
+      "ADC", "ADD", "AND", "BIT", "CCF", "COS", "CPL", "DAA", "DEC", "DEF",
+      "DIV", "EQU", "FOR", "HLD", "HLI", "INC", "LDD", "LDH", "LDI", "LOG",
+      "LOW", "MUL", "NOP", "OAM", "OPT", "POP", "POW", "RES", "RET", "RLA",
+      "RLC", "RRA", "RRC", "RST", "SBC", "SCF", "SET", "SIN", "SLA", "SRA",
+      "SRL", "SUB", "TAN", "XOR",
+      // 4
+      "ACOS", "ASIN", "ATAN", "BANK", "CALL", "CEIL", "ELIF", "ELSE", "ENDC",
+      "ENDL", "ENDM", "ENDR", "ENDU", "EQUS", "FAIL", "FMOD", "HALT", "HIGH",
+      "HRAM", "LOAD", "POPC", "POPO", "POPS", "PUSH", "REPT", "RETI", "RLCA",
+      "ROM0", "ROMX", "RRCA", "SRAM", "STOP", "SWAP", "VRAM", "WARN",
+      // 5
+      "ALIGN", "ATAN2", "BREAK", "FATAL", "FLOOR", "MACRO", "NEXTU", "PRINT",
+      "PURGE", "PUSHC", "PUSHO", "PUSHS", "REDEF", "ROUND", "RSSET", "SHIFT",
+      "STRIN", "UNION", "WRAM0", "WRAMX",
+      // 6
+      "ASSERT", "EXPORT", "INCBIN", "SIZEOF", "STRCAT", "STRCMP", "STRFMT",
+      "STRLEN", "STRLWR", "STRRIN", "STRRPL", "STRSUB", "STRUPR",
+      // 7
+      "BYTELEN", "CHARCMP", "CHARLEN", "CHARMAP", "CHARSUB", "CHARVAL",
+      "INCLUDE", "ISCONST", "PRINTLN", "REVCHAR", "RSRESET", "SECTION",
+      // 8
+      "STARTOF", "STRBYTE", "STRCHAR", "STRFIND", "TZCOUNT",
+      // 9
+      "BITWIDTH", "CHARSIZE", "FRAGMENT", "READFILE", "STRRFIND",
+      // 10+
+      "STRSLICE", "INCHARMAP", "ENDSECTION", "NEWCHARMAP", "SETCHARMAP",
+      "STATIC_ASSERT"};
 
-  if (matches_any(name, len, constants, sizeof(constants) / sizeof(constants[0])) != -1) {
+  if (matches_any(name, len, constants,
+                  sizeof(constants) / sizeof(constants[0])) != -1) {
     return true;
   }
 
@@ -170,7 +166,6 @@ static bool is_reserved_word(const char *name, size_t len) {
     upper[i] = c;
   }
   upper[len] = '\0';
-
 
   return matches_any(upper, len, reserved, count) != -1;
 }
@@ -211,7 +206,7 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
       // e.g., "DS.local" should be an error, not "DS" + ".local"
       if (len > 0 && is_reserved_word(name, len)) {
         // Consume the rest of the identifier
-        advance(lexer);  // consume the dot
+        advance(lexer); // consume the dot
         while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
           advance(lexer);
         }
@@ -233,11 +228,6 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   // Check what follows the identifier
   int32_t next = lexer->lookahead;
 
-  // If followed by '{'  this is part of interpolatable_identifier
-  if (next == '{') {
-    return false;
-  }
-
   bool marked = false;
   if (next == '\\') {
     // this will not become a LOAD_END_TOKEN
@@ -250,20 +240,16 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     next = lexer->lookahead;
   }
   if (
-    // presence of an affix means this is not a reserved word
-    !had_affix &&
-    // presence of dot means this is not a reserved word, they do not contain dots
-    !has_dot &&
-    is_reserved_word(name, len)
-  ) {
+      // presence of an affix means this is not a reserved word
+      !had_affix &&
+      // presence of dot means this is not a reserved word, they do not contain
+      // dots
+      !has_dot && is_reserved_word(name, len)) {
     // Check if we might scan a LOAD_END_TOKEN
     if (valid_symbols[LOAD_END_TOKEN]) {
       const size_t match = matches_any(
-        name,
-        len, 
-        (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 
-        4
-      );
+          name, len,
+          (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 4);
       if (match != -1) {
         lexer->result_symbol = LOAD_END_TOKEN;
         // if ENDL, consume it
@@ -318,12 +304,7 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
-bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
-                                               const bool *valid_symbols) {
-  if (valid_symbols[ERROR]) {
-    return false;
-  }
-
+static bool scan(TSLexer *lexer, const bool *valid_symbols) {
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
@@ -346,9 +327,9 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
     else if (lexer->lookahead == '\r') {
       advance(lexer);
       if (lexer->lookahead == '\n') {
-          advance(lexer);
-          lexer->mark_end(lexer);
-          return true;
+        advance(lexer);
+        lexer->mark_end(lexer);
+        return true;
       }
       return false;
     } else if (lexer->lookahead == '\n') {
@@ -359,14 +340,59 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
   }
 
   // Try to match identifier token (symbol, local, qualified local, or label)
-  if ((valid_symbols[SYMBOL_TOKEN] ||
-       valid_symbols[LOCAL_TOKEN] ||
-       valid_symbols[QUALIFIED_LOCAL_TOKEN] ||
-       valid_symbols[LOAD_END_TOKEN] ||
+  if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[LOCAL_TOKEN] ||
+       valid_symbols[QUALIFIED_LOCAL_TOKEN] || valid_symbols[LOAD_END_TOKEN] ||
        valid_symbols[LABEL_TOKEN]) &&
       scan_identifier_token(lexer, valid_symbols)) {
     return true;
   }
 
   return false;
+}
+
+bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
+                                              const bool *valid_symbols) {
+  if (valid_symbols[ERROR]) {
+    return false;
+  }
+
+#define DEBUG_SCANNER 0
+#if DEBUG_SCANNER
+  printf("External scanner invoked. Lookahead: '%c' (0x%02X) ",
+         (lexer->lookahead >= 32 && lexer->lookahead <= 126)
+             ? (char)lexer->lookahead
+             : '?',
+         (unsigned int)lexer->lookahead);
+  // Print valid symbols presence by lower and upper case
+  printf("Valid symbols: %c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
+  printf("%c", valid_symbols[LOCAL_TOKEN] ? 'L' : '.');
+  printf("%c", valid_symbols[QUALIFIED_LOCAL_TOKEN] ? 'Q' : '.');
+  printf("%c", valid_symbols[LOAD_END_TOKEN] ? 'E' : '.');
+  printf("%c ", valid_symbols[LABEL_TOKEN] ? 'B' : '.');
+#endif
+  bool result = scan(lexer, valid_symbols);
+#if DEBUG_SCANNER
+  char symbol = ' ';
+  if (result) {
+    switch (lexer->result_symbol) {
+    case SYMBOL_TOKEN:
+      symbol = 'S';
+      break;
+    case LOCAL_TOKEN:
+      symbol = 'L';
+      break;
+    case QUALIFIED_LOCAL_TOKEN:
+      symbol = 'Q';
+      break;
+    case LOAD_END_TOKEN:
+      symbol = 'E';
+      break;
+    case LABEL_TOKEN:
+      symbol = 'B';
+      break;
+    }
+  }
+  printf(" => '%c'\n", symbol);
+#endif
+  return result;
 }

@@ -177,7 +177,7 @@ DEF foo{bar}{d:{x}{y}_} = 0
     (def_directive
       (directive_keyword)
       (interpolatable_identifier
-        (identifier_fragment)
+        (symbol)
         (interpolation
           (interpolation_content))
         (interpolation
@@ -207,8 +207,7 @@ Invalid: # followed by { outside string
       (operand_list
         (expression
           (register))
-        (ERROR
-          (UNEXPECTED '{'))
+        (ERROR)
         (expression
           (interpolatable_identifier
             (interpolation

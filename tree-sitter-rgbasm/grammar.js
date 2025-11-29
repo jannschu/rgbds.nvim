@@ -30,6 +30,7 @@ module.exports = grammar({
     [$.macro_invocation],
     [$.interpolatable_identifier],
     [$.ds_directive],
+    [$.global_label_block],
   ],
 
   extras: $ => [
@@ -62,7 +63,17 @@ module.exports = grammar({
 
     _any_local: $ =>
       seq(
-        field('name', alias(choice($._qualified_local_label, $._local_label), $.local)),
+        field(
+          'name',
+          alias(
+            choice(
+              $._qualified_local_label,
+              $._local_label,
+              $.qualified_raw_identifier,
+            ),
+            $.local,
+          ),
+        ),
         optional($.uniqueness_affix),
       ),
 
@@ -902,6 +913,14 @@ module.exports = grammar({
         '}'
       ),
 
+    immediate_interpolation: $ =>
+      seq(
+        token.immediate('{'),
+        optional(field('format', $.format_spec)),
+        field('name', repeat1($.interpolation_content)),
+        '}',
+      ),
+
     // Content inside interpolation braces: identifier chars and nested interpolations
     // Matches RGBDS behavior of reading chars until '}' (lexer.cpp:1344-1347)
     // Must be visible (not _hidden) to appear in parse tree
@@ -966,18 +985,32 @@ module.exports = grammar({
     // Raw identifiers allow using reserved keywords as symbols
     // e.g. #load, #LOAD, #IF, etc.
     raw_identifier: $ =>
-      token(seq('#', /[A-Za-z_][A-Za-z0-9_]*(?:\\@)?/)),
+      seq(
+        field('marker', '#'),
+        token.immediate(/[A-Za-z_][A-Za-z0-9_#$@]*/),
+      ),
+
+    qualified_raw_identifier: $ =>
+      seq(
+        $.raw_identifier,
+        token.immediate(/\.[A-Za-z0-9_#$@]*/),
+      ),
 
     // Interpolatable identifier: identifier containing at least one {interpolation}
     // Examples: {x}, foo{x}, {x}foo, foo{x}bar{y}
     interpolatable_identifier: $ =>
       seq(
-        // Optional: identifier fragment before first interpolation
-        // Don't use .immediate() for first fragment (no preceding token)
-        optional($._identifier_fragment_initial),
+        choice(
+          seq(
+            $._identifier_fragment_initial,
+            alias($.immediate_interpolation, $.interpolation),
+          ),
+          $.interpolation,
+        ),
+        // ($.raw_identifier),
 
         // At least one interpolation required (distinguishes from plain symbol)
-        $.interpolation,
+        // $.interpolation,
 
         // Then any mix of fragments and interpolations
         // Subsequent fragments use .immediate() to prevent whitespace
@@ -985,13 +1018,18 @@ module.exports = grammar({
           choice(
             $.identifier_fragment,  // Uses .immediate()
             $.interpolation,
-          )
-        )
+          ),
+        ),
       ),
 
     // First identifier fragment (no .immediate() needed)
     _identifier_fragment_initial: $ =>
-      alias(token(/[A-Za-z_][A-Za-z0-9_#$@]*/), $.identifier_fragment),
+      prec(1,
+        choice(
+          $.symbol,
+          $.raw_identifier,
+        ),
+      ),
 
     // Identifier fragment: part of identifier without braces
     // Must be immediate to prevent whitespace between parts

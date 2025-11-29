@@ -217,6 +217,91 @@ DEF x = #load + #LOAD
               (raw_identifier))))))))
 
 ================================================================================
+Labels: local labels with # character in name
+================================================================================
+
+; The # character after a dot is NOT a raw identifier marker
+; It's just a regular character in the local label name
+; Note: .#if is a local label named "#if", not a raw identifier
+GlobalLabel:
+  .#if:
+    nop
+  .#else:
+    ret
+
+#section:
+  .#notakeyword:
+    nop
+
+---
+
+(source_file
+  (inline_comment)
+  (inline_comment)
+  (inline_comment)
+  (global_label_block
+    name: (label)
+    (local_label_block
+      name: (local)
+      (instruction_list
+        (instruction
+          opcode: (instruction_name))))
+    (local_label_block
+      name: (local)
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))))
+  (global_label_block
+    (raw_identifier)
+    (local_label_block
+      name: (local)
+      (instruction_list
+        (instruction
+          opcode: (instruction_name))))))
+
+================================================================================
+Labels: qualified references with raw identifiers
+================================================================================
+
+; Qualified label references with raw identifiers
+; Note: .#local is a local label with # in the name, not a raw identifier
+#section:
+  .#local:
+    nop
+
+; Reference them - the # is part of the local label name
+  jp #section.#local
+  call #load.loop
+
+---
+
+(source_file
+  (inline_comment)
+  (inline_comment)
+  (global_label_block
+    (raw_identifier)
+    (local_label_block
+      name: (local)
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)))
+      (inline_comment)
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)
+          (operand_list
+            (expression
+              name: (local
+                (raw_identifier))))))
+      (instruction_list
+        (instruction
+          opcode: (instruction_name)
+          (operand_list
+            (expression
+              name: (local
+                (raw_identifier)))))))))
+
+================================================================================
 Qualified local labels: outside global scope with colon
 ================================================================================
 
@@ -608,15 +693,13 @@ DEF x = 5 RB.local
 
 ---
 
-(source_file
+(ERROR
   (directive
     (def_directive
       (directive_keyword)
       (symbol)
-      (ERROR
-        (number_literal))
       (expression
-        (local)))))
+        (number_literal)))))
 
 ================================================================================
 Invalid: label must not merge with directive
@@ -664,13 +747,7 @@ Qualified.local:
     (local_label_block
       (local))
     (local_label_block
-      (instruction_list
-        (instruction
-          (instruction_name
-            (MISSING "def_directive_token7"))
-          (operand_list
-            (expression
-              (local)))))
+      (ERROR)
       (instruction_list
         (instruction
           (instruction_name))))))
