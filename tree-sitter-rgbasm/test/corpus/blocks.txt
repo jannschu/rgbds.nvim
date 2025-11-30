@@ -73,7 +73,9 @@ ENDM
         (for_block
           (directive_keyword)
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal))
           (expression
@@ -83,7 +85,9 @@ ENDM
               (directive_keyword)
               (argument_list
                 (expression
-                  (symbol)))))
+                  (identifier
+                    (global_identifier
+                      (symbol)))))))
           (directive_keyword)))
       (directive_keyword)))
   (inline_comment)
@@ -91,7 +95,9 @@ ENDM
     (macro_definition
       (directive_keyword)
       (expression
-        (symbol))
+        (identifier
+          (global_identifier
+            (symbol))))
       (instruction_list
         (instruction
           (instruction_name)
@@ -99,7 +105,9 @@ ENDM
             (expression
               (register))
             (expression
-              (symbol)))))
+              (identifier
+                (global_identifier
+                  (symbol)))))))
       (directive_keyword))))
 
 ================================================================================
@@ -114,14 +122,17 @@ if\@:
 
 (source_file
   (global_label_block
-    name: (label)
-    (uniqueness_affix)
-    (local_label_block
-      name: (local)
+    (global_identifier
+      (symbol)
       (uniqueness_affix))
     (local_label_block
-      name: (local)
-      (uniqueness_affix))))
+      (local_identifier
+        (local_symbol)
+        (uniqueness_affix)))
+    (local_label_block
+      (local_identifier
+        (local_symbol)
+        (uniqueness_affix)))))
 
 ================================================================================
 Blocks: macro arguments and escapes
@@ -147,7 +158,9 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (instruction_list
         (instruction
           opcode: (instruction_name)
@@ -166,35 +179,46 @@ ENDM
             (expression
               (macro_argument)))))
       (global_label_block
-        name: (label)
-        (uniqueness_affix)
+        name: (global_identifier
+          global: (symbol)
+          (uniqueness_affix))
         (local_label_block
-          name: (local)
-          (uniqueness_affix)
+          name: (qualified_identifier
+            global: (symbol)
+            local: (local_symbol)
+            (uniqueness_affix))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
                 (expression
-                  name: (symbol)
-                  (uniqueness_affix)))))
+                  (identifier
+                    (global_identifier
+                      global: (symbol)
+                      (uniqueness_affix)))))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
                 (expression
-                  name: (local)
-                  (uniqueness_affix))))))
+                  (identifier
+                    (qualified_identifier
+                      global: (symbol)
+                      local: (local_symbol)
+                      (uniqueness_affix))))))))
         (local_label_block
-          name: (local)
-          (uniqueness_affix)
+          name: (local_identifier
+            (local_symbol)
+            (uniqueness_affix))
           (instruction_list
             (instruction
               opcode: (instruction_name)
               (operand_list
                 (expression
-                  name: (local)
-                  (uniqueness_affix)))))
+                  (identifier
+                    (local_identifier
+                      (local_symbol)
+                      (uniqueness_affix)))))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
@@ -226,7 +250,9 @@ ENDR
     (macro_definition
       (directive_keyword)
       (expression
-        (symbol))
+        (identifier
+          (global_identifier
+            (symbol))))
       (directive
         (simple_directive
           (directive_keyword)
@@ -296,7 +322,9 @@ ENDR
     (for_block
       (directive_keyword)
       (expression
-        (symbol))
+        (identifier
+          (global_identifier
+            (symbol))))
       (expression
         (number_literal))
       (expression
@@ -309,14 +337,16 @@ ENDR
               (string_literal
                 (interpolation
                   (format_spec)
-                  (interpolation_content)))))))
+                  (symbol)))))))
       (directive
         (if_block
           (directive_keyword)
           (expression
             (binary_expression
               (expression
-                (symbol))
+                (identifier
+                  (global_identifier
+                    (symbol))))
               (expression
                 (number_literal))))
           (directive
@@ -401,7 +431,9 @@ ENDR
         (for_block
           (directive_keyword)
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal))
           (expression
@@ -412,7 +444,9 @@ ENDR
               (expression
                 (binary_expression
                   (expression
-                    (symbol))
+                    (identifier
+                      (global_identifier
+                        (symbol))))
                   (expression
                     (number_literal))))
               (directive
@@ -531,7 +565,8 @@ ENDL
       (string_literal)
       (section_type)
       (global_label_block
-        (label)
+        (global_identifier
+          (symbol))
         (instruction_list
           (instruction
             (instruction_name)
@@ -539,7 +574,9 @@ ENDL
               (expression
                 (register))
               (expression
-                (local)))))
+                (identifier
+                  (local_identifier
+                    (local_symbol)))))))
         (instruction_list
           (instruction
             (instruction_name)
@@ -561,7 +598,8 @@ ENDL
                         (expression
                           (number_literal))))))))))
         (local_label_block
-          (local)
+          (local_identifier
+            (local_symbol))
           (directive
             (simple_directive
               (directive_keyword)
@@ -648,12 +686,14 @@ POPS
       (string_literal)
       (section_type)
       (global_label_block
-        (label)
+        (global_identifier
+          (symbol))
         (directive
           (simple_directive
             (directive_keyword))))
       (global_label_block
-        (label)
+        (global_identifier
+          (symbol))
         (directive
           (ds_directive
             (directive_keyword)
@@ -797,7 +837,8 @@ wAnswer: db
       (string_literal)
       (section_type))
     (global_label_block
-      (label)
+      (global_identifier
+        (symbol))
       (instruction_list
         (instruction
           (instruction_name)
@@ -811,7 +852,8 @@ wAnswer: db
         (string_literal)
         (section_type)
         (global_label_block
-          (label)
+          (global_identifier
+            (symbol))
           (directive
             (simple_directive
               (directive_keyword))))
@@ -822,7 +864,9 @@ wAnswer: db
           (operand_list
             (address
               (expression
-                (symbol)))
+                (identifier
+                  (global_identifier
+                    (symbol)))))
             (expression
               (register))))))))
 
@@ -900,7 +944,9 @@ POPS
             (function_call
               (function_name)
               (expression
-                (symbol))))
+                (identifier
+                  (global_identifier
+                    (symbol))))))
           (directive
             (simple_directive
               (directive_keyword)

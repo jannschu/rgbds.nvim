@@ -6,6 +6,7 @@ function _top_level_statements($) {
     // we allow statements outside sections/labels
     // to support macro generated code we can not see and files that are included
     repeat($._statement),
+    repeat(alias($.qualified_label_block, $.local_label_block)),
     repeat($.local_label_block),
     repeat($.global_label_block),
     repeat($.section_block),
@@ -17,10 +18,19 @@ module.exports = grammar({
 
   externals: $ => [
     $.symbol,
-    $._label_token,
-    $._local_label,
-    $._qualified_local_label,
-    $._eol,  // End-of-line token: injected before ']]' and at EOF
+    $.raw_symbol,
+    $.local_symbol,
+    $._symbol_fragment,
+
+    $._identifier_boundary,
+    $._global_symbol_begin,
+    $._local_symbol_begin,
+    $._qualified_symbol_begin,
+
+    $._format_spec,
+
+    // End-of-line token: injected before ']]' and at EOF
+    $._eol,
     $._load_end,
     $._error_sentinel,
   ],
@@ -28,9 +38,11 @@ module.exports = grammar({
   conflicts: $ => [
     [$.condition_code, $.register],  // both accept 'C'
     [$.macro_invocation],
-    [$.interpolatable_identifier],
     [$.ds_directive],
     [$.global_label_block],
+    [$.local_label_block],
+    [$.qualified_label_block],
+    [$._qualified_label_header, $._local_label_header],
   ],
 
   extras: $ => [
@@ -44,8 +56,6 @@ module.exports = grammar({
 
   inline: $ => [],
 
-  word: $ => $._local_label,
-
   rules: {
     source_file: $ => _top_level_statements($),
 
@@ -56,41 +66,7 @@ module.exports = grammar({
         /\r?\n/,
       ),
 
-
     // ----- Labels -----
-
-    uniqueness_affix: $ => token.immediate('\\@'),
-
-    _any_local: $ =>
-      seq(
-        field(
-          'name',
-          alias(
-            choice(
-              $._qualified_local_label,
-              $._local_label,
-              $.qualified_raw_identifier,
-            ),
-            $.local,
-          ),
-        ),
-        optional($.uniqueness_affix),
-      ),
-
-    _qualified_local: $ => seq(
-      field('name', alias($._qualified_local_label, $.local)),
-      optional($.uniqueness_affix),
-    ),
-
-    _label: $ => seq(
-      field('name', alias($._label_token, $.label)),
-      optional($.uniqueness_affix),
-    ),
-
-    _symbol_with_opt_affix: $ => seq(
-      field('name', $.symbol),
-      optional($.uniqueness_affix),
-    ),
 
     // Section blocks: SECTION directive and its contents
     section_block: $ =>
@@ -99,11 +75,12 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
-        repeat($._qualified_label_block),
+        repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
         optional(field('end', alias(ci('ENDSECTION'), $.directive_keyword))),
       ),
 
+    _colon: $ => token.immediate(':'),
 
     // Global label blocks: global label and its contents
     global_label_block: $ =>
@@ -115,8 +92,8 @@ module.exports = grammar({
 
     _global_label_header: $ =>
       seq(
-        choice($._label, $.raw_identifier),
-        choice(token.immediate('::'), token.immediate(':')),
+        field('name', $.global_identifier),
+        choice(token.immediate('::'), $._colon),
       ),
 
     // Local label blocks: local label and its contents
@@ -128,24 +105,29 @@ module.exports = grammar({
 
     _local_label_header: $ =>
       seq(
-        // FIXME: are thre "raw" local labels?
-        $._any_local,
-        optional(token.immediate(':')),
+        field(
+          'name',
+          choice(
+            $.local_identifier,
+            $.qualified_identifier,
+          ),
+        ),
+        optional($._colon),
       ),
 
-    _qualified_label_block: $ =>
-      alias(
-        seq(
-          $._qualified_label_header,
-          repeat($._statement)
-        ),
-        $.local_label_block,
+    qualified_label_block: $ =>
+      seq(
+        $._qualified_label_header,
+        repeat1($._statement)
       ),
 
     _qualified_label_header: $ =>
       seq(
-        $._qualified_local,
-        optional(token.immediate(':')),
+        field(
+          'name',
+          $.qualified_identifier,
+        ),
+        optional($._colon),
       ),
 
     // ----- Section statements -----
@@ -233,7 +215,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
-        repeat($._qualified_label_block),
+        repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
         field('end', alias($._load_end, $.directive_keyword)),
       ),
@@ -245,7 +227,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
-        repeat($._qualified_label_block),
+        repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
         repeat($.section_block),
         field('end', alias(ci('POPS'), $.directive_keyword)),
@@ -308,16 +290,7 @@ module.exports = grammar({
     def_directive: $ =>
       seq(
         field('keyword', alias(ci('DEF', 'REDEF'), $.directive_keyword)),
-        field('name',
-          seq(
-            choice(
-              $.interpolatable_identifier,
-              $.raw_identifier,
-              $.symbol,
-            ),
-            optional($.uniqueness_affix),
-          ),
-        ),
+        field('name', $.global_identifier),
         choice(
           // String constant: DEF name EQUS "value" or #"value"
           seq(
@@ -395,7 +368,6 @@ module.exports = grammar({
     // - Escaped commas (\,)
     opt_arg: $ =>
       seq(
-        // this must not match $._local_label, so we don't allow dot prefix here
         choice(
           // Raw option text: letters, digits, dots, dashes, etc.
           // Excludes unescaped commas (those are argument separators)
@@ -499,8 +471,7 @@ module.exports = grammar({
 
     macro_invocation: $ =>
       seq(
-        // Macros must not be nested, so we do not allow \@ affix here
-        $.symbol,
+        $.global_identifier,
         optional(alias(token.immediate('?'), $.quiet)),
         optional(
           alias($._macro_args, $.argument_list),
@@ -571,7 +542,7 @@ module.exports = grammar({
 
     // ----- Comments -----
 
-    inline_comment: $ => token(seq(';', /.*/)),
+    inline_comment: $ => token(seq(';', /[^\r\n]*/)),
 
     // C-style block comments (RGBDS behavior: no nesting)
     block_comment: $ =>
@@ -650,27 +621,31 @@ module.exports = grammar({
       'XOR',
     ),
 
+    _dot: $ => '.',
+
     constant: $ =>
-      ci(
-        '@',
-        '.',
-        '..',
-        '__SCOPE__',
-        '_RS',
-        '_NARG',
-        '__ISO_8601_LOCAL__',
-        '__ISO_8601_UTC__',
-        '__UTC_YEAR__',
-        '__UTC_MONTH__',
-        '__UTC_DAY__',
-        '__UTC_HOUR__',
-        '__UTC_MINUTE__',
-        '__UTC_SECOND__',
-        '__RGBDS_MAJOR__',
-        '__RGBDS_MINOR__',
-        '__RGBDS_PATCH__',
-        '__RGBDS_RC__',
-        '__RGBDS_VERSION__',
+      choice(
+        $._dot,
+        ci(
+          '@',
+          '..',
+          '__SCOPE__',
+          '_RS',
+          '_NARG',
+          '__ISO_8601_LOCAL__',
+          '__ISO_8601_UTC__',
+          '__UTC_YEAR__',
+          '__UTC_MONTH__',
+          '__UTC_DAY__',
+          '__UTC_HOUR__',
+          '__UTC_MINUTE__',
+          '__UTC_SECOND__',
+          '__RGBDS_MAJOR__',
+          '__RGBDS_MINOR__',
+          '__RGBDS_PATCH__',
+          '__RGBDS_RC__',
+          '__RGBDS_VERSION__',
+        ),
       ),
 
     register: $ => ci('A', 'B', 'C', 'D', 'E', 'H', 'L', 'AF', 'BC', 'DE', 'HL', 'SP'),
@@ -726,16 +701,13 @@ module.exports = grammar({
         $.graphics_literal,
         $.char_literal,
         $.anonymous_label_ref,
-        $._any_local,
         $.constant,
         $.register,
         $.fragment_literal,
-        $.interpolatable_identifier,
         $.macro_argument,
         $.macro_arguments_spread,
         $.function_call,
-        $._symbol_with_opt_affix,
-        $.raw_identifier,
+        $.identifier,
         seq('(', $.expression, ')')
       ),
 
@@ -905,58 +877,6 @@ module.exports = grammar({
     _string_content_triple: $ =>
       token.immediate(prec(1, /([^"{]|\\.)+/)),
 
-    interpolation: $ =>
-      seq(
-        '{',
-        optional(field('format', $.format_spec)),
-        field('name', repeat1($.interpolation_content)),
-        '}'
-      ),
-
-    immediate_interpolation: $ =>
-      seq(
-        token.immediate('{'),
-        optional(field('format', $.format_spec)),
-        field('name', repeat1($.interpolation_content)),
-        '}',
-      ),
-
-    // Content inside interpolation braces: identifier chars and nested interpolations
-    // Matches RGBDS behavior of reading chars until '}' (lexer.cpp:1344-1347)
-    // Must be visible (not _hidden) to appear in parse tree
-    interpolation_content: $ =>
-      choice(
-        // Nested interpolation: {inner}
-        $.interpolation,
-        // Raw identifier characters (don't use $.symbol - avoid external scanner)
-        // Matches [A-Za-z_][A-Za-z0-9_#$@]* with different prefix patterns
-        // TODO: a predefined keyword without any other interpolation should error
-        //       eg "{if}"
-        /[A-Za-z_][A-Za-z0-9_#$@]*/,
-        // TODO: check if {.foo} is valid, not sure if this local label style identifier is allowed
-        // Dot prefix for local labels: .label
-        /\.[A-Za-z_][A-Za-z0-9_#$@]*/,
-        // Hash prefix for raw identifiers: #keyword
-        /#[A-Za-z_][A-Za-z0-9_#$@]*/,
-      ),
-
-    // Format specifier for interpolation: {formatspec:symbol}
-    // Syntax: [sign][exact][align][pad][width][frac][prec]type:
-    // NOTE: Single letter format types (d, x, X, etc.) conflict with symbol matching
-    format_spec: $ =>
-      token.immediate(seq(
-        optional(choice('+', ' ')),  // sign
-        optional('#'),                // exact
-        optional('-'),                // align
-        optional('0'),                // pad
-        optional(/[0-9]+/),           // width
-        optional(seq('.', /[0-9]*/)), // frac
-        optional(/q[0-9]+/),          // prec
-        choice('d', 'u', 'x', 'X', 'b', 'o', 'f', 's'), // type
-        // TODO: expose this as separate field / node
-        ':',
-      )),
-
     // Macro argument escapes usable inside macro/rept bodies
     macro_argument: $ =>
       token(seq(
@@ -982,60 +902,138 @@ module.exports = grammar({
         )
       ),
 
-    // Raw identifiers allow using reserved keywords as symbols
-    // e.g. #load, #LOAD, #IF, etc.
-    raw_identifier: $ =>
-      seq(
-        field('marker', '#'),
-        token.immediate(/[A-Za-z_][A-Za-z0-9_#$@]*/),
-      ),
+    // ----- Identifiers -----
 
-    qualified_raw_identifier: $ =>
-      seq(
-        $.raw_identifier,
-        token.immediate(/\.[A-Za-z0-9_#$@]*/),
-      ),
+    uniqueness_affix: $ => token.immediate('\\@'),
 
-    // Interpolatable identifier: identifier containing at least one {interpolation}
-    // Examples: {x}, foo{x}, {x}foo, foo{x}bar{y}
-    interpolatable_identifier: $ =>
+    identifier: $ => choice(
+      $.global_identifier,
+      $.local_identifier,
+      $.qualified_identifier,
+    ),
+
+    // -- Global Identifiers --
+
+    // A global identifier, without the uniqueness affix
+    _global_identifier_part: $ => choice(
+      $.symbol,
+      $._interpolated_global_identifier,
+      $.raw_symbol,
+    ),
+
+    global_identifier: $ => seq(
+      $._global_symbol_begin,
+      field('global', $._global_identifier_part),
+      $._identifier_boundary,
+      optional($.uniqueness_affix),
+    ),
+
+    // -- Local Identifiers --
+
+    // Part after the '.' in a local identifier,
+    // without any uniqueness affix.
+    //
+    // NOTE: This must only match if immediate to 
+    // prevent whitespace between '.' and the identifier part
+    _local_identifier_part: $ => choice(
+      $._interpolated_local_identifier,
+      $.local_symbol,
+    ),
+
+    local_identifier: $ => seq(
+      $._dot,
+      $._local_identifier_part,
+      $._identifier_boundary,
+      optional($.uniqueness_affix),
+    ),
+
+    // -- Qualified Identifiers --
+
+    qualified_identifier: $ => seq(
+      $._qualified_symbol_begin,
+      field('global', $._global_identifier_part),
+      token.immediate('.'),
+      field('local', $._local_identifier_part),
+      $._identifier_boundary,
+      optional($.uniqueness_affix),
+    ),
+
+    // ----- Interpolations -----
+
+    _interpolated_global_identifier: $ =>
       seq(
-        choice(
-          seq(
-            $._identifier_fragment_initial,
-            alias($.immediate_interpolation, $.interpolation),
-          ),
-          $.interpolation,
+        optional(
+          field('marker', '#'),
         ),
-        // ($.raw_identifier),
-
-        // At least one interpolation required (distinguishes from plain symbol)
-        // $.interpolation,
-
-        // Then any mix of fragments and interpolations
-        // Subsequent fragments use .immediate() to prevent whitespace
+        optional(alias(/[A-Za-z_][A-Za-z0-9_#$@]*/, $.symbol)),
+        $.interpolation,
         repeat(
           choice(
-            $.identifier_fragment,  // Uses .immediate()
-            $.interpolation,
+            alias($._symbol_fragment, $.symbol),
+            $._immediate_interpolation,
           ),
         ),
       ),
 
-    // First identifier fragment (no .immediate() needed)
-    _identifier_fragment_initial: $ =>
-      prec(1,
-        choice(
-          $.symbol,
-          $.raw_identifier,
-        ),
+    _interpolated_local_identifier: $ =>
+      seq(
+        optional(alias($._symbol_fragment, $.local_symbol)),
+        $._immediate_interpolation,
+        repeat(
+          choice(
+            alias($._symbol_fragment, $.local_symbol),
+            $._immediate_interpolation,
+          ),
+        )
       ),
 
-    // Identifier fragment: part of identifier without braces
-    // Must be immediate to prevent whitespace between parts
-    // Supports RGBDS identifier chars: A-Za-z0-9_#$@
-    identifier_fragment: $ =>
-      token.immediate(/[A-Za-z_][A-Za-z0-9_#$@]*/),
+    _immediate_interpolation_: $ =>
+      seq(
+        token.immediate('{'),
+        optional(field('format', $.format_spec)),
+        repeat1($._interpolation_content),
+        '}',
+      ),
+    _immediate_interpolation: $ =>
+      alias($._immediate_interpolation_, $.interpolation),
+
+    interpolation: $ =>
+      seq(
+        '{',
+        optional(field('format', $.format_spec)),
+        repeat1($._interpolation_content),
+        '}',
+      ),
+
+    _interpolation_content: $ =>
+      choice(
+        $._interpolated_global_identifier,
+        $.symbol,
+        $.raw_symbol,
+      ),
+
+    // Format specifier for interpolation: {formatspec:symbol}
+    // Syntax: [sign][exact][align][pad][width][frac][prec]type:
+    // NOTE: Single letter format types (d, x, X, etc.) conflict with symbol matching
+    format_spec: $ =>
+      seq(
+        $._format_spec,
+        token.immediate(':'),
+      ),
+    // token.immediate(
+    //   seq(
+    //     optional(choice('+', ' ')),  // sign
+    //     optional('#'),                // exact
+    //     optional('-'),                // align
+    //     optional('0'),                // pad
+    //     optional(/[0-9]+/),           // width
+    //     optional(seq('.', /[0-9]*/)), // frac
+    //     optional(/q[0-9]+/),          // prec
+    //     choice('d', 'u', 'x', 'X', 'b', 'o', 'f', 's'), // type
+    //     // TODO: expose this as separate field / node
+    //     ':',
+    //   ),
+    // ),
   },
 });
 

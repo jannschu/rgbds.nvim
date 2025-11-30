@@ -1,23 +1,33 @@
 #include "tree_sitter/parser.h"
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wctype.h>
 
 #define MAX_IDENTIFIER_LENGTH 255
+#define DEBUG_SCANNER 0
 
 enum TokenType {
-  // Non-reserved identifier, neither a label nor a keyword.
   SYMBOL_TOKEN,
-  // Global label ends with ':', e.g. "Start:"
-  LABEL_TOKEN,
-  // Unqualified local label starting with dot, e.g. ".loop"
-  LOCAL_TOKEN,
-  // Qualified local label with dot (not starting with dot), e.g. "Start.local"
-  QUALIFIED_LOCAL_TOKEN,
+  RAW_SYMBOL_TOKEN,
+  LOCAL_SYMBOL_TOKEN,
+  SYMBOL_FRAGMENT_TOKEN,
+
+  IDENTIFIER_BOUNDARY_TOKEN,
+
+  // Looking ahead for start of identifiers, which need considerable
+  // lookahead information
+  GLOBAL_SYMBOL_BEGIN,
+  LOCAL_SYMBOL_BEGIN,
+  QUALIFIED_LOCAL_SYMBOL_BEGIN,
+
+  FORMAT_SPEC,
+
   // End of line: physical newline, or synthetic (before ']]', at EOF)
   EOL_TOKEN,
+
   // A LOAD _may_ be ended by each of the following:
   // - <eof>
   // - ENDL token
@@ -46,8 +56,7 @@ void tree_sitter_rgbasm_external_scanner_deserialize(void *payload,
 
 static inline bool is_identifier_char(int32_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-         (c >= '0' && c <= '9') || c == '_' || c == '.' || c == '#' ||
-         c == '@' || c == '$';
+         (c >= '0' && c <= '9') || c == '_' || c == '#' || c == '@' || c == '$';
 }
 
 static inline void advance(TSLexer *lexer) { lexer->advance(lexer, false); }
@@ -57,16 +66,11 @@ static inline void skip(TSLexer *lexer) { lexer->advance(lexer, true); }
 static inline bool is_blank(int32_t c) { return c == ' ' || c == '\t'; }
 
 static inline bool is_identifier_start(int32_t c) {
-  // Include '.' for local labels (.loop, .local, etc.)
-  // '#' is NOT included here - it has context-dependent behavior:
-  //   - At identifier start (#if, #section): Raw identifier escape (handled by
-  //   internal lexer)
-  //   - After a dot (.#if, .#local): Just a regular character in the local
-  //   label name
-  //     Example: .#if creates a local label literally named "#if" (# is part of
-  //     the name)
-  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
-         c == '.';
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+static inline bool is_identifier_boundary(int32_t c) {
+  return !is_identifier_char(c) && c != '{' && c != '.';
 }
 
 static inline int matches_any(const char *input, size_t len,
@@ -181,123 +185,238 @@ static inline bool swallow_uniqueness_affix(TSLexer *lexer) {
   return false;
 }
 
+static inline bool is_format_char(int32_t c) {
+  return (c == 'd' || c == 'u' || c == 'x' || c == 'X' || c == 'b' ||
+          c == 'o' || c == 'f' || c == 's');
+}
+
+static inline bool scan_format_spec(TSLexer *lexer) {
+  if (lexer->lookahead == '+' || lexer->lookahead == ' ') {
+    advance(lexer);
+  }
+  if (lexer->lookahead == '#') {
+    advance(lexer);
+  }
+  do {
+    advance(lexer);
+  } while (lexer->lookahead >= '0' && lexer->lookahead <= '9');
+  if (lexer->lookahead == 'q') {
+    advance(lexer);
+    int digits = 0;
+    do {
+      advance(lexer);
+      digits += 1;
+    } while (lexer->lookahead >= '0' && lexer->lookahead <= '9');
+    if (digits == 0) {
+      return false;
+    }
+  }
+  if (is_format_char(lexer->lookahead)) {
+    advance(lexer);
+  }
+  if (lexer->lookahead == ':') {
+    lexer->mark_end(lexer);
+    lexer->result_symbol = FORMAT_SPEC;
+    return true;
+  }
+  return false;
+}
+
 // Scan an identifier and classify as SYMBOL, LOCAL, or LABEL
 static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
-  // Must start with valid identifier start character
-  if (!is_identifier_start(lexer->lookahead)) {
+  char start = lexer->lookahead;
+  if (start == '+' || start == ' ' || start == '-' ||
+      (start >= '0' && start <= '9')) {
+    return scan_format_spec(lexer);
+  }
+  bool raw = false;
+  bool local = is_identifier_char(start);
+  bool symbol = is_identifier_start(start);
+
+  if (!symbol) {
+    // could still be raw or local
+    if (local) {
+      raw = (lexer->lookahead == '#');
+      advance(lexer);
+    } else {
+      return false;
+    }
+  }
+
+  if (raw && (start == '-' || (start >= '0' && start <= '9'))) {
+    return scan_format_spec(lexer);
+  }
+
+  if (!symbol && !local && !raw) {
     return false;
   }
 
-  lexer->mark_end(lexer);
-
-  // Track dot state
-  bool has_dot = false;
   // Scan the identifier into a buffer
   size_t len = 0;
   char name[MAX_IDENTIFIER_LENGTH + 1];
   while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
     char c = (char)lexer->lookahead;
-    if (c == '.') {
-      if (has_dot) {
-        return false;
-      }
-      // Check if we have a reserved word followed by a dot
-      // This is invalid: keywords cannot be prefixes of qualified local labels
-      // e.g., "DS.local" should be an error, not "DS" + ".local"
-      if (len > 0 && is_reserved_word(name, len)) {
-        // Consume the rest of the identifier
-        advance(lexer); // consume the dot
-        while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
-          advance(lexer);
-        }
-        // Mark end and return ERROR token,
-        // although this is not in valid_symbols,
-        // but we use this to fail early, otherwise things like "DS.local"
-        // will parse as DS + .local
-        lexer->mark_end(lexer);
-        lexer->result_symbol = ERROR;
-        return true;
-      }
-      has_dot = true;
-    }
     name[len++] = c;
     advance(lexer);
   }
   name[len] = '\0';
 
+#if DEBUG_SCANNER
+  printf("# Scanned identifier: '%s' (len=%zu), symbol=%d, local=%d, raw=%d\n",
+         name, len, symbol, local, raw);
+#endif
+
   // Check what follows the identifier
   int32_t next = lexer->lookahead;
 
-  bool marked = false;
-  if (next == '\\') {
-    // this will not become a LOAD_END_TOKEN
-    // and we do not want to include the potential \@
+  if (valid_symbols[FORMAT_SPEC] && len == 1 && next == ':' &&
+      is_format_char(name[0])) {
     lexer->mark_end(lexer);
-    marked = true;
+    lexer->result_symbol = FORMAT_SPEC;
+    return true;
   }
+
+  // we do not want to include the potential \@
+  lexer->mark_end(lexer);
   const bool had_affix = swallow_uniqueness_affix(lexer);
   if (had_affix) {
     next = lexer->lookahead;
   }
-  if (
-      // presence of an affix means this is not a reserved word
-      !had_affix &&
-      // presence of dot means this is not a reserved word, they do not contain
-      // dots
-      !has_dot && is_reserved_word(name, len)) {
-    // Check if we might scan a LOAD_END_TOKEN
-    if (valid_symbols[LOAD_END_TOKEN]) {
-      const size_t match = matches_any(
-          name, len,
-          (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 4);
-      if (match != -1) {
-        lexer->result_symbol = LOAD_END_TOKEN;
-        // if ENDL, consume it
-        if (match == 0) {
-          lexer->mark_end(lexer);
-        }
-        return true;
-      }
+  if (valid_symbols[SYMBOL_FRAGMENT_TOKEN]) {
+    // if local symbol is also valid here, we prefer it
+    if (valid_symbols[LOCAL_SYMBOL_TOKEN] && local && next != '{') {
+      lexer->result_symbol = LOCAL_SYMBOL_TOKEN;
+    } else {
+      lexer->result_symbol = SYMBOL_FRAGMENT_TOKEN;
+    }
+    return true;
+  }
+  // only fragments are allowed before interpolation
+  if (next == '{') {
+    return false;
+  }
+  // presence of an affix means this is no longer a reserved word
+  const bool reserved = symbol && !had_affix && is_reserved_word(name, len);
+  if (reserved) {
+    symbol = false;
+#if DEBUG_SCANNER
+    printf("  Identifier is a reserved word: '%s'\n", name);
+#endif
+  }
+
+#if DEBUG_SCANNER
+  printf("# Identifier classification: symbol=%d, local=%d, raw=%d\n", symbol,
+         local, raw);
+#endif
+
+  if (raw) {
+    if (valid_symbols[RAW_SYMBOL_TOKEN]) {
+      lexer->result_symbol = SYMBOL_TOKEN;
+      return true;
+    }
+    return false;
+  } else if (symbol) {
+    if (valid_symbols[SYMBOL_TOKEN]) {
+      lexer->result_symbol = SYMBOL_TOKEN;
+      return true;
+    }
+    return false;
+  } else if (local) {
+    if (valid_symbols[LOCAL_SYMBOL_TOKEN]) {
+      lexer->result_symbol = LOCAL_SYMBOL_TOKEN;
+      return true;
     }
     return false;
   }
 
-  if (!marked) {
-    lexer->mark_end(lexer);
-  }
+  return false;
+}
 
-  // Classify token based on RGBDS rules
-  if (has_dot) {
-    if (name[len - 1] == '.') {
-      // Ends with dot → invalid
+static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
+  lexer->mark_end(lexer);
+  bool raw = lexer->lookahead == '#';
+  if (raw) {
+    advance(lexer);
+  }
+  size_t interpolation = 0;
+  bool interpolated = false;
+  size_t len = 0;
+  char name[MAX_IDENTIFIER_LENGTH + 1];
+  int dot = -1;
+
+  while (interpolation > 0 || is_identifier_char(lexer->lookahead) ||
+         lexer->lookahead == '.' || lexer->lookahead == '{') {
+    int32_t c = lexer->lookahead;
+    name[len] = (char)c;
+    if (c == '{') {
+      interpolation += 1;
+      interpolated = true;
+    } else if (interpolation > 0) {
+      if (c == '}') {
+        interpolation -= 1;
+      }
+      if (c == '\r' || c == '\n' || c == '\0') {
+        // unterminated interpolation
+        return false;
+      }
+    } else if (c == '.') {
+      if (dot != -1) {
+        // multiple dots not allowed
+        return false;
+      }
+      dot = (int)len;
+    } else if (len == 0 && !is_identifier_start(c)) {
       return false;
     }
-    if (name[0] == '.') {
-      // Starts with dot → LOCAL_TOKEN
-      if (valid_symbols[LOCAL_TOKEN]) {
-        lexer->result_symbol = LOCAL_TOKEN;
-        return true;
-      }
-      return false;
-    } else {
-      // Contains dot (not starting with) → QUALIFIED_LOCAL_TOKEN
-      if (valid_symbols[QUALIFIED_LOCAL_TOKEN]) {
-        lexer->result_symbol = QUALIFIED_LOCAL_TOKEN;
-        return true;
-      }
-      return false;
+    advance(lexer);
+    len += 1;
+  }
+  if (len == 0) {
+    return false;
+  }
+  if (raw && dot == 0) {
+    // raw local symbol cannot start with #
+    return false;
+  }
+  if (dot == 0) {
+    // local symbol
+    if (valid_symbols[LOCAL_SYMBOL_BEGIN]) {
+      lexer->result_symbol = LOCAL_SYMBOL_BEGIN;
+      return true;
     }
-  } else if (next == ':') {
-    if (valid_symbols[LABEL_TOKEN]) {
-      // No dots, followed by colon → LABEL_TOKEN (colon not included)
-      lexer->result_symbol = LABEL_TOKEN;
+    return false;
+  } else if (dot > 0) {
+    // qualified local symbol
+    if (valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN]) {
+      lexer->result_symbol = QUALIFIED_LOCAL_SYMBOL_BEGIN;
       return true;
     }
     return false;
   } else {
-    // No dots, not followed by colon → SYMBOL_TOKEN
-    if (valid_symbols[SYMBOL_TOKEN]) {
-      lexer->result_symbol = SYMBOL_TOKEN;
+    if (!raw && !interpolated && is_reserved_word(name, len)) {
+      if (valid_symbols[LOAD_END_TOKEN]) {
+        const size_t match = matches_any(
+            name, len,
+            (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 4);
+        if (match != -1) {
+          lexer->result_symbol = LOAD_END_TOKEN;
+          // if ENDL, consume it
+          if (match == 0) {
+            lexer->mark_end(lexer);
+          }
+          return true;
+        }
+      }
+
+      const bool had_affix = swallow_uniqueness_affix(lexer);
+      if (!had_affix) {
+        // reserved word cannot be global symbol
+        return false;
+      }
+    }
+    // global symbol
+    if (valid_symbols[GLOBAL_SYMBOL_BEGIN]) {
+      lexer->result_symbol = GLOBAL_SYMBOL_BEGIN;
       return true;
     }
     return false;
@@ -305,18 +424,33 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
 }
 
 static bool scan(TSLexer *lexer, const bool *valid_symbols) {
+  if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
+    if (is_identifier_boundary(lexer->lookahead)) {
+      lexer->mark_end(lexer);
+      lexer->result_symbol = IDENTIFIER_BOUNDARY_TOKEN;
+      return true;
+    }
+  }
+
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
 
   // Check for EOL token: newline, EOF, or before ]]
   if (valid_symbols[EOL_TOKEN]) {
-    // Mark end position FIRST (like tree-sitter-javascript automatic semicolon)
+    // Mark end position FIRST (like tree-sitter-javascript automatic
+    // semicolon)
     lexer->mark_end(lexer);
     lexer->result_symbol = EOL_TOKEN;
 
+#if DEBUG_SCANNER
+    printf("# Scanning for EOL token\n");
+    printf("  eof: %d, lookahead: 0x%02X\n", lexer->eof(lexer),
+           (unsigned int)lexer->lookahead);
+#endif
+
     if (lexer->eof(lexer)) {
-      return false;
+      return true;
     }
     // Before ']]' (fragment literal end)
     else if (lexer->lookahead == ']') {
@@ -339,11 +473,17 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
     }
   }
 
-  // Try to match identifier token (symbol, local, qualified local, or label)
-  if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[LOCAL_TOKEN] ||
-       valid_symbols[QUALIFIED_LOCAL_TOKEN] || valid_symbols[LOAD_END_TOKEN] ||
-       valid_symbols[LABEL_TOKEN]) &&
-      scan_identifier_token(lexer, valid_symbols)) {
+  if (valid_symbols[GLOBAL_SYMBOL_BEGIN] || valid_symbols[LOCAL_SYMBOL_BEGIN] ||
+      valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ||
+      valid_symbols[LOAD_END_TOKEN]) {
+    if (scan_identifier_start(lexer, valid_symbols)) {
+      return true;
+    }
+  } else if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[RAW_SYMBOL_TOKEN] ||
+              valid_symbols[LOCAL_SYMBOL_TOKEN] ||
+              valid_symbols[SYMBOL_FRAGMENT_TOKEN] ||
+              valid_symbols[FORMAT_SPEC]) &&
+             scan_identifier_token(lexer, valid_symbols)) {
     return true;
   }
 
@@ -352,47 +492,80 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
 
 bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
                                               const bool *valid_symbols) {
-  if (valid_symbols[ERROR]) {
-    return false;
-  }
-
-#define DEBUG_SCANNER 0
 #if DEBUG_SCANNER
-  printf("External scanner invoked. Lookahead: '%c' (0x%02X) ",
+  printf("# External scanner invoked. Lookahead: '%c' (0x%02X) ",
          (lexer->lookahead >= 32 && lexer->lookahead <= 126)
              ? (char)lexer->lookahead
              : '?',
          (unsigned int)lexer->lookahead);
   // Print valid symbols presence by lower and upper case
-  printf("Valid symbols: %c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
-  printf("%c", valid_symbols[LOCAL_TOKEN] ? 'L' : '.');
-  printf("%c", valid_symbols[QUALIFIED_LOCAL_TOKEN] ? 'Q' : '.');
-  printf("%c", valid_symbols[LOAD_END_TOKEN] ? 'E' : '.');
-  printf("%c ", valid_symbols[LABEL_TOKEN] ? 'B' : '.');
+  printf(" Valid symbols: ");
+  printf("%c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
+  printf("%c", valid_symbols[RAW_SYMBOL_TOKEN] ? 'R' : '.');
+  printf("%c", valid_symbols[LOCAL_SYMBOL_TOKEN] ? 'L' : '.');
+  printf("%c", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
+
+  printf("m%c", valid_symbols[IDENTIFIER_BOUNDARY_TOKEN] ? 'B' : '.');
+  printf("%c", valid_symbols[GLOBAL_SYMBOL_BEGIN] ? 'G' : '.');
+  printf("%c", valid_symbols[LOCAL_SYMBOL_BEGIN] ? 'l' : '.');
+  printf("%c ", valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ? 'Q' : '.');
+
+  printf("%c ", valid_symbols[FORMAT_SPEC] ? 'T' : '.');
+
+  printf("%c", valid_symbols[EOL_TOKEN] ? 'E' : '.');
+  printf("%c", valid_symbols[LOAD_END_TOKEN] ? 'e' : '.');
+  printf("\n");
+
+  if (valid_symbols[ERROR]) {
+    printf("  => error sentinel\n");
+    return false;
+  }
 #endif
+
   bool result = scan(lexer, valid_symbols);
+
 #if DEBUG_SCANNER
-  char symbol = ' ';
+  char *symbol = "<none>";
   if (result) {
     switch (lexer->result_symbol) {
     case SYMBOL_TOKEN:
-      symbol = 'S';
+      symbol = "S";
       break;
-    case LOCAL_TOKEN:
-      symbol = 'L';
+    case RAW_SYMBOL_TOKEN:
+      symbol = "R";
       break;
-    case QUALIFIED_LOCAL_TOKEN:
-      symbol = 'Q';
+    case LOCAL_SYMBOL_TOKEN:
+      symbol = "L";
+      break;
+    case SYMBOL_FRAGMENT_TOKEN:
+      symbol = "F";
+      break;
+    case IDENTIFIER_BOUNDARY_TOKEN:
+      symbol = "B";
+      break;
+    case GLOBAL_SYMBOL_BEGIN:
+      symbol = "G";
+      break;
+    case LOCAL_SYMBOL_BEGIN:
+      symbol = "l";
+      break;
+    case QUALIFIED_LOCAL_SYMBOL_BEGIN:
+      symbol = "Q";
+      break;
+    case FORMAT_SPEC:
+      symbol = "T";
+      break;
+    case EOL_TOKEN:
+      symbol = "E";
       break;
     case LOAD_END_TOKEN:
-      symbol = 'E';
+      symbol = "e";
       break;
-    case LABEL_TOKEN:
-      symbol = 'B';
-      break;
+    default:
+      symbol = "?";
     }
   }
-  printf(" => '%c'\n", symbol);
+  printf("  => %s\n", symbol);
 #endif
   return result;
 }

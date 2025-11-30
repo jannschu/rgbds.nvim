@@ -12,7 +12,8 @@ Start:
 (source_file
   (inline_comment)
   (global_label_block
-    (label)
+    (global_identifier
+      (symbol))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -40,7 +41,8 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (label)
+    (global_identifier
+      (symbol))
     (inline_comment)))
 
 ================================================================================
@@ -61,7 +63,8 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (label)
+    (global_identifier
+      (symbol))
     (block_comment)
     (instruction_list
       (instruction
@@ -89,7 +92,8 @@ DEF y = /* before */ 3 * /* after */ 4
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -100,7 +104,8 @@ DEF y = /* before */ 3 * /* after */ 4
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (block_comment)
       (expression
         (binary_expression
@@ -128,7 +133,8 @@ Start: /* block after label */
 (source_file
   (inline_comment)
   (global_label_block
-    (label)
+    (global_identifier
+      (symbol))
     (block_comment)
     (block_comment)
     (instruction_list
@@ -159,7 +165,8 @@ Start:
   (inline_comment)
   (block_comment)
   (global_label_block
-    (label)
+    (global_identifier
+      (symbol))
     (instruction_list
       (instruction
         (instruction_name)))

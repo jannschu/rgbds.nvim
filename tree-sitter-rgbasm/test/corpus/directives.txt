@@ -56,7 +56,8 @@ RSSET 10
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (symbol)
+        name: (global_identifier
+          global: (symbol))
         value: (expression
           (number_literal))))
     (directive
@@ -93,67 +94,78 @@ DEF x ^= $FF
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -184,54 +196,62 @@ DEF str_word RW 2
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (directive_keyword)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (directive_keyword)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
+      (directive_keyword)
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (directive_keyword)
+      (expression
+        (number_literal))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
       (directive_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -255,19 +275,22 @@ DEF struct_byte RB 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -287,7 +310,9 @@ STATIC_ASSERT FATAL, foo == 42
       (expression
         (binary_expression
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal)))))))
 
@@ -321,7 +346,9 @@ STATIC_ASSERT FATAL, foo == 42
             (function_call
               (function_name)
               (expression
-                (symbol))))
+                (identifier
+                  (global_identifier
+                    (symbol))))))
           (expression
             (number_literal))))))
   (directive
@@ -333,7 +360,9 @@ STATIC_ASSERT FATAL, foo == 42
             (function_call
               (function_name)
               (expression
-                (symbol))))
+                (identifier
+                  (global_identifier
+                    (symbol))))))
           (expression
             (number_literal))))))
   (inline_comment)
@@ -343,7 +372,9 @@ STATIC_ASSERT FATAL, foo == 42
       (expression
         (binary_expression
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal))))
       (string_literal)))
@@ -355,9 +386,13 @@ STATIC_ASSERT FATAL, foo == 42
           (expression
             (binary_expression
               (expression
-                (local))
+                (identifier
+                  (local_identifier
+                    (local_symbol))))
               (expression
-                (local))))
+                (identifier
+                  (local_identifier
+                    (local_symbol))))))
           (expression
             (number_literal))))
       (string_literal)))
@@ -369,7 +404,9 @@ STATIC_ASSERT FATAL, foo == 42
       (expression
         (binary_expression
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal))))))
   (directive
@@ -379,7 +416,9 @@ STATIC_ASSERT FATAL, foo == 42
       (expression
         (binary_expression
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal))))
       (string_literal)))
@@ -390,7 +429,9 @@ STATIC_ASSERT FATAL, foo == 42
       (expression
         (binary_expression
           (expression
-            (symbol))
+            (identifier
+              (global_identifier
+                (symbol))))
           (expression
             (number_literal)))))))
 
@@ -453,7 +494,9 @@ POPC
       (directive_keyword)
       (argument_list
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (simple_directive
       (directive_keyword))))
@@ -529,23 +572,33 @@ EXPORT #if, #section
       (directive_keyword)
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (export_directive
       (directive_keyword)
       (argument_list
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (export_directive
       (directive_keyword)
       (argument_list
         (expression
-          (raw_identifier))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (raw_identifier))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Directives: PURGE with raw identifiers
@@ -566,13 +619,15 @@ PURGE #section, #else
   (directive
     (def_directive
       (directive_keyword)
-      (raw_identifier)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (raw_identifier)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (inline_comment)
@@ -581,15 +636,21 @@ PURGE #section, #else
       (directive_keyword)
       (argument_list
         (expression
-          (raw_identifier)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
         (expression
-          (raw_identifier))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (raw_identifier))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Directives: SECTION with BANK option
@@ -912,21 +973,29 @@ POPC
       (directive_keyword)
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (simple_directive
       (directive_keyword))))
@@ -944,15 +1013,17 @@ REDEF n EQU 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
-      name: (uniqueness_affix)
+      name: (global_identifier
+        global: (symbol)
+        (uniqueness_affix))
       assign_type: (directive_keyword)
       value: (expression
         (number_literal))))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (expression
         (number_literal)))))
@@ -970,17 +1041,19 @@ REDEF s EQUS "{s}world!"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (string_literal
         (interpolation
-          name: (interpolation_content))))))
+          (symbol))))))
 
 ================================================================================
 Directives: REDEF with = (redefine variable)
@@ -995,13 +1068,15 @@ REDEF x = 20
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal))))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal)))))
 
@@ -1018,13 +1093,15 @@ REDEF counter += 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal))))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal)))))
 
@@ -1044,22 +1121,28 @@ ENDM ;
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (symbol)
+          name: (global_identifier
+            global: (symbol))
           assign_type: (directive_keyword)
           value: (expression
             (binary_expression
               left: (expression
-                name: (symbol))
+                (identifier
+                  (global_identifier
+                    global: (symbol))))
               right: (expression
                 (number_literal))))))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (symbol)
+          name: (global_identifier
+            global: (symbol))
           assign_type: (directive_keyword)
           value: (expression
             (macro_argument))))
@@ -1079,13 +1162,15 @@ REDEF struct_b RW
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal))))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol))))
+      name: (global_identifier
+        global: (symbol)))))
 
 ================================================================================
 Directives: REDEF with interpolatable identifier
@@ -1100,15 +1185,16 @@ REDEF {LIST_NAME} EQUS "["
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (interpolatable_identifier
-        (interpolation
-          name: (interpolation_content)))
+      name: (global_identifier
+        global: (interpolation
+          (symbol)))
       assign_type: (directive_keyword)
       value: (string_literal))))
 
@@ -1125,19 +1211,23 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (expression
         (number_literal))))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       assign_type: (directive_keyword)
       value: (expression
         (binary_expression
           left: (expression
-            name: (symbol))
+            (identifier
+              (global_identifier
+                global: (symbol))))
           right: (expression
             (number_literal)))))))
 
@@ -1231,21 +1321,24 @@ DB HiGh(100)
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (symbol)
+        name: (global_identifier
+          global: (symbol))
         assign_type: (directive_keyword)
         value: (expression
           (number_literal))))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (symbol)
+        name: (global_identifier
+          global: (symbol))
         assign_type: (directive_keyword)
         value: (expression
           (number_literal))))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (symbol)
+        name: (global_identifier
+          global: (symbol))
         assign_type: (directive_keyword)
         value: (expression
           (number_literal))))
@@ -1253,13 +1346,17 @@ DB HiGh(100)
       (macro_definition
         keyword: (directive_keyword)
         (expression
-          name: (symbol))
+          (identifier
+            (global_identifier
+              global: (symbol))))
         end: (directive_keyword)))
     (directive
       (macro_definition
         keyword: (directive_keyword)
         (expression
-          name: (symbol))
+          (identifier
+            (global_identifier
+              global: (symbol))))
         end: (directive_keyword)))
     (inline_comment)
     (directive
@@ -1322,7 +1419,9 @@ ENDM
     (macro_definition
       (directive_keyword)
       (expression
-        (symbol))
+        (identifier
+          (global_identifier
+            (symbol))))
       (directive
         (opt_directive
           (directive_keyword)
@@ -1384,7 +1483,7 @@ WARN "Value is {d:x}"
           (string_literal
             (interpolation
               format: (format_spec)
-              name: (interpolation_content))))))))
+              (symbol))))))))
 
 ================================================================================
 Directives: FAIL
@@ -1410,7 +1509,7 @@ FAIL "Invalid argument: {d:arg}"
           (string_literal
             (interpolation
               format: (format_spec)
-              name: (interpolation_content))))))))
+              (symbol))))))))
 
 ================================================================================
 Directives: FATAL

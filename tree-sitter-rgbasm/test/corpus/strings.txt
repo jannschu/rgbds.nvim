@@ -23,21 +23,24 @@ ASSERT "a" !== "b"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (directive_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (directive_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (directive_keyword)
       (raw_string_literal)))
   (inline_comment)

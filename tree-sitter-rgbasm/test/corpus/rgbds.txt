@@ -82,23 +82,38 @@ print_all This test, probably, passes\,, but who knows, ?
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (macro_arg_raw)
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (macro_arg_raw)))))
 
 ================================================================================
@@ -150,7 +165,8 @@ char 'c{s}e', 3
           (number_literal)))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (expression
           (char_literal))
@@ -172,7 +188,9 @@ test "デ"
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -184,7 +202,8 @@ test "デ"
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (expression
           (string_literal))))))
@@ -201,11 +220,13 @@ label:
 
 (source_file
   (global_label_block
-    name: (label)
+    name: (global_identifier
+      global: (symbol))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (symbol)
+        name: (global_identifier
+          global: (symbol))
         value: (expression
           (number_literal))))
     (directive
@@ -213,7 +234,9 @@ label:
         keyword: (directive_keyword)
         (argument_list
           (expression
-            name: (symbol)))))))
+            (identifier
+              (global_identifier
+                global: (symbol)))))))))
 
 ================================================================================
 Test Name: RGBDS import: deprecated functions
@@ -273,7 +296,46 @@ both cpl
 
 ---
 
-(fixme)
+(source_file
+  (directive
+    (macro_definition
+      (directive_keyword)
+      (expression
+        (identifier
+          (global_identifier
+            (symbol))))
+      (directive
+        (def_directive
+          (directive_keyword)
+          (global_identifier
+            (symbol))
+          (directive_keyword)
+          (string_literal)))
+      (directive
+        (simple_directive
+          (directive_keyword)))
+      (directive
+        (macro_invocation
+          (global_identifier
+            (interpolation
+              (symbol)))
+          (argument_list
+            (macro_arg_raw))))
+      (directive
+        (macro_invocation
+          (global_identifier
+            (interpolation
+              (symbol)))
+          (argument_list
+            (macro_arg_raw)
+            (macro_arg_raw))))
+      (directive_keyword)))
+  (directive
+    (macro_invocation
+      (global_identifier
+        (symbol))
+      (argument_list
+        (macro_arg_raw)))))
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps
@@ -316,7 +378,9 @@ test
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (assert_directive
           keyword: (directive_keyword)
@@ -332,14 +396,16 @@ test
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (symbol)))
+      (global_identifier
+        global: (symbol))))
   (directive
     (opt_directive
       keyword: (directive_keyword)
       (opt_arg)))
   (directive
     (macro_invocation
-      (symbol))))
+      (global_identifier
+        global: (symbol)))))
 
 ================================================================================
 Test Name: RGBDS import: div/mod macro arithmetic
@@ -358,23 +424,28 @@ test_mod 3, 2
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (symbol)
+          name: (global_identifier
+            global: (symbol))
           value: (expression
             (macro_argument))))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (symbol)
+          name: (global_identifier
+            global: (symbol))
           value: (expression
             (macro_argument))))
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (macro_arg_raw)
         (macro_arg_raw)))))
@@ -450,7 +521,9 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -470,10 +543,13 @@ foo passes\,
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (macro_arg_raw)))))
 
 ================================================================================
@@ -491,7 +567,9 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (expression
-        name: (symbol))
+        (identifier
+          (global_identifier
+            global: (symbol))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -519,7 +597,8 @@ PRINTLN "{d:X}"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (symbol)
+      name: (global_identifier
+        global: (symbol))
       value: (expression
         (number_literal))))
   (directive
@@ -529,7 +608,7 @@ PRINTLN "{d:X}"
         (expression
           (string_literal
             (interpolation
-              name: (interpolation_content)))))))
+              (symbol)))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
@@ -538,7 +617,7 @@ PRINTLN "{d:X}"
           (string_literal
             (interpolation
               format: (format_spec)
-              name: (interpolation_content)))))))
+              (symbol)))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
@@ -547,4 +626,4 @@ PRINTLN "{d:X}"
           (string_literal
             (interpolation
               format: (format_spec)
-              name: (interpolation_content))))))))
+              (symbol))))))))

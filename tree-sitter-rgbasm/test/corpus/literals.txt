@@ -25,63 +25,73 @@ DEF HEX7 = 0x1234
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -118,88 +128,102 @@ DEF OCT7 = 0o52
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (number_literal))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (number_literal))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -220,25 +244,29 @@ DEF FP4 = 789.25
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -263,38 +291,44 @@ DEF GFX6 = `33221100
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (graphics_literal)))))
 
@@ -315,7 +349,8 @@ DEF FPQ1 = 1.0q8
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -336,7 +371,8 @@ DEF CH1 = 'A'
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (char_literal)))))
 
@@ -357,6 +393,7 @@ DEF NUM1 = 123_456
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))

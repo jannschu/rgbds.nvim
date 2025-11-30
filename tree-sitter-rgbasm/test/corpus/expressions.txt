@@ -24,7 +24,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -38,7 +39,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -54,7 +56,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -73,7 +76,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -87,7 +91,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -97,7 +102,8 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -112,7 +118,7 @@ PRINTLN "The value is {X}"
         (expression
           (string_literal
             (interpolation
-              (interpolation_content))))))))
+              (symbol))))))))
 
 ================================================================================
 Expressions: all operators
@@ -150,7 +156,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -160,7 +167,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -175,7 +183,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -185,7 +194,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -195,7 +205,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (unary_expression
           (expression
@@ -208,7 +219,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -218,7 +230,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -228,7 +241,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -239,7 +253,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (unary_expression
           (expression
@@ -247,7 +262,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (unary_expression
           (expression
@@ -255,7 +271,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (unary_expression
           (expression
@@ -264,7 +281,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -274,7 +292,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -284,7 +303,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -294,7 +314,8 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -322,7 +343,8 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -331,7 +353,8 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -340,7 +363,8 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -349,26 +373,33 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (symbol))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
             (function_name)
             (expression
-              (symbol)))))))
+              (identifier
+                (global_identifier
+                  (symbol)))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -377,7 +408,8 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -440,7 +472,8 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -451,7 +484,8 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -462,7 +496,8 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -473,7 +508,8 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -484,101 +520,8 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -590,7 +533,112 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (number_literal))
+          (expression
+            (number_literal))))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -600,7 +648,9 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
             (function_call
               (function_name)
               (expression
-                (symbol)))))))))
+                (identifier
+                  (global_identifier
+                    (symbol)))))))))))
 
 ================================================================================
 Expressions: string functions
@@ -626,7 +676,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -639,7 +690,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -648,7 +700,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -657,7 +710,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -670,7 +724,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -684,7 +739,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -693,18 +749,8 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -715,7 +761,20 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (function_name)
+          (expression
+            (string_literal))
+          (expression
+            (string_literal))))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -740,7 +799,8 @@ DEF BYTE2 = STRBYTE("ABC", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -749,7 +809,8 @@ DEF BYTE2 = STRBYTE("ABC", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -760,7 +821,8 @@ DEF BYTE2 = STRBYTE("ABC", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -785,7 +847,8 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -796,7 +859,8 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -807,7 +871,8 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -833,16 +898,20 @@ DEF SEC_START = STARTOF(VRAM)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (symbol))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -851,16 +920,20 @@ DEF SEC_START = STARTOF(VRAM)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (symbol))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1056,7 +1129,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1065,7 +1139,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1074,7 +1149,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1083,7 +1159,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1092,7 +1169,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1101,7 +1179,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
@@ -1110,7 +1189,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
@@ -1120,7 +1200,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (startof_function
@@ -1130,7 +1211,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
@@ -1140,7 +1222,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1150,7 +1233,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1159,7 +1243,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1168,7 +1253,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1177,7 +1263,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1186,7 +1273,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1195,7 +1283,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
@@ -1205,7 +1294,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (sizeof_function
@@ -1216,7 +1306,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1226,44 +1317,57 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (symbol))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (symbol))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (raw_identifier))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
           (expression
-            (raw_identifier))))))
+            (identifier
+              (global_identifier
+                (symbol))))))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1272,7 +1376,8 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1340,7 +1445,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1349,7 +1455,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1358,7 +1465,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1367,7 +1475,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1376,7 +1485,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1385,7 +1495,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1396,7 +1507,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1407,7 +1519,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1416,7 +1529,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1425,7 +1539,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1434,7 +1549,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1445,7 +1561,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1456,7 +1573,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)
@@ -1467,7 +1585,8 @@ DEF STR2 = STRCHAR("A:)", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (function_call
           (function_name)

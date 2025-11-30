@@ -69,7 +69,8 @@ DEF X = 1 + 2 + \
   (directive
     (def_directive
       (directive_keyword)
-      (symbol)
+      (global_identifier
+        (symbol))
       (expression
         (binary_expression
           (expression
@@ -123,7 +124,8 @@ Line continuation: with comment
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (macro_arg_raw)
         (line_continuation
@@ -142,13 +144,20 @@ Line continuation: with comment
               (inline_comment)))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (line_continuation
           (inline_comment))
         (expression
-          (symbol))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))

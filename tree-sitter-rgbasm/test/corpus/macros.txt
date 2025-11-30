@@ -11,13 +11,16 @@ spam_macro ;
 (source_file
   (directive
     (macro_invocation
-      (symbol)))
+      (global_identifier
+        (symbol))))
   (directive
     (macro_invocation
-      (symbol)))
+      (global_identifier
+        (symbol))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (inline_comment))))
 
 ================================================================================
@@ -33,21 +36,24 @@ calcmacro (FOO + 1) << 2
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (expression
           (expression
             (number_literal))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (macro_arg_raw)
         (macro_arg_raw)
         (macro_arg_raw))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        global: (symbol))
       (argument_list
         (expression
           (binary_expression
@@ -55,7 +61,9 @@ calcmacro (FOO + 1) << 2
               (expression
                 (binary_expression
                   left: (expression
-                    name: (symbol))
+                    (identifier
+                      (global_identifier
+                        global: (symbol))))
                   right: (expression
                     (number_literal)))))
             right: (expression
@@ -73,13 +81,15 @@ print_pair "foo", "bar"
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
           (string_literal)))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
           (string_literal))
@@ -98,26 +108,42 @@ debug_macro some words here
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Macros: RAW arguments with multiple words
@@ -131,30 +157,50 @@ log_macro Processing file data now
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Macros: comment only (no RAW mode)
@@ -168,11 +214,13 @@ testmacro ; another comment
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (inline_comment)))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (inline_comment))))
 
 ================================================================================
@@ -187,26 +235,40 @@ debug_log /* note */ Processing data
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (block_comment)
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (block_comment)
       (argument_list
         (expression
-          (symbol))
+          (identifier
+            (global_identifier
+              (symbol))))
         (expression
-          (symbol))))))
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Macros: expression arguments with identifiers
@@ -223,13 +285,17 @@ simple_call A
   (inline_comment)
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
-          (symbol)))))
+          (identifier
+            (global_identifier
+              (symbol)))))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (macro_arg_raw)))))
 
@@ -245,14 +311,16 @@ format_msg "Hello", 123, "World"
 (source_file
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
           (string_literal))
         (macro_arg_raw))))
   (directive
     (macro_invocation
-      (symbol)
+      (global_identifier
+        (symbol))
       (argument_list
         (expression
           (string_literal))

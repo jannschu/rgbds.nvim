@@ -34,7 +34,9 @@ PRINTLN .loop
       (directive_keyword)
       (argument_list
         (expression
-          (local))))))
+          (identifier
+            (local_identifier
+              (local_symbol))))))))
 
 ================================================================================
 Instructions: arithmetic A with register, immediate, or memory
@@ -686,23 +688,29 @@ Global:: jp nz, Global
           (expression
             (anonymous_label_ref)))))
     (global_label_block
-      (label)
+      (global_identifier
+        (symbol))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
             (condition_code)
             (expression
-              (symbol)))))
+              (identifier
+                (global_identifier
+                  (symbol)))))))
       (local_label_block
-        (local)
+        (local_identifier
+          (local_symbol))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (condition_code)
               (expression
-                (local)))))))))
+                (identifier
+                  (local_identifier
+                    (local_symbol)))))))))))
 
 ================================================================================
 Instructions: SUB and SBC
@@ -1341,7 +1349,9 @@ SECTION "Test", ROM0
         (operand_list
           (condition_code)
           (expression
-            (symbol)))))
+            (identifier
+              (global_identifier
+                (symbol)))))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -1857,35 +1867,45 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (expression
-            (symbol)))))
+            (identifier
+              (global_identifier
+                (symbol)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
           (expression
-            (symbol)))))
+            (identifier
+              (global_identifier
+                (symbol)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
           (expression
-            (symbol)))))
+            (identifier
+              (global_identifier
+                (symbol)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
           (expression
-            (symbol)))))
+            (identifier
+              (global_identifier
+                (symbol)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
           (expression
-            (symbol)))))))
+            (identifier
+              (global_identifier
+                (symbol)))))))))
 
 ================================================================================
 Instructions: JP HL

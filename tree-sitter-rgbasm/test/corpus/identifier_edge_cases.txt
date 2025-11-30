@@ -11,19 +11,19 @@ DEF foo{name} = 2
   (directive
     (def_directive
       (directive_keyword)
-      (interpolatable_identifier
+      (global_identifier
         (interpolation
-          (interpolation_content))
-        (identifier_fragment))
+          (symbol))
+        (symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (interpolatable_identifier
+      (global_identifier
         (symbol)
         (interpolation
-          (interpolation_content)))
+          (symbol)))
       (expression
         (number_literal)))))
 
@@ -43,7 +43,7 @@ PRINTLN "{#if}"
         (expression
           (string_literal
             (interpolation
-              (interpolation_content))))))))
+              (symbol))))))))
 
 ================================================================================
 Interpolation: raw identifier in DEF
@@ -59,7 +59,8 @@ DEF #if = 100
   (directive
     (def_directive
       (directive_keyword)
-      (raw_identifier)
+      (global_identifier
+        (symbol))
       (expression
         (number_literal)))))
 
@@ -75,10 +76,29 @@ DEF #if{suffix} = 200
   (directive
     (def_directive
       (directive_keyword)
-      (interpolatable_identifier
-        (raw_identifier)
+      (global_identifier
+        (symbol)
         (interpolation
-          (interpolation_content)))
+          (symbol)))
+      (expression
+        (number_literal)))))
+
+===============================================================================
+Interpolation: keyword with interpolation
+===============================================================================
+
+DEF IF{num} = 250
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol)
+        (interpolation
+          (symbol)))
       (expression
         (number_literal)))))
 
@@ -101,3 +121,69 @@ DEF #section {num} = 300
           (interpolation_content)))
       (expression
         (number_literal)))))
+
+================================================================================
+Interpolation: Global label
+================================================================================
+
+Main{x}::
+{y}Sub:
+
+---
+
+(source_file
+  (global_label_block
+    (global_identifier
+      (symbol)
+      (interpolation
+        (symbol))))
+  (global_label_block
+    (global_identifier
+      (interpolation
+        (symbol))
+      (symbol))))
+
+================================================================================
+Interpolation: Local label
+================================================================================
+
+{y}.ok:
+x{y}.{x}a{ok}y
+.{x}:
+.if{x}
+{a{q}}:
+
+---
+
+(source_file
+  (local_label_block
+    (qualified_identifier
+      (interpolation
+        (symbol))
+      (local_symbol)))
+  (local_label_block
+    (qualified_identifier
+      (symbol)
+      (interpolation
+        (symbol))
+      (interpolation
+        (symbol))
+      (local_symbol)
+      (interpolation
+        (symbol))
+      (local_symbol)))
+  (local_label_block
+    (local_identifier
+      (interpolation
+        (symbol))))
+  (local_label_block
+    (local_identifier
+      (local_symbol)
+      (interpolation
+        (symbol))))
+  (global_label_block
+    (global_identifier
+      (interpolation
+        (symbol)
+        (interpolation
+          (symbol))))))
