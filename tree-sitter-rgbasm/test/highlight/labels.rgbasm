@@ -1,0 +1,39 @@
+main:
+; <- module 
+;   ^ punctuation.bracket
+main::
+; <- module.builtin
+;   ^ punctuation.special
+main.local
+; ^ label
+;   ^ punctuation.delimiter
+;      ^ label
+main.local:
+; ^ label
+;   ^ punctuation.delimiter
+;         ^ punctuation.bracket
+;      ^ label
+
+.local
+; <- punctuation.delimiter
+; ^ label
+.foo:
+; <- punctuation.delimiter
+; ^ label
+;   ^ punctuation.bracket
+:
+; <- label
+
+main\@:
+; <- module
+;   ^ punctuation.special
+;     ^ punctuation.bracket
+.local\@:
+; <- punctuation.delimiter
+; ^ label
+;     ^ punctuation.special
+;       ^ punctuation.bracket
+.local\@
+; <- punctuation.delimiter
+; ^ label
+;     ^ punctuation.special

@@ -77,7 +77,14 @@ module.exports = grammar({
         repeat($._statement),
         repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
-        optional(field('end', alias(ci('ENDSECTION'), $.directive_keyword))),
+        optional(
+          seq(
+            field('end', alias(ci('ENDSECTION'), $.directive_keyword)),
+            optional($.inline_comment),
+            $._eol,
+            repeat($._statement),
+          ),
+        ),
       ),
 
     _colon: $ => token.immediate(':'),

@@ -22,9 +22,9 @@ local spec = {
 				require("nvim-treesitter.parsers").rgbasm = {
 					install_info = {
 						path = spec.dir,
-						location = "/tree-sitter-rgbasm",
+						location = "tree-sitter-rgbasm",
 						generate = false,
-						queries = "queries",
+						queries = "tree-sitter-rgbasm/queries",
 					},
 					filetype = "rgbasm",
 				}

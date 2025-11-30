@@ -967,3 +967,45 @@ POPS
                   (number_literal)))))
           (directive_keyword)))
       (directive_keyword))))
+
+================================================================================
+Blocks: ENDSECTION with content
+================================================================================
+
+SECTION "Code", ROM0
+    nop
+ENDSECTION
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (directive_keyword)
+      (string_literal)
+      (section_type))
+    (instruction_list
+      (instruction
+        (instruction_name)))
+    (directive_keyword)))
+
+==================================================================================
+Blocks: ENDSECTION without content
+==================================================================================
+
+SECTION "Code", ROM0
+; no instructions here
+ENDSECTION
+; no instructions here
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      keyword: (directive_keyword)
+      (string_literal)
+      (section_type))
+    (inline_comment)
+    end: (directive_keyword)
+    (inline_comment)))

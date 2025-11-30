@@ -3,56 +3,58 @@
 ; ==============================================================================
 
 ; Global label names - exported (::)
-(global_label_block
-  name: (label) @module.builtin
-  "::")
-
-(global_label_block
-  (raw_identifier) @module.builtin
-  "::")
+((global_label_block
+  (global_identifier) @module.builtin
+  "::" @punctuation.special))
 
 ; Global label names - non-exported (:)
-(global_label_block
-  name: (label) @module
-  ":")
+((global_label_block
+  (global_identifier) @module
+  ":" @punctuation.bracket))
 
-(global_label_block
-  (raw_identifier) @module
-  ":")
+; Local label names (includes both .local and Parent.local forms)
+((local_label_block
+  [(local_identifier) (qualified_identifier)] @label))
 
-; Export marker :: for global labels
-(global_label_block
-  "::" @keyword.directive)
+(local_label_block ":" @punctuation.bracket)
 
-; Local label names
-(local_label_block
-  name: (local) @label)
+(qualified_identifier "." @punctuation.delimiter)
 
-; Local label references in expressions
-(expression
-  (local) @variable.member)
+(local_identifier "." @punctuation.delimiter) @label
 
 ; Anonymous labels
 (anonymous_label) @label
-(anonymous_label_ref) @label
-
-; Label colons as punctuation
-(global_label_block ":" @punctuation.delimiter)
-(local_label_block ":" @punctuation.delimiter)
 
 (uniqueness_affix) @punctuation.special
+
+
+; ==============================================================================
+; Variables and Identifiers
+; ==============================================================================
+
+(anonymous_label_ref) @label
+
+(expression 
+  (identifier
+    (global_identifier
+      (symbol) @constant
+        (#match? @constant "^r?[A-Z][A-Z_]+"))))
+(expression 
+  (identifier
+    (global_identifier
+      (symbol) @variable
+        (#not-match? @variable "^r?[A-Z][A-Z_]+"))))
 
 ; ==============================================================================
 ; Instructions
 ; ==============================================================================
 
 (instruction
-  opcode: (instruction_name) @function.builtin)
+  opcode: (instruction_name) @function.method.call)
 
-(register) @constant
+(register) @variable.builtin
 
-(condition_code
-  condition: _ @keyword.conditional)
+(condition_code) @keyword.conditional
 
 ; ==============================================================================
 ; Directives - Control Flow
@@ -81,7 +83,7 @@
 
 (def_directive
   keyword: (directive_keyword) @keyword.directive.define
-  name: [(symbol) (raw_identifier) (interpolatable_identifier)] @variable)
+  name: (global_identifier) @variable)
 
 (def_directive
   assign_type: (directive_keyword) @keyword.modifier)  ; EQU, EQUS, RB, RW, RL
@@ -97,18 +99,14 @@
   keyword: (directive_keyword) @markup.heading)
 
 (section_directive
-  fragment: (directive_keyword) @keyword.directive)
+  fragment: (directive_keyword) @keyword.modifier)
 
 (section_directive
-  union: (directive_keyword) @keyword.directive)
+  union: (directive_keyword) @keyword.modifier)
 
 ; ENDSECTION keyword
 (section_block
   (directive_keyword) @markup.heading)
-
-; Section name highlighting
-(section_directive
-  (string_literal) @module)
 
 (section_type) @type
 
@@ -186,9 +184,9 @@
   keyword: (directive_keyword) @keyword.directive.define
   end: (directive_keyword) @keyword.directive.define)
 
-; Macro invocations - symbol nodes without affix
+; Macro invocations - global identifier nodes
 (macro_invocation
-  (symbol) @function.macro)
+  (global_identifier) @function.macro)
 
 ; Macro arguments and unique affix
 (macro_argument) @variable.parameter
@@ -241,24 +239,15 @@
 (interpolation
   format: (format_spec) @keyword.operator)
 
+; Interpolation content highlighting
 (interpolation
-  name: (interpolation_content) @variable)
+  (symbol) @variable)
 
-(interpolatable_identifier
-  (interpolation
-    "{" @punctuation.special
-    "}" @punctuation.special))
+(interpolation
+  (raw_symbol) @variable)
 
-(interpolatable_identifier
-  (interpolation
-    format: (format_spec) @keyword.operator))
-
-(interpolatable_identifier
-  (interpolation
-    name: (interpolation_content) @variable))
-
-(interpolatable_identifier
-  (identifier_fragment) @variable)
+; Symbols in interpolated identifiers are handled by the interpolation patterns above
+; (The _interpolated_* nodes are internal and can't be queried directly)
 
 ; ==============================================================================
 ; Comments
@@ -288,7 +277,7 @@
 [","] @punctuation.delimiter
 
 ; Instruction separator
-"::" @punctuation.delimiter
+; "::" @punctuation.delimiter
 
 ; Quiet token for suppressing error backtraces
 (quiet) @punctuation.special
@@ -297,4 +286,4 @@
 ; Fragment Literals
 ; ==============================================================================
 
-(fragment_literal) @constant.builtin
+(fragment_literal) @punctuation.bracket

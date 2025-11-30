@@ -1,0 +1,64 @@
+SECTION "Main", ROM0
+; <- markup.heading
+;       ^ string
+;                 ^ type
+ENDSECTION
+; <- markup.heading
+
+SECTION "FOO", VRAM0, bank[$1000]
+; <- markup.heading
+;       ^ string
+;                 ^ type
+;                      ^ keyword.modifier
+;                         ^ punctuation.bracket
+;                          ^ number
+;                               ^ punctuation.bracket
+
+SECTION FRAGMENT UNION "", ROM0
+; <- markup.heading
+;       ^ keyword.modifier
+;                ^ keyword.modifier
+
+IF 0
+; <- keyword.conditional
+;  ^ number
+ELIF 1
+; <- keyword.conditional
+;    ^ number
+ELSE
+; <- keyword.conditional
+ENDC
+; <- keyword.conditional
+
+REPT 0
+; <- keyword.repeat
+;    ^ number
+ENDR
+; <- keyword.repeat
+
+FOR i, 0, 10
+; <- keyword.repeat
+;   ^ variable
+;    ^ punctuation.delimiter
+;      ^ number
+;       ^ punctuation.delimiter
+;          ^ number
+ENDR
+; <- keyword.repeat
+
+
+REPT? 0
+; <- keyword.repeat
+;   ^ punctuation.special
+;     ^ number
+ENDR
+; <- keyword.repeat
+
+FOR? i, 10
+; <- keyword.repeat
+;  ^ punctuation.special
+;    ^ variable
+;     ^ punctuation.delimiter
+;       ^ number
+ENDR
+; <- keyword.repeat

@@ -1,0 +1,11 @@
+main:
+  add a, b
+  ; <- function.method.call
+  ;   ^ variable.builtin
+  ;    ^ punctuation.delimiter
+  ;      ^ variable.builtin
+  jr nc, :+
+  ; <- function.method.call
+  ;   ^ keyword.conditional
+  ;    ^ punctuation.delimiter
+  ;       ^ label
