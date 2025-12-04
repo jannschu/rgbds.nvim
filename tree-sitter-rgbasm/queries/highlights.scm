@@ -5,12 +5,12 @@
 ; Global label names - exported (::)
 ((global_label_block
   (global_identifier) @module.builtin
-  "::" @punctuation.special))
+  "::" @punctuation.bracket.label.export))
 
 ; Global label names - non-exported (:)
 ((global_label_block
   (global_identifier) @module
-  ":" @punctuation.bracket))
+  ":" @punctuation.bracket.label))
 
 ; Local label names (includes both .local and Parent.local forms)
 ((local_label_block

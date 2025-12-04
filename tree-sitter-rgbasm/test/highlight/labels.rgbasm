@@ -1,9 +1,9 @@
 main:
-; <- module 
-;   ^ punctuation.bracket
+; <- module
+;   ^ punctuation.bracket.label
 main::
 ; <- module.builtin
-;   ^ punctuation.special
+;   ^ punctuation.bracket.label.export
 main.local
 ; ^ label
 ;   ^ punctuation.delimiter
@@ -26,14 +26,14 @@ main.local:
 
 main\@:
 ; <- module
-;   ^ punctuation.special
-;     ^ punctuation.bracket
+;   ^^ punctuation.special
+;     ^ punctuation.bracket.label
 .local\@:
 ; <- punctuation.delimiter
 ; ^ label
-;     ^ punctuation.special
+;     ^^punctuation.special
 ;       ^ punctuation.bracket
 .local\@
 ; <- punctuation.delimiter
 ; ^ label
-;     ^ punctuation.special
+;     ^^ punctuation.special
