@@ -20,15 +20,7 @@ local function detect()
 	return require("rgbds.filetype").detect(unpack(arg))
 end
 
----@param dir string|nil
-function M.init(dir)
-	if dir == nil then
-		dir = get_plugin_dir()
-		if dir == nil then
-			vim.notify("rgbds.nvim: could not determine plugin directory", vim.log.levels.ERROR)
-			return
-		end
-	end
+local function register(dir)
 	vim.filetype.add({
 		extension = {
 			gbz80 = "rgbasm",
@@ -52,13 +44,25 @@ function M.init(dir)
 			}
 		end,
 	})
+end
+
+---@param dir string|nil
+function M.init(dir)
+	if dir == nil then
+		dir = get_plugin_dir()
+		if dir == nil then
+			vim.notify("rgbds.nvim: could not determine plugin directory", vim.log.levels.ERROR)
+			return
+		end
+	end
+	register(dir)
 	init = true
 end
 
 ---@param spec LazyPluginSpec
 function M.setup(opts)
 	if not init then
-		M.init(dir)
+		M.init()
 	end
 end
 
