@@ -1,17 +1,17 @@
 SECTION "Main", ROM0
 ; <- markup.heading
-;       ^ string
-;                 ^ type
+;       ^^^^^^ string
+;               ^^^^ type
 ENDSECTION
 ; <- markup.heading
 
 SECTION "FOO", VRAM0, bank[$1000]
 ; <- markup.heading
-;       ^ string
-;                 ^ type
-;                      ^ keyword.modifier
-;                         ^ punctuation.bracket
-;                          ^ number
+;       ^^^^^ string
+;              ^^^^^ type
+;                     ^^^^ keyword.modifier
+;                         ^  ^  ^ punctuation.bracket
+;                          ^^^^^ number
 ;                               ^ punctuation.bracket
 
 SECTION FRAGMENT UNION "", ROM0
