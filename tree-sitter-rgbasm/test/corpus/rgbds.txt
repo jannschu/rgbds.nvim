@@ -170,7 +170,8 @@ char 'c{s}e', 3
       (argument_list
         (expression
           (char_literal))
-        (macro_arg_raw)))))
+        (expression
+          (number_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: CHARMAP with macro argument key
@@ -320,22 +321,29 @@ both cpl
             (interpolation
               (symbol)))
           (argument_list
-            (macro_arg_raw))))
+            (expression
+              (macro_arguments_spread)))))
       (directive
         (macro_invocation
           (global_identifier
             (interpolation
               (symbol)))
           (argument_list
-            (macro_arg_raw)
-            (macro_arg_raw))))
+            (expression
+              (register))
+            (expression
+              (macro_arguments_spread)))))
       (directive_keyword)))
   (directive
     (macro_invocation
       (global_identifier
         (symbol))
       (argument_list
-        (macro_arg_raw)))))
+        (condition_code)
+        (expression
+          (identifier
+            (global_identifier
+              (symbol))))))))
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps
@@ -447,8 +455,10 @@ test_mod 3, 2
       (global_identifier
         global: (symbol))
       (argument_list
-        (macro_arg_raw)
-        (macro_arg_raw)))))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: ds align inline forms

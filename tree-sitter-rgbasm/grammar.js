@@ -451,23 +451,21 @@ module.exports = grammar({
         field('end', alias(ci('ENDM'), $.directive_keyword)),
       ),
 
-    macro_arg_raw: $ => token(
-      repeat1(choice(
-        // Raw option text: letters, digits, dots, dashes, etc.
-        // Excludes unescaped commas (those are argument separators)
-        /[a-zA-Z0-9_\.@#*/\-+=?]+/,
-        // Backslash escapes: \, for escaped comma, \1-\9 for macro args, etc.
-        // \; starts line continuation with a comment, so exclude it here
-        /\\[^; \r\n]/,
-      ))),
+    // NOTE: this must only match tokens that are not
+    // matched by any other rule in _macro_arg!
+    macro_arg_raw: $ => token(repeat1(
+      choice(
+        '\\,',
+        /\?/,
+      ),
+    )),
 
     _macro_arg: $ => repeat1(choice(
       $._operand,
       $.section_type,
       $.section_option,
       $.severity,
-      // Allow raw tokens that are not valid macro args
-      prec(-2, $.macro_arg_raw),
+      $.macro_arg_raw,
     )),
 
     _macro_args: $ =>

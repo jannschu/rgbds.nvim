@@ -127,10 +127,12 @@ Line continuation: with comment
       (global_identifier
         (symbol))
       (argument_list
-        (macro_arg_raw)
+        (expression
+          (number_literal))
         (line_continuation
           (inline_comment))
-        (macro_arg_raw))))
+        (expression
+          (number_literal)))))
   (directive
     (simple_directive
       (directive_keyword)

@@ -47,9 +47,12 @@ calcmacro (FOO + 1) << 2
       (global_identifier
         global: (symbol))
       (argument_list
-        (macro_arg_raw)
-        (macro_arg_raw)
-        (macro_arg_raw))))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal))
+        (expression
+          (number_literal)))))
   (directive
     (macro_invocation
       (global_identifier
@@ -297,7 +300,8 @@ simple_call A
       (global_identifier
         (symbol))
       (argument_list
-        (macro_arg_raw)))))
+        (expression
+          (register))))))
 
 ================================================================================
 Macros: mixed string and number arguments
@@ -316,7 +320,8 @@ format_msg "Hello", 123, "World"
       (argument_list
         (expression
           (string_literal))
-        (macro_arg_raw))))
+        (expression
+          (number_literal)))))
   (directive
     (macro_invocation
       (global_identifier
@@ -324,6 +329,7 @@ format_msg "Hello", 123, "World"
       (argument_list
         (expression
           (string_literal))
-        (macro_arg_raw)
+        (expression
+          (number_literal))
         (expression
           (string_literal))))))

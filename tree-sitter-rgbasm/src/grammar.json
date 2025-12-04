@@ -2022,12 +2022,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "PATTERN",
-              "value": "[a-zA-Z0-9_\\.@#*/\\-+=?]+"
+              "type": "STRING",
+              "value": "\\,"
             },
             {
               "type": "PATTERN",
-              "value": "\\\\[^; \\r\\n]"
+              "value": "\\?"
             }
           ]
         }
@@ -2055,12 +2055,8 @@
             "name": "severity"
           },
           {
-            "type": "PREC",
-            "value": -2,
-            "content": {
-              "type": "SYMBOL",
-              "name": "macro_arg_raw"
-            }
+            "type": "SYMBOL",
+            "name": "macro_arg_raw"
           }
         ]
       }
