@@ -18,7 +18,8 @@ module.exports = grammar({
 
   externals: $ => [
     $.symbol,
-    $.raw_symbol,
+    $._raw_symbol_begin,
+    $._raw_symbol,
     $.local_symbol,
     $._symbol_fragment,
 
@@ -444,7 +445,7 @@ module.exports = grammar({
       seq(
         field('keyword', alias(ci('MACRO'), $.directive_keyword)),
         optional(alias('?', $.quiet)),
-        $.expression,
+        field('name', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
@@ -917,6 +918,12 @@ module.exports = grammar({
       $.qualified_identifier,
     ),
 
+    raw_symbol: $ => seq(
+      $._raw_symbol_begin,
+      field('raw_marker', '#'),
+      $._raw_symbol,
+    ),
+
     // -- Global Identifiers --
 
     // A global identifier, without the uniqueness affix
@@ -968,7 +975,7 @@ module.exports = grammar({
     _interpolated_global_identifier: $ =>
       seq(
         optional(
-          field('marker', '#'),
+          field('raw_marker', '#'),
         ),
         optional(alias(/[A-Za-z_][A-Za-z0-9_#$@]*/, $.symbol)),
         $.interpolation,
@@ -1025,20 +1032,6 @@ module.exports = grammar({
         $._format_spec,
         token.immediate(':'),
       ),
-    // token.immediate(
-    //   seq(
-    //     optional(choice('+', ' ')),  // sign
-    //     optional('#'),                // exact
-    //     optional('-'),                // align
-    //     optional('0'),                // pad
-    //     optional(/[0-9]+/),           // width
-    //     optional(seq('.', /[0-9]*/)), // frac
-    //     optional(/q[0-9]+/),          // prec
-    //     choice('d', 'u', 'x', 'X', 'b', 'o', 'f', 's'), // type
-    //     // TODO: expose this as separate field / node
-    //     ':',
-    //   ),
-    // ),
   },
 });
 

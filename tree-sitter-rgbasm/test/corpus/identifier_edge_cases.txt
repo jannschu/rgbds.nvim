@@ -43,7 +43,7 @@ PRINTLN "{#if}"
         (expression
           (string_literal
             (interpolation
-              (symbol))))))))
+              (raw_symbol))))))))
 
 ================================================================================
 Interpolation: raw identifier in DEF
@@ -60,7 +60,7 @@ DEF #if = 100
     (def_directive
       (directive_keyword)
       (global_identifier
-        (symbol))
+        (raw_symbol))
       (expression
         (number_literal)))))
 

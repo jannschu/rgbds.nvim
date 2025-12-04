@@ -160,7 +160,7 @@ PRINTLN "{#if}"
         (expression
           (string_literal
             (interpolation
-              (symbol))))))))
+              (raw_symbol))))))))
 
 ================================================================================
 Interpolation: Nested and concatenated

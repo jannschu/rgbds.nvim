@@ -220,16 +220,16 @@ DEF x = #load + #LOAD
   (inline_comment)
   (global_label_block
     (global_identifier
-      (symbol)))
+      (raw_symbol)))
   (global_label_block
     (global_identifier
-      (symbol)))
+      (raw_symbol)))
   (global_label_block
     (global_identifier
-      (symbol)))
+      (raw_symbol)))
   (global_label_block
     (global_identifier
-      (symbol))
+      (raw_symbol))
     (inline_comment)
     (directive
       (def_directive
@@ -241,11 +241,11 @@ DEF x = #load + #LOAD
             (expression
               (identifier
                 (global_identifier
-                  (symbol))))
+                  (raw_symbol))))
             (expression
               (identifier
                 (global_identifier
-                  (symbol))))))))))
+                  (raw_symbol))))))))))
 
 ================================================================================
 Labels: local labels with # character in name
@@ -287,7 +287,7 @@ GlobalLabel:
           opcode: (instruction_name)))))
   (global_label_block
     name: (global_identifier
-      global: (symbol))
+      global: (raw_symbol))
     (local_label_block
       name: (local_identifier
         (local_symbol))
@@ -316,7 +316,7 @@ Labels: qualified references with raw identifiers
   (inline_comment)
   (global_label_block
     name: (global_identifier
-      global: (symbol))
+      global: (raw_symbol))
     (local_label_block
       name: (local_identifier
         (local_symbol))
@@ -331,7 +331,7 @@ Labels: qualified references with raw identifiers
             (expression
               (identifier
                 (qualified_identifier
-                  global: (symbol)
+                  global: (raw_symbol)
                   local: (local_symbol)))))))
       (instruction_list
         (instruction
@@ -340,7 +340,7 @@ Labels: qualified references with raw identifiers
             (expression
               (identifier
                 (qualified_identifier
-                  global: (symbol)
+                  global: (raw_symbol)
                   local: (local_symbol))))))))))
 
 ================================================================================

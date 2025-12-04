@@ -918,7 +918,7 @@
           }
         ]
       },
-      "marker": {
+      "raw_marker": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1197,7 +1197,7 @@
           }
         ]
       },
-      "marker": {
+      "raw_marker": {
         "multiple": true,
         "required": false,
         "types": [
@@ -1447,11 +1447,21 @@
             "named": true
           }
         ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
       }
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "anonymous_label",
@@ -1463,10 +1473,6 @@
         },
         {
           "type": "directive",
-          "named": true
-        },
-        {
-          "type": "expression",
           "named": true
         },
         {
@@ -1837,7 +1843,7 @@
           }
         ]
       },
-      "marker": {
+      "raw_marker": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1857,6 +1863,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "raw_symbol",
+    "named": true,
+    "fields": {
+      "raw_marker": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "#",
+            "named": false
+          }
+        ]
+      }
     }
   },
   {
@@ -2604,10 +2626,6 @@
   },
   {
     "type": "raw_string_literal",
-    "named": true
-  },
-  {
-    "type": "raw_symbol",
     "named": true
   },
   {

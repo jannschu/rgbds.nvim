@@ -594,11 +594,11 @@ EXPORT #if, #section
         (expression
           (identifier
             (global_identifier
-              (symbol))))
+              (raw_symbol))))
         (expression
           (identifier
             (global_identifier
-              (symbol))))))))
+              (raw_symbol))))))))
 
 ================================================================================
 Directives: PURGE with raw identifiers
@@ -620,14 +620,14 @@ PURGE #section, #else
     (def_directive
       (directive_keyword)
       (global_identifier
-        (symbol))
+        (raw_symbol))
       (expression
         (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
       (global_identifier
-        (symbol))
+        (raw_symbol))
       (expression
         (number_literal))))
   (inline_comment)
@@ -638,7 +638,7 @@ PURGE #section, #else
         (expression
           (identifier
             (global_identifier
-              (symbol)))))))
+              (raw_symbol)))))))
   (directive
     (simple_directive
       (directive_keyword)
@@ -646,11 +646,11 @@ PURGE #section, #else
         (expression
           (identifier
             (global_identifier
-              (symbol))))
+              (raw_symbol))))
         (expression
           (identifier
             (global_identifier
-              (symbol))))))))
+              (raw_symbol))))))))
 
 ================================================================================
 Directives: SECTION with BANK option
@@ -1120,7 +1120,7 @@ ENDM ;
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
@@ -1345,7 +1345,7 @@ DB HiGh(100)
     (directive
       (macro_definition
         keyword: (directive_keyword)
-        (expression
+        name: (expression
           (identifier
             (global_identifier
               global: (symbol))))
@@ -1353,7 +1353,7 @@ DB HiGh(100)
     (directive
       (macro_definition
         keyword: (directive_keyword)
-        (expression
+        name: (expression
           (identifier
             (global_identifier
               global: (symbol))))

@@ -11,6 +11,7 @@
 
 enum TokenType {
   SYMBOL_TOKEN,
+  RAW_SYMBOL_BEGIN,
   RAW_SYMBOL_TOKEN,
   LOCAL_SYMBOL_TOKEN,
   SYMBOL_FRAGMENT_TOKEN,
@@ -237,7 +238,9 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     // could still be raw or local
     if (local) {
       raw = (lexer->lookahead == '#');
+      lexer->mark_end(lexer);
       advance(lexer);
+      start = lexer->lookahead;
     } else {
       return false;
     }
@@ -276,8 +279,11 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
     return true;
   }
 
-  // we do not want to include the potential \@
-  lexer->mark_end(lexer);
+  // if this is only the raw symbol begin, we marked the end already,
+  // otherwise we mark here, because we do not want to include the potential \@
+  if (!raw || !valid_symbols[RAW_SYMBOL_BEGIN]) {
+    lexer->mark_end(lexer);
+  }
   const bool had_affix = swallow_uniqueness_affix(lexer);
   if (had_affix) {
     next = lexer->lookahead;
@@ -310,8 +316,8 @@ static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
 #endif
 
   if (raw) {
-    if (valid_symbols[RAW_SYMBOL_TOKEN]) {
-      lexer->result_symbol = SYMBOL_TOKEN;
+    if (valid_symbols[RAW_SYMBOL_BEGIN]) {
+      lexer->result_symbol = RAW_SYMBOL_BEGIN;
       return true;
     }
     return false;
@@ -424,6 +430,28 @@ static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
 }
 
 static bool scan(TSLexer *lexer, const bool *valid_symbols) {
+  if (valid_symbols[RAW_SYMBOL_TOKEN]) {
+#if DEBUG_SCANNER
+    printf("# Scanning for RAW_SYMBOL_TOKEN\n");
+    printf("  lookahead: '%c' (0x%02X)\n",
+           (lexer->lookahead >= 32 && lexer->lookahead <= 126)
+               ? (char)lexer->lookahead
+               : '?',
+           (unsigned int)lexer->lookahead);
+#endif
+    size_t len = 0;
+    while (is_identifier_char(lexer->lookahead) &&
+           len < MAX_IDENTIFIER_LENGTH) {
+      len += 1;
+      advance(lexer);
+    }
+    lexer->mark_end(lexer);
+    lexer->result_symbol = RAW_SYMBOL_TOKEN;
+    // this should always be fulfilled due to the valid positions for this token
+    // in the grammar
+    return len > 0;
+  }
+
   if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
     if (is_identifier_boundary(lexer->lookahead)) {
       lexer->mark_end(lexer);
@@ -479,7 +507,7 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
     if (scan_identifier_start(lexer, valid_symbols)) {
       return true;
     }
-  } else if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[RAW_SYMBOL_TOKEN] ||
+  } else if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[RAW_SYMBOL_BEGIN] ||
               valid_symbols[LOCAL_SYMBOL_TOKEN] ||
               valid_symbols[SYMBOL_FRAGMENT_TOKEN] ||
               valid_symbols[FORMAT_SPEC]) &&
@@ -501,6 +529,7 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
   // Print valid symbols presence by lower and upper case
   printf(" Valid symbols: ");
   printf("%c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
+  printf("%c", valid_symbols[RAW_SYMBOL_BEGIN] ? '#' : '.');
   printf("%c", valid_symbols[RAW_SYMBOL_TOKEN] ? 'R' : '.');
   printf("%c", valid_symbols[LOCAL_SYMBOL_TOKEN] ? 'L' : '.');
   printf("%c", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
@@ -530,6 +559,9 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
     switch (lexer->result_symbol) {
     case SYMBOL_TOKEN:
       symbol = "S";
+      break;
+    case RAW_SYMBOL_BEGIN:
+      symbol = "#";
       break;
     case RAW_SYMBOL_TOKEN:
       symbol = "R";

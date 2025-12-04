@@ -27,6 +27,9 @@
 
 (uniqueness_affix) @punctuation.special
 
+(_
+  raw_marker: _ @punctuation.delimiter)
+
 
 ; ==============================================================================
 ; Variables and Identifiers
@@ -37,12 +40,12 @@
 (expression 
   (identifier
     (global_identifier
-      (symbol) @constant
+      [(symbol) (raw_symbol)] @constant
         (#match? @constant "^r?[A-Z][A-Z_]+"))))
 (expression 
   (identifier
     (global_identifier
-      (symbol) @variable
+      [(symbol) (raw_symbol)] @variable
         (#not-match? @variable "^r?[A-Z][A-Z_]+"))))
 
 ; ==============================================================================
@@ -237,14 +240,13 @@
   "}" @punctuation.special)
 
 (interpolation
-  format: (format_spec) @keyword.operator)
+  format: (format_spec) @string.special.symbol)
+
+(format_spec ":" @punctuation.delimiter)
 
 ; Interpolation content highlighting
 (interpolation
-  (symbol) @variable)
-
-(interpolation
-  (raw_symbol) @variable)
+  [(symbol) (raw_symbol)] @variable)
 
 ; Symbols in interpolated identifiers are handled by the interpolation patterns above
 ; (The _interpolated_* nodes are internal and can't be queried directly)

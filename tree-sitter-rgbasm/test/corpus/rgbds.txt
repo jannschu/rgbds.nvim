@@ -188,7 +188,7 @@ test "デ"
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
@@ -385,7 +385,7 @@ test
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
@@ -431,7 +431,7 @@ test_mod 3, 2
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
@@ -530,7 +530,7 @@ ENDM
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
@@ -576,7 +576,7 @@ ENDM
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      (expression
+      name: (expression
         (identifier
           (global_identifier
             global: (symbol))))
