@@ -2615,9 +2615,9 @@ enum ts_field_identifiers {
   field_left = 12,
   field_local = 13,
   field_message = 14,
-  field_name = 15,
-  field_offset = 16,
-  field_opcode = 17,
+  field_mnemonic = 15,
+  field_name = 16,
+  field_offset = 17,
   field_operator = 18,
   field_raw_marker = 19,
   field_right = 20,
@@ -2642,9 +2642,9 @@ static const char * const ts_field_names[] = {
   [field_left] = "left",
   [field_local] = "local",
   [field_message] = "message",
+  [field_mnemonic] = "mnemonic",
   [field_name] = "name",
   [field_offset] = "offset",
-  [field_opcode] = "opcode",
   [field_operator] = "operator",
   [field_raw_marker] = "raw_marker",
   [field_right] = "right",
@@ -2756,7 +2756,7 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
   [1] =
     {field_name, 0, .inherited = true},
   [2] =
-    {field_opcode, 0},
+    {field_mnemonic, 0},
   [3] =
     {field_name, 0},
   [4] =

@@ -1141,7 +1141,7 @@
     "type": "instruction",
     "named": true,
     "fields": {
-      "opcode": {
+      "mnemonic": {
         "multiple": false,
         "required": true,
         "types": [

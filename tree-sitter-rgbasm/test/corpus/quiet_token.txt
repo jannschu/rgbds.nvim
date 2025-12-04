@@ -19,7 +19,7 @@ ENDM
             global: (symbol))))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword))))
 
 ================================================================================
@@ -43,7 +43,7 @@ ENDM
             global: (symbol))))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword))))
 
 ================================================================================
@@ -108,7 +108,7 @@ ENDR
         (number_literal))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword))))
 
 ================================================================================
@@ -130,7 +130,7 @@ ENDR
         (number_literal))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword))))
 
 ================================================================================
@@ -230,7 +230,7 @@ INCLUDE "file.inc"
             global: (symbol))))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword)))
   (directive
     (rept_block
@@ -239,7 +239,7 @@ INCLUDE "file.inc"
         (number_literal))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       end: (directive_keyword)))
   (directive
     (for_block

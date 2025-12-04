@@ -3124,7 +3124,7 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "opcode",
+          "name": "mnemonic",
           "content": {
             "type": "SYMBOL",
             "name": "instruction_name"

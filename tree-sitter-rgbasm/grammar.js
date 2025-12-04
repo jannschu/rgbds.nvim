@@ -664,7 +664,7 @@ module.exports = grammar({
 
     instruction: $ =>
       seq(
-        field('opcode', $.instruction_name),
+        field('mnemonic', $.instruction_name),
         optional($.operand_list),
       ),
 

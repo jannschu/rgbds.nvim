@@ -163,7 +163,7 @@ ENDM
             global: (symbol))))
       (instruction_list
         (instruction
-          opcode: (instruction_name)
+          mnemonic: (instruction_name)
           (operand_list
             (expression
               (macro_argument))
@@ -212,7 +212,7 @@ ENDM
             (uniqueness_affix))
           (instruction_list
             (instruction
-              opcode: (instruction_name)
+              mnemonic: (instruction_name)
               (operand_list
                 (expression
                   (identifier

@@ -63,7 +63,7 @@ SECTION "Test", ROM0
       (section_type))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register))
@@ -71,19 +71,19 @@ SECTION "Test", ROM0
             (register)))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register)))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register)))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register))
@@ -91,13 +91,13 @@ SECTION "Test", ROM0
             (number_literal)))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (number_literal)))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register))
@@ -106,7 +106,7 @@ SECTION "Test", ROM0
               (register))))))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (address
             (expression

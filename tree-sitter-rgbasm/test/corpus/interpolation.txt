@@ -199,7 +199,7 @@ Interpolation: # followed by {
 (source_file
   (instruction_list
     (instruction
-      opcode: (instruction_name)
+      mnemonic: (instruction_name)
       (operand_list
         (expression
           (register))

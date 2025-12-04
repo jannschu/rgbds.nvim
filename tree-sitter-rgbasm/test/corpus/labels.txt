@@ -174,21 +174,21 @@ Loop::
       global: (symbol))
     (instruction_list
       (instruction
-        opcode: (instruction_name))))
+        mnemonic: (instruction_name))))
   (global_label_block
     name: (global_identifier
       global: (symbol))
     (instruction_list
       (instruction
-        opcode: (instruction_name)))
+        mnemonic: (instruction_name)))
     (inline_comment)
     (anonymous_label)
     (instruction_list
       (instruction
-        opcode: (instruction_name)))
+        mnemonic: (instruction_name)))
     (instruction_list
       (instruction
-        opcode: (instruction_name)
+        mnemonic: (instruction_name)
         (operand_list
           (expression
             (register))
@@ -197,9 +197,9 @@ Loop::
     (inline_comment)
     (instruction_list
       (instruction
-        opcode: (instruction_name))
+        mnemonic: (instruction_name))
       (instruction
-        opcode: (instruction_name)))))
+        mnemonic: (instruction_name)))))
 
 ================================================================================
 Labels: raw identifiers with # prefix
@@ -278,13 +278,13 @@ GlobalLabel:
         (local_symbol))
       (instruction_list
         (instruction
-          opcode: (instruction_name))))
+          mnemonic: (instruction_name))))
     (local_label_block
       name: (local_identifier
         (local_symbol))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))))
+          mnemonic: (instruction_name)))))
   (global_label_block
     name: (global_identifier
       global: (raw_symbol))
@@ -293,7 +293,7 @@ GlobalLabel:
         (local_symbol))
       (instruction_list
         (instruction
-          opcode: (instruction_name))))))
+          mnemonic: (instruction_name))))))
 
 ================================================================================
 Labels: qualified references with raw identifiers
@@ -322,11 +322,11 @@ Labels: qualified references with raw identifiers
         (local_symbol))
       (instruction_list
         (instruction
-          opcode: (instruction_name)))
+          mnemonic: (instruction_name)))
       (inline_comment)
       (instruction_list
         (instruction
-          opcode: (instruction_name)
+          mnemonic: (instruction_name)
           (operand_list
             (expression
               (identifier
@@ -335,7 +335,7 @@ Labels: qualified references with raw identifiers
                   local: (local_symbol)))))))
       (instruction_list
         (instruction
-          opcode: (instruction_name)
+          mnemonic: (instruction_name)
           (operand_list
             (expression
               (identifier

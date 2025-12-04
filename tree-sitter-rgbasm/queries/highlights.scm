@@ -41,19 +41,20 @@
   (identifier
     (global_identifier
       [(symbol) (raw_symbol)] @constant
-        (#match? @constant "^r?[A-Z][A-Z_]+"))))
+        (#match? @constant "^r?[A-Z_][A-Z_\d]+"))))
 (expression 
   (identifier
     (global_identifier
       [(symbol) (raw_symbol)] @variable
-        (#not-match? @variable "^r?[A-Z][A-Z_]+"))))
+        (#not-match? @variable "^r?[A-Z_][A-Z_\d]+"))))
 
 ; ==============================================================================
 ; Instructions
 ; ==============================================================================
 
-(instruction
-  opcode: (instruction_name) @function.method.call)
+; We do not highlight this to have less color noise in the editor
+; (instruction
+;   mnemonic: (instruction_name) @function.method.call)
 
 (register) @variable.builtin
 
@@ -158,7 +159,7 @@
 (assert_directive
   keyword: (directive_keyword) @keyword.directive)
 
-(severity) @comment.error
+(severity) @keyword.modifier
 
 (export_directive
   keyword: (directive_keyword) @keyword.directive)
@@ -186,6 +187,9 @@
 (macro_definition
   keyword: (directive_keyword) @keyword.directive.define
   end: (directive_keyword) @keyword.directive.define)
+
+(macro_definition
+  name: (expression (identifier) @function.macro (#set! priority 105)))
 
 ; Macro invocations - global identifier nodes
 (macro_invocation
@@ -279,7 +283,7 @@
 [","] @punctuation.delimiter
 
 ; Instruction separator
-; "::" @punctuation.delimiter
+"::" @punctuation.delimiter
 
 ; Quiet token for suppressing error backtraces
 (quiet) @punctuation.special
