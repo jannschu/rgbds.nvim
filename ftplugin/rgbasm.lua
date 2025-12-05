@@ -9,3 +9,6 @@ vim.bo.shiftwidth = 4
 vim.bo.autoindent = true
 vim.bo.smartindent = false
 vim.bo.cindent = false
+
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.wo.foldmethod = "expr"
