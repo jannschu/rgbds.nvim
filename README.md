@@ -6,6 +6,7 @@ syntax highlighting based on [tree-sitter](https://tree-sitter.github.io/tree-si
 ## Features
 
 - Extensive syntax highlighting for rgbasm source files based on a tree-sitter grammar.
+- [hardware.inc](https://github.com/gbdev/hardware.inc) aware highlighting.
 - Heuristic based file type detection for ambiguous file extensions like `.inc`, `.s`, and `.asm`.
 - Folds based on the syntax tree.
 
