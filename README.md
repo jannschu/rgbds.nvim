@@ -1,12 +1,13 @@
 # rgbds.nvim
 
 A Neovim plugin for the [rgbasm](https://rgbds.gbdev.io/) assembler providing
-syntax highlighting and indentation using [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
+syntax highlighting based on [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
 ## Features
 
-- Syntax highlighting for rgbasm source files based on a tree-sitter grammar.
-- Indentation for rgbasm files using tree-sitter and [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
+- Extensive syntax highlighting for rgbasm source files based on a tree-sitter grammar.
+- Heuristic based file type detection for ambiguous file extensions like `.inc`, `.s`, and `.asm`.
+- Folds based on the syntax tree.
 
 ## Installation
 
@@ -17,6 +18,20 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   "jannschu/rgbds.nvim",
 }
 ```
+
+Using [packer.nvim](https://github.com/wbthomason/packer.nvim):
+
+```lua
+use {
+  "jannschu/rgbds.nvim",
+  requires = { "nvim-treesitter/nvim-treesitter" },
+  run = ":TSUpdate rgbasm",
+}
+```
+
+### Configuration
+
+No configuration options are defined at the moment.
 
 ## References
 
