@@ -1,0 +1,104 @@
+*rgbds.nvim.txt*          Neovim plugin for the rgbasm assembler
+
+==============================================================================
+CONTENTS                                                      *rgbds-contents*
+
+    1. Introduction .......................... |rgbds-introduction|
+    2. Installation .......................... |rgbds-installation|
+    3. Features .............................. |rgbds-features|
+    4. Filetype Detection .................... |rgbds-filetype|
+    5. Configuration ......................... |rgbds-configuration|
+    6. About ................................. |rgbds-about|
+
+==============================================================================
+1. INTRODUCTION                                           *rgbds-introduction*
+
+A Neovim plugin for the rgbasm assembler providing syntax highlighting based
+on tree-sitter.
+
+The tree-sitter grammar is not tied to Neovim and can be used with other
+editors that support tree-sitter.
+
+Features:
+- Extensive syntax highlighting for rgbasm source files
+- Heuristic-based file type detection for ambiguous extensions
+- Code folding based on the syntax tree
+
+==============================================================================
+2. INSTALLATION                                           *rgbds-installation*
+
+Using lazy.nvim:
+>lua
+    {
+      "jannschu/rgbds.nvim",
+    }
+<
+
+Using packer.nvim:
+>lua
+    use {
+      "jannschu/rgbds.nvim",
+      requires = { "nvim-treesitter/nvim-treesitter" },
+      run = ":TSUpdate rgbasm",
+    }
+<
+
+==============================================================================
+3. FEATURES                                                   *rgbds-features*
+
+SYNTAX HIGHLIGHTING~
+
+Extensive syntax highlighting based on tree-sitter for:
+- Directives (SECTION, DEF, IF, MACRO, etc.)
+- Instructions and addressing modes
+- Literals (decimal, hex, binary, octal, fixed-point, graphics)
+- String literals with interpolation
+- Comments
+- Labels (global, local, anonymous)
+- Operators and built-in functions
+
+CODE FOLDING~
+
+Automatic folding for block structures (IF, MACRO, REPT, FOR, UNION).
+
+==============================================================================
+4. FILETYPE DETECTION                                       *rgbds-filetype*
+
+AUTOMATIC DETECTION~
+
+Files with these extensions are automatically detected as rgbasm:
+- .gbz80
+- .rgbasm
+
+HEURISTIC DETECTION~
+
+For ambiguous extensions (.asm, .s, .inc), the plugin uses heuristics to
+detect rgbasm files by checking for:
+
+Content patterns:
+- SECTION directive with quoted names
+- Game Boy specific memory regions (ROM0, ROMX, WRAM0, WRAMX, SRAM, HRAM)
+- hardware.inc include
+- Game Boy specific instructions (ldh) and addressing modes ([hl+], [hl-])
+- Hardware registers (rLCDC, rSTAT, rSCY, rSCX)
+
+Project context:
+- hardware.inc file in parent directories
+- Makefile containing rgbasm, rgblink, or rgbfix references
+
+==============================================================================
+5. CONFIGURATION                                       *rgbds-configuration*
+
+No configuration options are defined at the moment.
+
+==============================================================================
+6. ABOUT                                                         *rgbds-about*
+
+REFERENCES~
+- rgbasm.5: https://rgbds.gbdev.io/docs/master/rgbasm.5
+- gbz80.7: https://rgbds.gbdev.io/docs/master/gbz80.7
+- RGBDS source: https://github.com/gbdev/rgbds
+- Homebrew Hub: https://hh.gbdev.io/
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
