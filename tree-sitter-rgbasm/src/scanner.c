@@ -1,3 +1,4 @@
+#include "tree_sitter/alloc.h"
 #include "tree_sitter/parser.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -29,6 +30,10 @@ enum TokenType {
   // End of line: physical newline, or synthetic (before ']]', at EOF)
   EOL_TOKEN,
 
+  SECTION_START,
+  SECTION_END_EXPLICIT,
+  SECTION_TRAILER,
+
   // A LOAD _may_ be ended by each of the following:
   // - <eof>
   // - ENDL token
@@ -39,21 +44,46 @@ enum TokenType {
   // - SECTION
   // - POPS
   LOAD_END_TOKEN,
+
   ERROR,
 };
 
-void *tree_sitter_rgbasm_external_scanner_create() { return NULL; }
+typedef struct ScannerState {
+  int section_state;
+} ScannerState;
 
-void tree_sitter_rgbasm_external_scanner_destroy(void *payload) {}
+enum SectionState {
+  SECTION_STATE_NONE = 0,
+  SECTION_STATE_STARTED,
+  SECTION_STATE_ENDED,
+};
+
+void *tree_sitter_rgbasm_external_scanner_create() {
+  ScannerState *state = (ScannerState *)ts_calloc(1, sizeof(ScannerState));
+  state->section_state = SECTION_STATE_NONE;
+  return state;
+}
+
+void tree_sitter_rgbasm_external_scanner_destroy(void *payload) {
+  ts_free(payload);
+}
 
 unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload,
                                                        char *buffer) {
-  return 0;
+
+  ScannerState *state = (ScannerState *)payload;
+  buffer[0] = (char)(state->section_state & 0xFF);
+  return 1;
 }
 
 void tree_sitter_rgbasm_external_scanner_deserialize(void *payload,
                                                      const char *buffer,
-                                                     unsigned length) {}
+                                                     unsigned length) {
+  if (length > 0) {
+    ScannerState *state = (ScannerState *)payload;
+    state->section_state = (enum SectionState)(buffer[0] & 0xFF);
+  }
+}
 
 static inline bool is_identifier_char(int32_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
@@ -429,7 +459,16 @@ static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
-static bool scan(TSLexer *lexer, const bool *valid_symbols) {
+static bool scan(ScannerState *state, TSLexer *lexer,
+                 const bool *valid_symbols) {
+  // ----- Raw symbol token -----
+  //
+  // A raw symbol, like #if, is first scanned as RAW_SYMBOL_BEGIN (see below),
+  // which already validates that a valid raw symbol follows, so we blindly scan
+  // it here now. This relies on correct ussage of the two token pairs in the
+  // grammar.
+  //
+  // This allows to separately lex '#' and the rest.
   if (valid_symbols[RAW_SYMBOL_TOKEN]) {
 #if DEBUG_SCANNER
     printf("# Scanning for RAW_SYMBOL_TOKEN\n");
@@ -452,6 +491,10 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
     return len > 0;
   }
 
+  // ----- Identifier boundary -----
+  //
+  // A simple lookahead
+
   if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
     if (is_identifier_boundary(lexer->lookahead)) {
       lexer->mark_end(lexer);
@@ -459,6 +502,33 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
       return true;
     }
   }
+
+  // ----- Section handling -----
+  //
+  // We use markers for start and explicit ends via ENDSECTION and save that in
+  // the state. The start and end tokens are assumed to be optional, so we
+  // always return false (virtual token anyway).
+
+  if (valid_symbols[SECTION_START]) {
+    state->section_state = SECTION_STATE_STARTED;
+    return false;
+  }
+
+  if (valid_symbols[SECTION_END_EXPLICIT]) {
+    state->section_state = SECTION_STATE_ENDED;
+    if (!valid_symbols[SECTION_TRAILER]) {
+      return false;
+    }
+  }
+
+  if (valid_symbols[SECTION_TRAILER] &&
+      state->section_state == SECTION_STATE_ENDED) {
+    lexer->mark_end(lexer);
+    lexer->result_symbol = SECTION_TRAILER;
+    return true;
+  }
+
+  // Skip blanks
 
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
@@ -518,14 +588,30 @@ static bool scan(TSLexer *lexer, const bool *valid_symbols) {
   return false;
 }
 
-bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
+bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
+                                              TSLexer *lexer,
                                               const bool *valid_symbols) {
 #if DEBUG_SCANNER
-  printf("# External scanner invoked. Lookahead: '%c' (0x%02X) ",
-         (lexer->lookahead >= 32 && lexer->lookahead <= 126)
-             ? (char)lexer->lookahead
-             : '?',
-         (unsigned int)lexer->lookahead);
+  char buf[2];
+  char *repr = "<non-printable>";
+  if (lexer->lookahead == '\n') {
+    repr = "\\n";
+  } else if (lexer->lookahead == '\r') {
+    repr = "\\r";
+  } else if (lexer->lookahead == '\t') {
+    repr = "\\t";
+  } else if (lexer->lookahead == '\0') {
+    repr = "\\0";
+  } else if (lexer->lookahead >= 32 && lexer->lookahead <= 126) {
+    buf[0] = (char)lexer->lookahead;
+    buf[1] = '\0';
+    repr = buf;
+  }
+  const char *section_state_names[] = {"NONE", "STARTED", "ENDED"};
+  printf("# External scanner. Lookahead: '%-2s' (0x%02X), section %s", repr,
+         (unsigned int)lexer->lookahead,
+         section_state_names[state->section_state]);
+
   // Print valid symbols presence by lower and upper case
   printf(" Valid symbols: ");
   printf("%c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
@@ -534,14 +620,20 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
   printf("%c", valid_symbols[LOCAL_SYMBOL_TOKEN] ? 'L' : '.');
   printf("%c", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
 
-  printf("m%c", valid_symbols[IDENTIFIER_BOUNDARY_TOKEN] ? 'B' : '.');
+  printf("%c ", valid_symbols[IDENTIFIER_BOUNDARY_TOKEN] ? 'B' : '.');
+
   printf("%c", valid_symbols[GLOBAL_SYMBOL_BEGIN] ? 'G' : '.');
   printf("%c", valid_symbols[LOCAL_SYMBOL_BEGIN] ? 'l' : '.');
   printf("%c ", valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ? 'Q' : '.');
 
   printf("%c ", valid_symbols[FORMAT_SPEC] ? 'T' : '.');
 
-  printf("%c", valid_symbols[EOL_TOKEN] ? 'E' : '.');
+  printf("%c ", valid_symbols[EOL_TOKEN] ? 'E' : '.');
+
+  printf("%c", valid_symbols[SECTION_START] ? '>' : '.');
+  printf("%c", valid_symbols[SECTION_END_EXPLICIT] ? '<' : '.');
+  printf("%c ", valid_symbols[SECTION_TRAILER] ? '*' : '.');
+
   printf("%c", valid_symbols[LOAD_END_TOKEN] ? 'e' : '.');
   printf("\n");
 
@@ -551,7 +643,7 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
   }
 #endif
 
-  bool result = scan(lexer, valid_symbols);
+  bool result = scan(state, lexer, valid_symbols);
 
 #if DEBUG_SCANNER
   char *symbol = "<none>";
@@ -589,6 +681,15 @@ bool tree_sitter_rgbasm_external_scanner_scan(void *payload, TSLexer *lexer,
       break;
     case EOL_TOKEN:
       symbol = "E";
+      break;
+    case SECTION_START:
+      symbol = ">";
+      break;
+    case SECTION_END_EXPLICIT:
+      symbol = "<";
+      break;
+    case SECTION_TRAILER:
+      symbol = "*";
       break;
     case LOAD_END_TOKEN:
       symbol = "e";

@@ -9,7 +9,17 @@ function _top_level_statements($) {
     repeat(alias($.qualified_label_block, $.local_label_block)),
     repeat($.local_label_block),
     repeat($.global_label_block),
-    repeat($.section_block),
+    repeat(
+      seq(
+        $.section_block,
+        optional(
+          seq(
+            $._section_trailer,
+            repeat($._statement),
+          ),
+        ),
+      ),
+    ),
   );
 }
 
@@ -24,6 +34,7 @@ module.exports = grammar({
     $._symbol_fragment,
 
     $._identifier_boundary,
+
     $._global_symbol_begin,
     $._local_symbol_begin,
     $._qualified_symbol_begin,
@@ -32,7 +43,13 @@ module.exports = grammar({
 
     // End-of-line token: injected before ']]' and at EOF
     $._eol,
+
+    $._section_start,
+    $._section_end_explicit,
+    $._section_trailer,
+
     $._load_end,
+
     $._error_sentinel,
   ],
 
@@ -83,12 +100,10 @@ module.exports = grammar({
             field('end', alias(ci('ENDSECTION'), $.directive_keyword)),
             optional($.inline_comment),
             $._eol,
-            repeat($._statement),
+            optional($._section_end_explicit),
           ),
         ),
       ),
-
-    _colon: $ => token.immediate(':'),
 
     // Global label blocks: global label and its contents
     global_label_block: $ =>
@@ -101,7 +116,7 @@ module.exports = grammar({
     _global_label_header: $ =>
       seq(
         field('name', $.global_identifier),
-        choice(token.immediate('::'), $._colon),
+        choice(token.immediate('::'), token.immediate(':')),
       ),
 
     // Local label blocks: local label and its contents
@@ -120,7 +135,7 @@ module.exports = grammar({
             $.qualified_identifier,
           ),
         ),
-        optional($._colon),
+        optional(token.immediate(':')),
       ),
 
     qualified_label_block: $ =>
@@ -135,7 +150,7 @@ module.exports = grammar({
           'name',
           $.qualified_identifier,
         ),
-        optional($._colon),
+        optional(token.immediate(':')),
       ),
 
     // ----- Section statements -----
@@ -166,6 +181,7 @@ module.exports = grammar({
     section_directive: $ =>
       seq(
         field('keyword', alias(ci('SECTION'), $.directive_keyword)),
+        optional($._section_start),
         $._section_args,
       ),
 
@@ -845,7 +861,6 @@ module.exports = grammar({
 
     // Single-character numeric constants like 'A' or '\n'
     char_literal: $ =>
-      // TODO: support '&euro;'?
       token(seq("'", /([^'\\\r\n]|\\.)+/, "'")),
 
     graphics_literal: $ =>
