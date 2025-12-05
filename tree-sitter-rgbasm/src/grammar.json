@@ -51,8 +51,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "PATTERN",
-          "value": "\\\\[ \\t]*"
+          "type": "FIELD",
+          "name": "char",
+          "content": {
+            "type": "STRING",
+            "value": "\\"
+          }
         },
         {
           "type": "CHOICE",

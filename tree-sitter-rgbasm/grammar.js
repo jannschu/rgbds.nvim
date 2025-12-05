@@ -62,7 +62,7 @@ module.exports = grammar({
 
     line_continuation: $ =>
       seq(
-        /\\[ \t]*/,
+        field('char', '\\'),
         optional($.inline_comment),
         /\r?\n/,
       ),

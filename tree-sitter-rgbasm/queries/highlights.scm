@@ -332,6 +332,8 @@
 ; Quiet token for suppressing error backtraces
 (quiet) @punctuation.special
 
+(line_continuation char: _ @punctuation.bracket)
+
 ; ==============================================================================
 ; Fragment Literals
 ; ==============================================================================

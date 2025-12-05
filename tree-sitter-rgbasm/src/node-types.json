@@ -1231,7 +1231,18 @@
     "type": "line_continuation",
     "named": true,
     "extra": true,
-    "fields": {},
+    "fields": {
+      "char": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "\\",
+            "named": false
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": false,
@@ -2552,6 +2563,10 @@
   },
   {
     "type": "[[",
+    "named": false
+  },
+  {
+    "type": "\\",
     "named": false
   },
   {
