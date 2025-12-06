@@ -2352,6 +2352,21 @@
     }
   },
   {
+    "type": "symbol",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "any_symbol",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "unary_expression",
     "named": true,
     "fields": {},
@@ -2643,6 +2658,10 @@
     "named": true
   },
   {
+    "type": "any_symbol",
+    "named": true
+  },
+  {
     "type": "block_comment",
     "named": true,
     "extra": true
@@ -2686,10 +2705,6 @@
   },
   {
     "type": "raw_string_literal",
-    "named": true
-  },
-  {
-    "type": "symbol",
     "named": true
   },
   {

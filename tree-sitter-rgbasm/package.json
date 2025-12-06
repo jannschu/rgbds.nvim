@@ -2,7 +2,10 @@
   "name": "tree-sitter-rgbasm",
   "version": "0.1.0",
   "description": "Rgbasm grammar for tree-sitter",
-  "repository": "https://github.com/tree-sitter/tree-sitter-rgbasm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jannschu/rgbds.nvim.git"
+  },
   "license": "MIT",
   "author": {
     "name": "Jannik Schürg",
