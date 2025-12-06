@@ -27,16 +27,19 @@ enum TokenType {
 
   FORMAT_SPEC,
 
-  // End of line: physical newline, or synthetic (before ']]', at EOF)
+  // A statement is ended either at the end of line/file, or by a ']]' token,
+  // which closes a fragment literal. Latter must not be consumed.
   EOL_TOKEN,
 
+  // These markers allow the scanner to track section state
   SECTION_START,
   SECTION_END_EXPLICIT,
+  // Is scanned if the last section was explicitly ended
   SECTION_TRAILER,
 
   // A LOAD _may_ be ended by each of the following:
   // - <eof>
-  // - ENDL token
+  // - ENDL token  FIXME: check if this can now be handled by the grammar
   //
   // Additionally, the following tokens of other section related blocks
   // will also implicitly end a LOAD block:
@@ -424,6 +427,10 @@ static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
   } else if (dot > 0) {
     // qualified local symbol
     if (valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN]) {
+      if (!raw && !interpolated && is_reserved_word(name, dot)) {
+        lexer->result_symbol = ERROR;
+        return true;
+      }
       lexer->result_symbol = QUALIFIED_LOCAL_SYMBOL_BEGIN;
       return true;
     }
@@ -459,73 +466,75 @@ static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
   }
 }
 
-static bool scan(ScannerState *state, TSLexer *lexer,
-                 const bool *valid_symbols) {
-  // ----- Raw symbol token -----
-  //
-  // A raw symbol, like #if, is first scanned as RAW_SYMBOL_BEGIN (see below),
-  // which already validates that a valid raw symbol follows, so we blindly scan
-  // it here now. This relies on correct ussage of the two token pairs in the
-  // grammar.
-  //
-  // This allows to separately lex '#' and the rest.
-  if (valid_symbols[RAW_SYMBOL_TOKEN]) {
+static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
+                 const bool error) {
+  if (!error) {
+    // ----- Raw symbol token -----
+    //
+    // A raw symbol, like #if, is first scanned as RAW_SYMBOL_BEGIN (see below),
+    // which already validates that a valid raw symbol follows, so we blindly
+    // scan it here now. This relies on correct ussage of the two token pairs in
+    // the grammar.
+    //
+    // This allows to separately lex '#' and the rest.
+    if (valid_symbols[RAW_SYMBOL_TOKEN]) {
 #if DEBUG_SCANNER
-    printf("# Scanning for RAW_SYMBOL_TOKEN\n");
-    printf("  lookahead: '%c' (0x%02X)\n",
-           (lexer->lookahead >= 32 && lexer->lookahead <= 126)
-               ? (char)lexer->lookahead
-               : '?',
-           (unsigned int)lexer->lookahead);
+      printf("# Scanning for RAW_SYMBOL_TOKEN\n");
+      printf("  lookahead: '%c' (0x%02X)\n",
+             (lexer->lookahead >= 32 && lexer->lookahead <= 126)
+                 ? (char)lexer->lookahead
+                 : '?',
+             (unsigned int)lexer->lookahead);
 #endif
-    size_t len = 0;
-    while (is_identifier_char(lexer->lookahead) &&
-           len < MAX_IDENTIFIER_LENGTH) {
-      len += 1;
-      advance(lexer);
-    }
-    lexer->mark_end(lexer);
-    lexer->result_symbol = RAW_SYMBOL_TOKEN;
-    // this should always be fulfilled due to the valid positions for this token
-    // in the grammar
-    return len > 0;
-  }
-
-  // ----- Identifier boundary -----
-  //
-  // A simple lookahead
-
-  if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
-    if (is_identifier_boundary(lexer->lookahead)) {
+      size_t len = 0;
+      while (is_identifier_char(lexer->lookahead) &&
+             len < MAX_IDENTIFIER_LENGTH) {
+        len += 1;
+        advance(lexer);
+      }
       lexer->mark_end(lexer);
-      lexer->result_symbol = IDENTIFIER_BOUNDARY_TOKEN;
-      return true;
+      lexer->result_symbol = RAW_SYMBOL_TOKEN;
+      // this should always be fulfilled due to the valid positions for this
+      // token in the grammar
+      return len > 0;
     }
-  }
 
-  // ----- Section handling -----
-  //
-  // We use markers for start and explicit ends via ENDSECTION and save that in
-  // the state. The start and end tokens are assumed to be optional, so we
-  // always return false (virtual token anyway).
+    // ----- Identifier boundary -----
+    //
+    // A simple lookahead
 
-  if (valid_symbols[SECTION_START]) {
-    state->section_state = SECTION_STATE_STARTED;
-    return false;
-  }
+    if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
+      if (is_identifier_boundary(lexer->lookahead)) {
+        lexer->mark_end(lexer);
+        lexer->result_symbol = IDENTIFIER_BOUNDARY_TOKEN;
+        return true;
+      }
+    }
 
-  if (valid_symbols[SECTION_END_EXPLICIT]) {
-    state->section_state = SECTION_STATE_ENDED;
-    if (!valid_symbols[SECTION_TRAILER]) {
+    // ----- Section handling -----
+    //
+    // We use markers for start and explicit ends via ENDSECTION and save that
+    // in the state. The start and end tokens are assumed to be optional, so we
+    // always return false (virtual token anyway).
+
+    if (valid_symbols[SECTION_START]) {
+      state->section_state = SECTION_STATE_STARTED;
       return false;
     }
-  }
 
-  if (valid_symbols[SECTION_TRAILER] &&
-      state->section_state == SECTION_STATE_ENDED) {
-    lexer->mark_end(lexer);
-    lexer->result_symbol = SECTION_TRAILER;
-    return true;
+    if (valid_symbols[SECTION_END_EXPLICIT]) {
+      state->section_state = SECTION_STATE_ENDED;
+      if (!valid_symbols[SECTION_TRAILER]) {
+        return false;
+      }
+    }
+
+    if (valid_symbols[SECTION_TRAILER] &&
+        state->section_state == SECTION_STATE_ENDED) {
+      lexer->mark_end(lexer);
+      lexer->result_symbol = SECTION_TRAILER;
+      return true;
+    }
   }
 
   // Skip blanks
@@ -571,6 +580,10 @@ static bool scan(ScannerState *state, TSLexer *lexer,
     }
   }
 
+  if (error) {
+    return false;
+  }
+
   if (valid_symbols[GLOBAL_SYMBOL_BEGIN] || valid_symbols[LOCAL_SYMBOL_BEGIN] ||
       valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ||
       valid_symbols[LOAD_END_TOKEN]) {
@@ -608,7 +621,7 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
     repr = buf;
   }
   const char *section_state_names[] = {"NONE", "STARTED", "ENDED"};
-  printf("# External scanner. Lookahead: '%-2s' (0x%02X), section %s", repr,
+  printf("# External scanner. Lookahead: %-2s (0x%02X), section %s", repr,
          (unsigned int)lexer->lookahead,
          section_state_names[state->section_state]);
 
@@ -618,7 +631,7 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
   printf("%c", valid_symbols[RAW_SYMBOL_BEGIN] ? '#' : '.');
   printf("%c", valid_symbols[RAW_SYMBOL_TOKEN] ? 'R' : '.');
   printf("%c", valid_symbols[LOCAL_SYMBOL_TOKEN] ? 'L' : '.');
-  printf("%c", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
+  printf("%c ", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
 
   printf("%c ", valid_symbols[IDENTIFIER_BOUNDARY_TOKEN] ? 'B' : '.');
 
@@ -636,14 +649,9 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
 
   printf("%c", valid_symbols[LOAD_END_TOKEN] ? 'e' : '.');
   printf("\n");
-
-  if (valid_symbols[ERROR]) {
-    printf("  => error sentinel\n");
-    return false;
-  }
 #endif
 
-  bool result = scan(state, lexer, valid_symbols);
+  bool result = scan(state, lexer, valid_symbols, valid_symbols[ERROR]);
 
 #if DEBUG_SCANNER
   char *symbol = "<none>";

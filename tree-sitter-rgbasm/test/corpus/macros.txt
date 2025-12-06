@@ -300,8 +300,7 @@ simple_call A
       (global_identifier
         (symbol))
       (argument_list
-        (expression
-          (register))))))
+        (register)))))
 
 ================================================================================
 Macros: mixed string and number arguments

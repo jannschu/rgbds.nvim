@@ -358,8 +358,7 @@ DEF TZ = TZCOUNT(8)
       (expression
         (function_call
           (function_name)
-          (expression
-            (register))))))
+          (register)))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1238,8 +1237,7 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (expression
         (function_call
           (function_name)
-          (expression
-            (register))))))
+          (register)))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1248,8 +1246,7 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (expression
         (function_call
           (function_name)
-          (expression
-            (register))))))
+          (register)))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1258,8 +1255,7 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (expression
         (function_call
           (function_name)
-          (expression
-            (register))))))
+          (register)))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1268,8 +1264,7 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (expression
         (function_call
           (function_name)
-          (expression
-            (register))))))
+          (register)))))
   (directive
     (def_directive
       (directive_keyword)
@@ -1278,7 +1273,16 @@ DEF FILE_PART = READFILE("data.bin", 256)
       (expression
         (function_call
           (function_name)
-          (expression
+          (register)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (global_identifier
+        (symbol))
+      (expression
+        (function_call
+          (sizeof_function
+            (function_name)
             (register))))))
   (directive
     (def_directive
@@ -1289,19 +1293,7 @@ DEF FILE_PART = READFILE("data.bin", 256)
         (function_call
           (sizeof_function
             (function_name)
-            (expression
-              (register)))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (expression
-              (register)))))))
+            (register))))))
   (inline_comment)
   (directive
     (def_directive

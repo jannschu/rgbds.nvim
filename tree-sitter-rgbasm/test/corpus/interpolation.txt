@@ -184,7 +184,7 @@ DEF foo{bar}{d:{x}{y}_} = 0
             (symbol))
           (interpolation
             (symbol))
-          (symbol)))
+          (symbol_fragment)))
       (expression
         (number_literal)))))
 
@@ -201,8 +201,7 @@ Interpolation: # followed by {
     (instruction
       mnemonic: (instruction_name)
       (operand_list
-        (expression
-          (register))
+        (register)
         (expression
           (identifier
             (global_identifier

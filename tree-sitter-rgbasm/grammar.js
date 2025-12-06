@@ -23,11 +23,46 @@ function _top_level_statements($) {
   );
 }
 
+const RESERVED = [
+  "A", "B", "C", "D", "E", "H", "L", "Z",
+  "AF", "BC", "CP", "DB", "DE", "DI", "DL", "DS", "DW", "EI", "HL", "IF",
+  "JP", "JR", "LD", "NC", "NZ", "OR", "RB", "RL", "RR", "RW", "SP",
+  "ADC", "ADD", "AND", "BIT", "CCF", "COS", "CPL", "DAA", "DEC", "DEF",
+  "DIV", "EQU", "FOR", "HLD", "HLI", "INC", "LDD", "LDH", "LDI", "LOG",
+  "LOW", "MUL", "NOP", "OAM", "OPT", "POP", "POW", "RES", "RET", "RLA",
+  "RLC", "RRA", "RRC", "RST", "SBC", "SCF", "SET", "SIN", "SLA", "SRA",
+  "SRL", "SUB", "TAN", "XOR",
+  "ACOS", "ASIN", "ATAN", "BANK", "CALL", "CEIL", "ELIF", "ELSE", "ENDC",
+  "ENDL", "ENDM", "ENDR", "ENDU", "EQUS", "FAIL", "FMOD", "HALT", "HIGH",
+  "HRAM", "LOAD", "POPC", "POPO", "POPS", "PUSH", "REPT", "RETI", "RLCA",
+  "ROM0", "ROMX", "RRCA", "SRAM", "STOP", "SWAP", "VRAM", "WARN",
+  "ALIGN", "ATAN2", "BREAK", "FATAL", "FLOOR", "MACRO", "NEXTU", "PRINT",
+  "PURGE", "PUSHC", "PUSHO", "PUSHS", "REDEF", "ROUND", "RSSET", "SHIFT",
+  "STRIN", "UNION", "WRAM0", "WRAMX",
+  "ASSERT", "EXPORT", "INCBIN", "SIZEOF", "STRCAT", "STRCMP", "STRFMT",
+  "STRLEN", "STRLWR", "STRRIN", "STRRPL", "STRSUB", "STRUPR",
+  "BYTELEN", "CHARCMP", "CHARLEN", "CHARMAP", "CHARSUB", "CHARVAL",
+  "INCLUDE", "ISCONST", "PRINTLN", "REVCHAR", "RSRESET", "SECTION",
+  "STARTOF", "STRBYTE", "STRCHAR", "STRFIND", "TZCOUNT",
+  "BITWIDTH", "CHARSIZE", "FRAGMENT", "READFILE", "STRRFIND",
+  "STRSLICE", "INCHARMAP", "ENDSECTION", "NEWCHARMAP", "SETCHARMAP",
+  "STATIC_ASSERT",
+];
+
+const KW = Object.fromEntries(RESERVED.map(kw => [kw, ci(kw)]));
+
+const MNEMONICS = [
+  'ADC', 'ADD', 'AND', 'BIT', 'CALL', 'CCF', 'CP', 'CPL', 'DAA', 'DEC', 'DI',
+  'EI', 'HALT', 'INC', 'JP', 'JR', 'LD', 'LDD', 'LDH', 'LDI', 'NOP', 'OR', 'POP',
+  'PUSH', 'RES', 'RET', 'RETI', 'RL', 'RLA', 'RLC', 'RLCA', 'RR', 'RRA', 'RRC',
+  'RRCA', 'RST', 'SBC', 'SCF', 'SET', 'SLA', 'SRA', 'SRL', 'STOP', 'SUB', 'SWAP', 'XOR',
+];
+
 module.exports = grammar({
   name: 'rgbasm',
 
   externals: $ => [
-    $.symbol,
+    $.__symbol,
     $._raw_symbol_begin,
     $._raw_symbol,
     $.local_symbol,
@@ -55,12 +90,13 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.condition_code, $.register],  // both accept 'C'
+    // FIXME: check this, why is it needed?
+    [$._qualified_label_header, $._local_label_header],
     [$.macro_invocation],
     [$.ds_directive],
     [$.global_label_block],
     [$.local_label_block],
     [$.qualified_label_block],
-    [$._qualified_label_header, $._local_label_header],
   ],
 
   extras: $ => [
@@ -74,6 +110,12 @@ module.exports = grammar({
 
   inline: $ => [],
 
+  word: $ => $.symbol,
+
+  reserved: {
+    global: $ => [$._constant, ...Object.values(KW)],
+  },
+
   rules: {
     source_file: $ => _top_level_statements($),
 
@@ -84,26 +126,62 @@ module.exports = grammar({
         /\r?\n/,
       ),
 
-    // ----- Labels -----
+    symbol: $ => /[A-Za-z_][A-Za-z0-9_#$@]*/,
 
-    // Section blocks: SECTION directive and its contents
-    section_block: $ =>
-      seq(
-        $.section_directive,
-        optional($.inline_comment),
-        $._eol,
-        repeat($._statement),
-        repeat(alias($.qualified_label_block, $.local_label_block)),
-        repeat($.global_label_block),
-        optional(
-          seq(
-            field('end', alias(ci('ENDSECTION'), $.directive_keyword)),
-            optional($.inline_comment),
-            $._eol,
-            optional($._section_end_explicit),
-          ),
-        ),
+    // ----- Reserved keywords -----
+
+    instruction_name: $ => choice(...MNEMONICS.map(kw => KW[kw])),
+
+    _dot: $ => token('.'),
+
+    _constant: $ =>
+      token(choice(
+        '@', '..', '__SCOPE__', '_RS', '_NARG',
+        '__ISO_8601_LOCAL__', '__ISO_8601_UTC__',
+        '__UTC_YEAR__', '__UTC_MONTH__', '__UTC_DAY__', '__UTC_HOUR__',
+        '__UTC_MINUTE__', '__UTC_SECOND__',
+        '__RGBDS_MAJOR__', '__RGBDS_MINOR__', '__RGBDS_PATCH__', '__RGBDS_RC__',
+        '__RGBDS_VERSION__',
+      )),
+    constant: $ => choice(
+      $._constant,
+      $._dot,
+    ),
+
+    register: $ => choice(KW.A, KW.B, KW.C, KW.D, KW.E, KW.H, KW.L, KW.AF, KW.BC, KW.DE, KW.HL, KW.SP),
+
+    condition_code: $ => seq(
+      optional('!'),
+      field('condition', choice(KW.Z, KW.NZ, KW.C, KW.NC)),
+    ),
+
+    function_name: $ => choice(
+      // NOTE: SIZEOF and STARTOF are handled specially, they accept a section_type
+      KW.ACOS, KW.ASIN, KW.ATAN2, KW.ATAN, KW.BANK, KW.BITWIDTH, KW.BYTELEN, KW.CEIL, KW.CHARCMP,
+      KW.CHARLEN, KW.CHARSIZE, KW.CHARVAL, KW.COS, KW.DEF, KW.DIV, KW.FLOOR, KW.FMOD, KW.HIGH,
+      KW.LOW, KW.INCHARMAP, KW.ISCONST, KW.LOG, KW.MUL, KW.POW, KW.READFILE, KW.REVCHAR, KW.ROUND,
+      KW.SECTION, KW.SIN, KW.STRBYTE, KW.STRCAT, KW.STRCHAR, KW.STRCMP, KW.STRFIND, KW.STRFMT,
+      KW.STRLEN, KW.STRLWR, KW.STRRFIND, KW.STRRPL, KW.STRSLICE, KW.STRUPR, KW.TAN, KW.TZCOUNT,
+      // deprecated
+      KW.CHARSUB, KW.STRIN, KW.STRRIN, KW.STRSUB,
+    ),
+
+    directive_keyword: $ =>
+      choice(
+        KW.ALIGN, KW.BREAK, KW.INCBIN, KW.PRINT, KW.PRINTLN, KW.PURGE, KW.READFILE, KW.DB, KW.DW, KW.DL,
+        KW.SHIFT, KW.RSSET, KW.RSRESET, KW.NEWCHARMAP, KW.SETCHARMAP, KW.CHARMAP, KW.PUSHC, KW.POPC,
+        KW.FAIL, KW.WARN, KW.FATAL
       ),
+
+    section_type: $ =>
+      choice(
+        KW.ROM0, KW.ROMX, KW.VRAM, KW.SRAM,
+        KW.WRAM0, KW.WRAMX, KW.OAM, KW.HRAM,
+      ),
+
+    severity: $ => choice(KW.FAIL, KW.WARN, KW.FATAL),
+
+    // ----- Labels -----
 
     // Global label blocks: global label and its contents
     global_label_block: $ =>
@@ -169,10 +247,29 @@ module.exports = grammar({
 
     // ----- Section -----
 
+    // Section blocks: SECTION directive and its contents
+    section_block: $ =>
+      seq(
+        $.section_directive,
+        optional($.inline_comment),
+        $._eol,
+        repeat($._statement),
+        repeat(alias($.qualified_label_block, $.local_label_block)),
+        repeat($.global_label_block),
+        optional(
+          seq(
+            field('end', alias(KW.ENDSECTION, $.directive_keyword)),
+            optional($.inline_comment),
+            $._eol,
+            optional($._section_end_explicit),
+          ),
+        ),
+      ),
+
     _section_args: $ =>
       seq(
-        optional(field('fragment', alias(ci('FRAGMENT'), $.directive_keyword))),
-        optional(field('union', alias(ci('UNION'), $.directive_keyword))),
+        optional(field('fragment', alias(KW.FRAGMENT, $.directive_keyword))),
+        optional(field('union', alias(KW.UNION, $.directive_keyword))),
         $.string_literal,
         optional(seq(',', $.section_type, optional($.section_address))),
         optional($.section_options)
@@ -180,21 +277,9 @@ module.exports = grammar({
 
     section_directive: $ =>
       seq(
-        field('keyword', alias(ci('SECTION'), $.directive_keyword)),
+        field('keyword', alias(KW.SECTION, $.directive_keyword)),
         optional($._section_start),
         $._section_args,
-      ),
-
-    section_type: $ =>
-      ci(
-        'ROM0',
-        'ROMX',
-        'VRAM',
-        'SRAM',
-        'WRAM0',
-        'WRAMX',
-        'OAM',
-        'HRAM',
       ),
 
     section_address: $ =>
@@ -217,7 +302,7 @@ module.exports = grammar({
 
     bank_option: $ =>
       seq(
-        alias(ci('BANK'), 'BANK'),
+        alias(KW.BANK, 'BANK'),
         '[',
         field('bank', $.expression),
         ']'
@@ -225,7 +310,7 @@ module.exports = grammar({
 
     align_option: $ =>
       seq(
-        alias(ci('ALIGN'), 'ALIGN'),
+        alias(KW.ALIGN, 'ALIGN'),
         '[',
         field('align', $.expression),
         optional(seq(',', field('offset', $.expression))),
@@ -234,19 +319,19 @@ module.exports = grammar({
 
     load_block: $ =>
       seq(
-        field('keyword', alias(ci('LOAD'), $.directive_keyword)),
+        field('keyword', alias(KW.LOAD, $.directive_keyword)),
         $._section_args,
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
         repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
-        field('end', alias($._load_end, $.directive_keyword)),
+        field('end', alias(choice(KW.ENDL, $._load_end), $.directive_keyword)),
       ),
 
     pushs_block: $ =>
       seq(
-        field('keyword', alias(ci('PUSHS'), $.directive_keyword)),
+        field('keyword', alias(KW.PUSHS, $.directive_keyword)),
         $._section_args,
         optional($.inline_comment),
         $._eol,
@@ -254,7 +339,7 @@ module.exports = grammar({
         repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
         repeat($.section_block),
-        field('end', alias(ci('POPS'), $.directive_keyword)),
+        field('end', alias(KW.POPS, $.directive_keyword)),
       ),
 
     // ----- Directives -----
@@ -280,7 +365,7 @@ module.exports = grammar({
 
     ds_directive: $ =>
       seq(
-        field('keyword', alias(ci('DS'), $.directive_keyword)),
+        field('keyword', alias(KW.DS, $.directive_keyword)),
         choice(
           seq(
             $.align_option,
@@ -295,17 +380,17 @@ module.exports = grammar({
 
     union_block: $ =>
       seq(
-        field('keyword', alias(ci('UNION'), $.directive_keyword)),
+        field('keyword', alias(KW.UNION, $.directive_keyword)),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
         repeat($.nextu_block),
-        field('end', alias(ci('ENDU'), $.directive_keyword)),
+        field('end', alias(KW.ENDU, $.directive_keyword)),
       ),
 
     nextu_block: $ =>
       seq(
-        field('keyword', alias(ci('NEXTU'), $.directive_keyword)),
+        field('keyword', alias(KW.NEXTU, $.directive_keyword)),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
@@ -313,17 +398,17 @@ module.exports = grammar({
 
     def_directive: $ =>
       seq(
-        field('keyword', alias(ci('DEF', 'REDEF'), $.directive_keyword)),
+        field('keyword', alias(choice(KW.DEF, KW.REDEF), $.directive_keyword)),
         field('name', $.global_identifier),
         choice(
           // String constant: DEF name EQUS "value" or #"value"
           seq(
-            field('assign_type', alias(ci('EQUS'), $.directive_keyword)),
+            field('assign_type', alias(KW.EQUS, $.directive_keyword)),
             field('value', choice($.string_literal, $.raw_string_literal))
           ),
           // Numeric constant (immutable): DEF name EQU value
           seq(
-            field('assign_type', alias(ci('EQU'), $.directive_keyword)),
+            field('assign_type', alias(KW.EQU, $.directive_keyword)),
             field('value', $.expression)
           ),
           // Variable (mutable): DEF name = value
@@ -333,17 +418,15 @@ module.exports = grammar({
           ),
           // RS offset constants: DEF name RB/RW/RL count
           seq(
-            field('assign_type', ci('RB', 'RW', 'RL')),
+            field('assign_type', choice(KW.RB, KW.RW, KW.RL)),
             optional(field('value', $.expression))
           ),
         ),
       ),
 
-    severity: $ => ci('FAIL', 'WARN', 'FATAL'),
-
     assert_directive: $ =>
       prec.right(seq(
-        field('keyword', alias(ci('ASSERT', 'STATIC_ASSERT'), $.directive_keyword)),
+        field('keyword', alias(choice(KW.ASSERT, KW.STATIC_ASSERT), $.directive_keyword)),
         // Optional severity with REQUIRED comma: ASSERT [severity,] condition [, message]
         optional(seq(
           $.severity,
@@ -355,7 +438,7 @@ module.exports = grammar({
 
     export_directive: $ =>
       seq(
-        field('keyword', alias(ci('EXPORT'), $.directive_keyword)),
+        field('keyword', alias(KW.EXPORT, $.directive_keyword)),
         choice(
           $.def_directive,
           $.argument_list,
@@ -364,7 +447,7 @@ module.exports = grammar({
 
     opt_directive: $ =>
       seq(
-        field('keyword', alias(ci('OPT'), $.directive_keyword)),
+        field('keyword', alias(KW.OPT, $.directive_keyword)),
         optional(seq(
           $.opt_arg,
           repeat(seq(',', $.opt_arg))
@@ -373,7 +456,7 @@ module.exports = grammar({
 
     pusho_directive: $ =>
       seq(
-        field('keyword', alias(ci('PUSHO'), $.directive_keyword)),
+        field('keyword', alias(KW.PUSHO, $.directive_keyword)),
         optional(seq(
           $.opt_arg,
           repeat(seq(',', $.opt_arg))
@@ -382,7 +465,7 @@ module.exports = grammar({
 
     popo_directive: $ =>
       seq(
-        field('keyword', alias(ci('POPO'), $.directive_keyword))
+        field('keyword', alias(KW.POPO, $.directive_keyword))
       ),
 
     // OPT arguments are parsed in RAW mode by RGBDS - similar to macro arguments
@@ -418,35 +501,9 @@ module.exports = grammar({
 
     include_directive: $ =>
       seq(
-        field('keyword', alias(ci('INCLUDE'), $.directive_keyword)),
+        field('keyword', alias(KW.INCLUDE, $.directive_keyword)),
         optional(alias('?', $.quiet)),
         optional($.argument_list),
-      ),
-
-    directive_keyword: $ =>
-      token(
-        ci(
-          'ALIGN',
-          'BREAK',
-          'INCBIN',
-          'PRINT',
-          'PRINTLN',
-          'PURGE',
-          'READFILE',
-          'DB',
-          'DW',
-          'SHIFT',
-          'RSSET',
-          'RSRESET',
-          'NEWCHARMAP',
-          'SETCHARMAP',
-          'CHARMAP',
-          'PUSHC',
-          'POPC',
-          'WARN',
-          'FAIL',
-          'FATAL',
-        )
       ),
 
     argument_list: $ =>
@@ -459,13 +516,13 @@ module.exports = grammar({
 
     macro_definition: $ =>
       seq(
-        field('keyword', alias(ci('MACRO'), $.directive_keyword)),
+        field('keyword', alias(KW.MACRO, $.directive_keyword)),
         optional(alias('?', $.quiet)),
         field('name', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        field('end', alias(ci('ENDM'), $.directive_keyword)),
+        field('end', alias(KW.ENDM, $.directive_keyword)),
       ),
 
     // NOTE: this must only match tokens that are not
@@ -507,19 +564,19 @@ module.exports = grammar({
 
     if_block: $ =>
       seq(
-        field('keyword', alias(ci('IF'), $.directive_keyword)),
+        field('keyword', alias(KW.IF, $.directive_keyword)),
         field('condition', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
         repeat($.elif_clause),
         optional($.else_clause),
-        field('end', alias(ci('ENDC'), $.directive_keyword)),
+        field('end', alias(KW.ENDC, $.directive_keyword)),
       ),
 
     elif_clause: $ =>
       seq(
-        alias(ci('ELIF'), $.directive_keyword),
+        alias(KW.ELIF, $.directive_keyword),
         $.expression,
         optional($.inline_comment),
         $._eol,
@@ -528,7 +585,7 @@ module.exports = grammar({
 
     else_clause: $ =>
       seq(
-        alias(ci('ELSE'), $.directive_keyword),
+        alias(KW.ELSE, $.directive_keyword),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
@@ -536,18 +593,18 @@ module.exports = grammar({
 
     rept_block: $ =>
       seq(
-        field('keyword', alias(ci('REPT'), $.directive_keyword)),
+        field('keyword', alias(KW.REPT, $.directive_keyword)),
         optional(alias('?', $.quiet)),
         field('count', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        field('end', alias(ci('ENDR'), $.directive_keyword)),
+        field('end', alias(KW.ENDR, $.directive_keyword)),
       ),
 
     for_block: $ =>
       seq(
-        field('keyword', alias(ci('FOR'), $.directive_keyword)),
+        field('keyword', alias(KW.FOR, $.directive_keyword)),
         optional(alias('?', $.quiet)),
         $.expression,
         repeat(
@@ -559,7 +616,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        field('end', alias(ci('ENDR'), $.directive_keyword)),
+        field('end', alias(KW.ENDR, $.directive_keyword)),
       ),
 
     // ----- Comments -----
@@ -594,84 +651,6 @@ module.exports = grammar({
 
     // ----- Instructions -----
 
-    instruction_name: $ => ci(
-      'ADC',
-      'ADD',
-      'AND',
-      'BIT',
-      'CALL',
-      'CCF',
-      'CP',
-      'CPL',
-      'DAA',
-      'DEC',
-      'DI',
-      'EI',
-      'HALT',
-      'INC',
-      'JP',
-      'JR',
-      'LD',
-      'LDD',
-      'LDH',
-      'LDI',
-      'NOP',
-      'OR',
-      'POP',
-      'PUSH',
-      'RES',
-      'RET',
-      'RETI',
-      'RL',
-      'RLA',
-      'RLC',
-      'RLCA',
-      'RR',
-      'RRA',
-      'RRC',
-      'RRCA',
-      'RST',
-      'SBC',
-      'SCF',
-      'SET',
-      'SLA',
-      'SRA',
-      'SRL',
-      'STOP',
-      'SUB',
-      'SWAP',
-      'XOR',
-    ),
-
-    _dot: $ => '.',
-
-    constant: $ =>
-      choice(
-        $._dot,
-        ci(
-          '@',
-          '..',
-          '__SCOPE__',
-          '_RS',
-          '_NARG',
-          '__ISO_8601_LOCAL__',
-          '__ISO_8601_UTC__',
-          '__UTC_YEAR__',
-          '__UTC_MONTH__',
-          '__UTC_DAY__',
-          '__UTC_HOUR__',
-          '__UTC_MINUTE__',
-          '__UTC_SECOND__',
-          '__RGBDS_MAJOR__',
-          '__RGBDS_MINOR__',
-          '__RGBDS_PATCH__',
-          '__RGBDS_RC__',
-          '__RGBDS_VERSION__',
-        ),
-      ),
-
-    register: $ => ci('A', 'B', 'C', 'D', 'E', 'H', 'L', 'AF', 'BC', 'DE', 'HL', 'SP'),
-
     instruction_list: $ =>
       seq(
         $.instruction,
@@ -684,11 +663,6 @@ module.exports = grammar({
         optional($.operand_list),
       ),
 
-    condition_code: $ => seq(
-      optional('!'),
-      field('condition', ci('Z', 'NZ', 'C', 'NC')),
-    ),
-
     operand_list: $ =>
       seq(
         $._operand,
@@ -699,14 +673,22 @@ module.exports = grammar({
       choice(
         $.condition_code,
         $.address,
+        $.register,
         $.expression,
       ),
+
+    _hl_special: $ => choice(
+      KW.HLI,
+      KW.HLD,
+      seq(KW.HL, token.immediate(/[\-\+]/)),
+    ),
 
     address: $ =>
       seq('[',
         choice(
+          $.register,
           $.expression,
-          alias(ci('HLD', 'HL-', 'HLI', 'HL+'), $.register),
+          alias($._hl_special, $.register),
         ),
         ']',
       ),
@@ -724,7 +706,6 @@ module.exports = grammar({
         $.char_literal,
         $.anonymous_label_ref,
         $.constant,
-        $.register,
         $.fragment_literal,
         $.macro_argument,
         $.macro_arguments_spread,
@@ -740,58 +721,10 @@ module.exports = grammar({
         field('end', ']]')
       ),
 
-    function_name: $ => ci(
-      "ACOS",
-      "ASIN",
-      "ATAN2",
-      "ATAN",
-      "BANK",
-      "BITWIDTH",
-      "BYTELEN",
-      "CEIL",
-      "CHARCMP",
-      "CHARLEN",
-      "CHARSIZE",
-      "CHARVAL",
-      "COS",
-      "DEF",
-      "DIV",
-      "FLOOR",
-      "FMOD",
-      "HIGH",
-      "LOW",
-      "INCHARMAP",
-      "ISCONST",
-      "LOG",
-      "MUL",
-      "POW",
-      "READFILE",
-      "REVCHAR",
-      "ROUND",
-      "SECTION",
-      "SIN",
-      // handled specially, accepts a section type
-      // "SIZEOF",
-      // "STARTOF",
-      "STRBYTE",
-      "STRCAT",
-      "STRCHAR",
-      "STRCMP",
-      "STRFIND",
-      "STRFMT",
-      "STRLEN",
-      "STRLWR",
-      "STRRFIND",
-      "STRRPL",
-      "STRSLICE",
-      "STRUPR",
-      "TAN",
-      "TZCOUNT",
-      // deprecated
-      "CHARSUB",
-      "STRIN",
-      "STRRIN",
-      "STRSUB",
+    _func_arg: $ => choice(
+      $.address,
+      $.register,
+      $.expression,
     ),
 
     function_call: $ =>
@@ -803,9 +736,9 @@ module.exports = grammar({
           '(',
           optional(
             seq(
-              $.expression,
-              repeat(seq(',', $.expression))
-            )
+              $._func_arg,
+              repeat(seq(',', $._func_arg)),
+            ),
           ),
           ')'
         ),
@@ -813,22 +746,36 @@ module.exports = grammar({
 
     startof_function: $ =>
       seq(
-        alias(ci('STARTOF'), $.function_name),
+        alias(KW.STARTOF, $.function_name),
         '(',
-        choice($.section_type, $.expression),
+        choice($.section_type, $._func_arg),
         ')',
       ),
 
     sizeof_function: $ =>
       seq(
-        alias(ci('SIZEOF'), $.function_name),
+        alias(KW.SIZEOF, $.function_name),
         '(',
-        choice($.section_type, $.expression),
+        choice($.section_type, $._func_arg),
         ')',
       ),
 
     binary_expression: $ =>
-      choice(...binary_ops($)),
+      choice(
+        ...binary_ops($),
+        // FIXME: maybe move this to operand?
+        //        functions may accept registers as arguments, maybe add operand as option there, too?
+        //
+        // this is used for the "LD HL,SP+e8" instruction,
+        // the only case where a register may show up in an expression,
+        prec.left(4,
+          seq(
+            field('left', alias(KW.SP, $.register)),
+            field('operator', /[\+\-]/),
+            field('right', $.expression)
+          ),
+        ),
+      ),
 
     unary_expression: $ =>
       prec.right(
@@ -988,19 +935,19 @@ module.exports = grammar({
     // ----- Interpolations -----
 
     _interpolated_global_identifier: $ =>
-      seq(
+      prec(1, seq(
         optional(
           field('raw_marker', '#'),
         ),
-        optional(alias(/[A-Za-z_][A-Za-z0-9_#$@]*/, $.symbol)),
+        optional($.symbol),
         $.interpolation,
         repeat(
           choice(
-            alias($._symbol_fragment, $.symbol),
+            alias($._symbol_fragment, $.symbol_fragment),
             $._immediate_interpolation,
           ),
         ),
-      ),
+      )),
 
     _interpolated_local_identifier: $ =>
       seq(
@@ -1075,7 +1022,7 @@ function binary_ops($) {
   });
 }
 
-function ci(...keywords) {
+function ciRegex(...keywords) {
   const patterns = keywords.map(keyword => {
     const charPattern = keyword
       .split('')
@@ -1096,7 +1043,11 @@ function ci(...keywords) {
 
     return new RegExp(charPattern);
   });
+  return patterns;
+}
 
+function ci(...keywords) {
+  const patterns = ciRegex(...keywords);
   // Do not wrap in choice if only one keyword
   return patterns.length === 1 ? patterns[0] : choice(...patterns);
 }

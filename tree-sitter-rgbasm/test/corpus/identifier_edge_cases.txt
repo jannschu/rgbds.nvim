@@ -14,7 +14,7 @@ DEF foo{name} = 2
       (global_identifier
         (interpolation
           (symbol))
-        (symbol))
+        (symbol_fragment))
       (expression
         (number_literal))))
   (directive
@@ -142,7 +142,7 @@ Main{x}::
     (global_identifier
       (interpolation
         (symbol))
-      (symbol))))
+      (symbol_fragment))))
 
 ================================================================================
 Interpolation: Local label

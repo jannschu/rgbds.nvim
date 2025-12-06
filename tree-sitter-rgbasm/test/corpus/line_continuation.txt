@@ -101,12 +101,10 @@ Line continuation: in instruction
     (instruction
       (instruction_name)
       (operand_list
-        (expression
-          (register))
+        (register)
         (line_continuation)
         (address
-          (expression
-            (register)))))))
+          (register))))))
 
 ================================================================================
 Line continuation: with comment

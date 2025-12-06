@@ -17,8 +17,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))))
+          (register))))))
 
 ================================================================================
 Instructions: Label EOF expression
@@ -65,28 +64,23 @@ SECTION "Test", ROM0
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -99,18 +93,15 @@ SECTION "Test", ROM0
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: ADD
@@ -145,28 +136,23 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -179,33 +165,27 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))))
 
@@ -229,8 +209,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)))))
@@ -286,28 +265,23 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -320,45 +294,37 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -371,45 +337,37 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -422,18 +380,15 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: INC and DEC
@@ -464,64 +419,54 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (address
-            (expression
-              (register))))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))))
 
 ================================================================================
 Instructions: LD
@@ -557,8 +502,7 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
+            (register))
           (expression
             (number_literal)))))
     (instruction_list
@@ -566,17 +510,14 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
-          (expression
-            (register)))))
+            (register))
+          (register))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (inline_comment)
@@ -584,34 +525,29 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code)
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (inline_comment)
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
             (expression
               (number_literal))))))))
@@ -652,7 +588,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code)
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -706,7 +642,7 @@ Global:: jp nz, Global
           (instruction
             (instruction_name)
             (operand_list
-              (condition_code)
+              (register)
               (expression
                 (identifier
                   (local_identifier
@@ -752,28 +688,23 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -786,45 +717,37 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -837,18 +760,15 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: CP (compare)
@@ -877,28 +797,23 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -911,18 +826,15 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: Bit manipulation (BIT, SET, RES)
@@ -959,16 +871,14 @@ SECTION "Test", ROM0
         (operand_list
           (expression
             (number_literal))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (expression
             (number_literal))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -976,8 +886,7 @@ SECTION "Test", ROM0
           (expression
             (number_literal))
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
@@ -985,15 +894,14 @@ SECTION "Test", ROM0
         (operand_list
           (expression
             (number_literal))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (expression
             (number_literal))
-          (condition_code))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -1001,8 +909,7 @@ SECTION "Test", ROM0
           (expression
             (number_literal))
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
@@ -1010,16 +917,14 @@ SECTION "Test", ROM0
         (operand_list
           (expression
             (number_literal))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (expression
             (number_literal))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -1027,8 +932,7 @@ SECTION "Test", ROM0
           (expression
             (number_literal))
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: Rotate and shift
@@ -1088,21 +992,18 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1111,20 +1012,18 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1133,21 +1032,18 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1156,21 +1052,18 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1179,57 +1072,49 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: Stack operations (PUSH, POP)
@@ -1258,50 +1143,42 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))))
+          (register))))))
 
 ================================================================================
 Instructions: CALL and RET
@@ -1363,7 +1240,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code)
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -1388,7 +1265,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)))))
@@ -1489,14 +1366,12 @@ SECTION "Test", ROM0
           (address
             (expression
               (number_literal)))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
             (expression
               (number_literal))))))
@@ -1505,19 +1380,15 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
-          (expression
-            (register)))))
+            (register))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: LD with HLI and HLD
@@ -1557,50 +1428,42 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
             (register))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
             (register))
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
           (address
             (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
             (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
@@ -1608,50 +1471,42 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
             (register))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
-          (expression
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
             (register))
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
           (address
             (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
             (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (address
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Instructions: LD with register binary expressions
@@ -1666,12 +1521,10 @@ ld hl, sp + $10
     (instruction
       (instruction_name)
       (operand_list
-        (expression
-          (register))
+        (register)
         (expression
           (binary_expression
-            (expression
-              (register))
+            (register)
             (expression
               (number_literal))))))))
 
@@ -1707,44 +1560,35 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register)))
-          (expression
+            (register))
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (address
+            (register))
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
             (register)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
+          (register)
           (address
-            (expression
-              (register)))
-          (expression
             (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register))
-          (address
-            (expression
-              (register))))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (register))
-          (address
-            (expression
-              (register))))))
     (inline_comment)
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (instruction_list
@@ -1754,40 +1598,33 @@ SECTION "Test", ROM0
           (address
             (expression
               (number_literal)))
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (binary_expression
-              (expression
-                (register))
+              (register)
               (expression
                 (number_literal)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (binary_expression
-              (expression
-                (register))
+              (register)
               (expression
                 (number_literal)))))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))))
+          (register)
+          (register))))))
 
 ================================================================================
 Instructions: Miscellaneous (NOP, HALT, STOP, etc.)
@@ -1901,7 +1738,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (condition_code)
+          (register)
           (expression
             (identifier
               (global_identifier
@@ -1927,12 +1764,10 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (register))))))))
+            (register)))))))

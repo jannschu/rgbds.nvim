@@ -69,6 +69,10 @@
           "named": true
         },
         {
+          "type": "register",
+          "named": true
+        },
+        {
           "type": "section_option",
           "named": true
         },
@@ -155,6 +159,10 @@
         "types": [
           {
             "type": "expression",
+            "named": true
+          },
+          {
+            "type": "register",
             "named": true
           }
         ]
@@ -449,6 +457,11 @@
     }
   },
   {
+    "type": "directive_keyword",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "ds_directive",
     "named": true,
     "fields": {
@@ -699,10 +712,6 @@
           "named": true
         },
         {
-          "type": "register",
-          "named": true
-        },
-        {
           "type": "string_literal",
           "named": true
         },
@@ -869,11 +878,19 @@
       "required": true,
       "types": [
         {
+          "type": "address",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
         {
           "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "register",
           "named": true
         },
         {
@@ -914,6 +931,10 @@
           },
           {
             "type": "symbol",
+            "named": true
+          },
+          {
+            "type": "symbol_fragment",
             "named": true
           }
         ]
@@ -1222,6 +1243,10 @@
         },
         {
           "type": "symbol",
+          "named": true
+        },
+        {
+          "type": "symbol_fragment",
           "named": true
         }
       ]
@@ -1629,6 +1654,10 @@
         {
           "type": "expression",
           "named": true
+        },
+        {
+          "type": "register",
+          "named": true
         }
       ]
     }
@@ -1836,6 +1865,10 @@
           },
           {
             "type": "symbol",
+            "named": true
+          },
+          {
+            "type": "symbol_fragment",
             "named": true
           }
         ]
@@ -2198,11 +2231,19 @@
       "required": true,
       "types": [
         {
+          "type": "address",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
         {
           "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "register",
           "named": true
         },
         {
@@ -2273,11 +2314,19 @@
       "required": true,
       "types": [
         {
+          "type": "address",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
         {
           "type": "function_name",
+          "named": true
+        },
+        {
+          "type": "register",
           "named": true
         },
         {
@@ -2603,10 +2652,6 @@
     "named": true
   },
   {
-    "type": "directive_keyword",
-    "named": true
-  },
-  {
     "type": "graphics_literal",
     "named": true
   },
@@ -2645,6 +2690,10 @@
   },
   {
     "type": "symbol",
+    "named": true
+  },
+  {
+    "type": "symbol_fragment",
     "named": true
   },
   {

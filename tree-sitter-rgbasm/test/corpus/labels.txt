@@ -190,8 +190,7 @@ Loop::
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (register))
+          (register)
           (expression
             (number_literal)))))
     (inline_comment)

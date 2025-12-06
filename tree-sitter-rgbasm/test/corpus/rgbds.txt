@@ -264,8 +264,7 @@ println CHARSUB("a", 123), STRIN(A, 2), STRRIN("foo", 2), STRSUB("bar", "baz")
         (expression
           (function_call
             (function_name)
-            (expression
-              (register))
+            (register)
             (expression
               (number_literal))))
         (expression
@@ -329,8 +328,7 @@ both cpl
             (interpolation
               (symbol)))
           (argument_list
-            (expression
-              (register))
+            (register)
             (expression
               (macro_arguments_spread)))))
       (directive_keyword)))
@@ -339,7 +337,7 @@ both cpl
       (global_identifier
         (symbol))
       (argument_list
-        (condition_code)
+        (register)
         (expression
           (identifier
             (global_identifier

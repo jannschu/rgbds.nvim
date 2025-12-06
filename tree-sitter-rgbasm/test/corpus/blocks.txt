@@ -36,8 +36,7 @@ ENDM
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (register))
+            (register)
             (expression
               (number_literal)))))
       (elif_clause
@@ -48,8 +47,7 @@ ENDM
           (instruction
             (instruction_name)
             (operand_list
-              (expression
-                (register))
+              (register)
               (expression
                 (number_literal))))))
       (else_clause
@@ -58,8 +56,7 @@ ENDM
           (instruction
             (instruction_name)
             (operand_list
-              (expression
-                (register))
+              (register)
               (expression
                 (number_literal))))))
       (directive_keyword)))
@@ -102,8 +99,7 @@ ENDM
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (register))
+            (register)
             (expression
               (identifier
                 (global_identifier
@@ -571,8 +567,7 @@ ENDL
           (instruction
             (instruction_name)
             (operand_list
-              (expression
-                (register))
+              (register)
               (expression
                 (identifier
                   (local_identifier
@@ -581,8 +576,7 @@ ENDL
           (instruction
             (instruction_name)
             (operand_list
-              (expression
-                (register))
+              (register)
               (expression
                 (number_literal)))))
         (instruction_list
@@ -843,8 +837,7 @@ wAnswer: db
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (register))
+            (register)
             (expression
               (number_literal)))))
       (pushs_block
@@ -867,8 +860,7 @@ wAnswer: db
                 (identifier
                   (global_identifier
                     (symbol)))))
-            (expression
-              (register))))))))
+            (register)))))))
 
 ================================================================================
 Blocks: PUSHS within LOAD block

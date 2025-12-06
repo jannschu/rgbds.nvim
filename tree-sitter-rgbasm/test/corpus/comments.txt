@@ -22,10 +22,8 @@ Start:
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register)))))
+          (register)
+          (register))))
     (inline_comment)))
 
 ================================================================================
@@ -73,11 +71,9 @@ Start:
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (register))
-          (expression
-            (register))
-          (condition_code))))))
+          (register)
+          (register)
+          (register))))))
 
 ================================================================================
 Comments: block comments in expressions
@@ -142,8 +138,7 @@ Start: /* block after label */
         (instruction_name)
         (block_comment)
         (operand_list
-          (expression
-            (register)))))
+          (register))))
     (inline_comment)
     (instruction_list
       (instruction
