@@ -266,7 +266,7 @@ both cpl
             (identifier))
           (equs_keyword)
           (string_literal
-            (escape))))
+            (macro_argument))))
       (directive
         (simple_directive
           (directive_keyword)))
@@ -535,19 +535,16 @@ PRINTLN "{d:X}"
       keyword: (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier))))))
+          (identifier)))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier))))))
+          (identifier)))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))

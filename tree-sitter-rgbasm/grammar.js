@@ -66,7 +66,6 @@ module.exports = grammar({
     $._peek_global,
     $._peek_local,
     $._peek_qualified,
-    $._inside_interpolation,
 
     $._string_content,
     $._string_content_triple,
@@ -390,7 +389,7 @@ module.exports = grammar({
           // String constant: DEF name EQUS "value" or #"value"
           seq(
             field('assign_type', alias(KW.EQUS, $.equs_keyword)),
-            field('value', choice($.string_literal, $.raw_string_literal))
+            field('value', $.expression),
           ),
           // Numeric constant (immutable): DEF name EQU value
           seq(
@@ -825,15 +824,20 @@ module.exports = grammar({
         $._regular_string
       ),
 
+    _global: $ => seq($._peek_global, $.identifier),
+
     _triple_quote_string: $ =>
       seq(
         '"""',
         repeat(choice(
           $._string_content_triple,
+          seq($._peek_global, $.identifier),
           $.escape,
-          $.variable,
+          $.macro_argument,
+          $.macro_arguments_spread,
+          $.wrong_escape,
         )),
-        '"""'
+        '"""',
       ),
 
     _regular_string: $ =>
@@ -841,13 +845,16 @@ module.exports = grammar({
         '"',
         repeat(choice(
           $._string_content,
+          seq($._peek_global, $.identifier),
           $.escape,
-          $.variable,
+          $.macro_argument,
+          $.macro_arguments_spread,
+          $.wrong_escape,
         )),
         '"'
       ),
 
-    escape: $ => /\\./,
+    escape: $ => token(prec(10, /\\[\\"'\{\}nrt0]/)),
 
     raw_string_literal: $ =>
       token(
@@ -863,7 +870,7 @@ module.exports = grammar({
 
     // Macro argument escapes usable inside macro/rept bodies
     macro_argument: $ =>
-      token(seq(
+      token(prec(5, seq(
         '\\',
         choice(
           // \1 through \9
@@ -871,10 +878,12 @@ module.exports = grammar({
           // \<10>, \<-1>, \<identifier>, \<v{d:x}> (accept until closing '>')
           seq('<', /[^>\r\n]+/, '>')
         )
-      )),
+      ))),
 
     macro_arguments_spread: $ =>
-      token(seq('\\', '#')),
+      token(prec(5, seq('\\', '#'))),
+
+    wrong_escape: $ => /\\./,
 
     // ---- Identifiers and symbols -----
 

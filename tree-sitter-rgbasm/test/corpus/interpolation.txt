@@ -19,8 +19,7 @@ PRINTLN "Value is {name}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Interpolation: nested interpolation
@@ -51,10 +50,8 @@ PRINTLN "The {{topic}} is {answer}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier))
-          (variable
-            (identifier)))))))
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Interpolation: format specifier
@@ -70,12 +67,9 @@ PRINTLN "Hex {X:X} dec {d:X} bin {b:X}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier))
-          (variable
-            (identifier))
-          (variable
-            (identifier)))))))
+          (identifier)
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Interpolation in names: DEF/FOR/PURGE
@@ -138,8 +132,7 @@ PRINTLN "{#if}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Interpolation: Nested and concatenated
@@ -173,3 +166,32 @@ Interpolation: # followed by {
         (register)
         (variable
           (identifier))))))
+
+================================================================================
+Interpolation: boundaries
+:cst
+================================================================================
+
+DEF X EQUS "{V}\@ {W}not{Q}" ++ "a"
+
+---
+
+0:0  - 2:0    source_file
+1:0  - 1:35     directive
+1:0  - 1:35       def_directive
+1:0  - 1:3          keyword: def_keyword `DEF`
+1:4  - 1:5          name: variable
+1:4  - 1:5            identifier `X`
+1:6  - 1:10         assign_type: equs_keyword `EQUS`
+1:11 - 1:35         value: binary_expression
+1:11 - 1:28           left: string_literal
+1:11 - 1:12             "\""
+1:12 - 1:15             identifier `{V}`
+1:15 - 1:17             wrong_escape `\\@`
+1:18 - 1:21             identifier `{W}`
+1:24 - 1:27             identifier `{Q}`
+1:27 - 1:28             "\""
+1:29 - 1:31           "++"
+1:32 - 1:35           right: string_literal
+1:32 - 1:33             "\""
+1:34 - 1:35             "\""

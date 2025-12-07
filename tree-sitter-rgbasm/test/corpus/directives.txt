@@ -932,8 +932,7 @@ REDEF s EQUS "{s}world!"
         (identifier))
       assign_type: (equs_keyword)
       value: (string_literal
-        (variable
-          (identifier))))))
+        (identifier)))))
 
 ================================================================================
 Directives: REDEF with = (redefine variable)
@@ -1327,8 +1326,7 @@ WARN "Value is {d:x}"
       keyword: (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Directives: FAIL
@@ -1350,8 +1348,7 @@ FAIL "Invalid argument: {d:arg}"
       keyword: (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Directives: FATAL

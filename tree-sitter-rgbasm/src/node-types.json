@@ -716,11 +716,6 @@
     }
   },
   {
-    "type": "escape",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "export_directive",
     "named": true,
     "fields": {
@@ -2230,7 +2225,19 @@
           "named": true
         },
         {
-          "type": "variable",
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "macro_argument",
+          "named": true
+        },
+        {
+          "type": "macro_arguments_spread",
+          "named": true
+        },
+        {
+          "type": "wrong_escape",
           "named": true
         }
       ]
@@ -2345,6 +2352,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "wrong_escape",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "!",
@@ -2585,6 +2597,10 @@
   },
   {
     "type": "equs_keyword",
+    "named": true
+  },
+  {
+    "type": "escape",
     "named": true
   },
   {

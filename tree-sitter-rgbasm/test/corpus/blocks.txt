@@ -283,8 +283,7 @@ ENDR
           (directive_keyword)
           (argument_list
             (string_literal
-              (variable
-                (identifier))))))
+              (identifier)))))
       (directive
         (if_block
           (if_keyword)

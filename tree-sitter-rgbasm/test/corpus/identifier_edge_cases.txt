@@ -35,8 +35,7 @@ PRINTLN "{#if}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Interpolation: raw identifier in DEF

@@ -88,8 +88,7 @@ PRINTLN "The value is {X}"
       (directive_keyword)
       (argument_list
         (string_literal
-          (variable
-            (identifier)))))))
+          (identifier))))))
 
 ================================================================================
 Expressions: all operators

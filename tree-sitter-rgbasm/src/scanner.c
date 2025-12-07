@@ -18,7 +18,6 @@ enum TokenType {
   GLOBAL_IDENTIFIER_BEGIN,
   LOCAL_IDENTIFIER_BEGIN,
   QUALIFIED_LOCAL_IDENTIFIER_BEGIN,
-  INSIDE_INTERPOLATION,
 
   STRING_CONTENT,
   TRIPLE_STRING_CONTENT,
@@ -110,6 +109,12 @@ static inline int min(int a, int b) { return (a < b) ? a : b; }
 
 static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
                               const bool peek) {
+  const bool in_string =
+      valid_symbols[STRING_CONTENT] || valid_symbols[TRIPLE_STRING_CONTENT];
+  if (in_string && lexer->lookahead != '{') {
+    // inside strings we only scan symbols like {...}
+    return 0;
+  }
   lexer->mark_end(lexer);
   bool raw = lexer->lookahead == '#';
   int len = 0;
@@ -138,6 +143,12 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
     } else if (interpolation > 0) {
       if (c == '}') {
         interpolation -= 1;
+        if (in_string && interpolation == 0) {
+          // end of interpolation inside string
+          advance(lexer);
+          len += 1;
+          break;
+        }
       }
       if (c == '\r' || c == '\n' || c == '\0') {
         // unterminated interpolation
@@ -155,7 +166,7 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
     advance(lexer);
     len += 1;
   }
-  if (len == 0) {
+  if (len - raw == 0) {
     return 0;
   }
   if (raw && dot == 0) {
@@ -342,14 +353,6 @@ static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
       valid_symbols[LOAD_END_TOKEN]) {
     int len = scan_identifier(lexer, valid_symbols, true);
     if (len > 0) {
-      if (valid_symbols[INSIDE_INTERPOLATION]) {
-        while (is_blank(lexer->lookahead)) {
-          skip(lexer);
-        }
-        if (lexer->lookahead != '}') {
-          return false;
-        }
-      }
       state->peeked_identifier_length = len;
       return true;
     }
@@ -407,13 +410,10 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
 
   // Print valid symbols presence by lower and upper case
   printf(" Valid symbols: ");
-  const char del1 = valid_symbols[INSIDE_INTERPOLATION] ? '{' : '(';
-  const char del2 = valid_symbols[INSIDE_INTERPOLATION] ? '}' : ')';
-  printf("%c%c", valid_symbols[IDENTIFIER_TOKEN] ? 'I' : '.', del1);
+  printf("%c(", valid_symbols[IDENTIFIER_TOKEN] ? 'I' : '.');
   printf("%c", valid_symbols[GLOBAL_IDENTIFIER_BEGIN] ? 'G' : '.');
   printf("%c", valid_symbols[LOCAL_IDENTIFIER_BEGIN] ? 'l' : '.');
-  printf("%c%c ", valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN] ? 'Q' : '.',
-         del2);
+  printf("%c) ", valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN] ? 'Q' : '.');
 
   printf("\":%c", valid_symbols[TRIPLE_STRING_CONTENT] ? '3' : '.');
   printf("%c ", valid_symbols[STRING_CONTENT] ? '1' : '.');

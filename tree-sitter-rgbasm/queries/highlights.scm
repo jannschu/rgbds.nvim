@@ -229,8 +229,11 @@
   (escape) @string.escape)
 
 (string_literal
+  [(macro_argument) (macro_arguments_spread)] @punctuation.special)
+
+(string_literal
   ; interpolation
-  (variable) @punctuation.special)
+  (identifier) @punctuation.special)
 
 ; ==============================================================================
 ; Comments
