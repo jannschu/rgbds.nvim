@@ -22,13 +22,13 @@ RSSET 10
   (inline_comment)
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)))
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (inline_comment)
     (directive
@@ -50,7 +50,7 @@ RSSET 10
     (inline_comment)
     (directive
       (def_directive
-        keyword: (directive_keyword)
+        keyword: (def_keyword)
         name: (variable
           (identifier))
         value: (number_literal)))
@@ -86,67 +86,67 @@ DEF x ^= $FF
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -177,57 +177,59 @@ DEF str_word RW 2
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (number_literal)))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (directive_keyword)
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (directive_keyword)
       (number_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equ_keyword)
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (equ_keyword)
+      (number_literal)))
+  (inline_comment)
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (equs_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
+      (r_keyword)
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
+      (r_keyword)
       (number_literal))))
 
 ================================================================================
@@ -249,21 +251,24 @@ DEF struct_byte RB 1
       (directive_keyword)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
+      (r_keyword)
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
+      (r_keyword)
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
+      (r_keyword)
       (number_literal))))
 
 ================================================================================
@@ -382,15 +387,15 @@ POPS
 
 (source_file
   (pushs_block
-    (directive_keyword)
+    (pushs_keyword)
     (string_literal)
     (section_type)
     (section_block
       (section_directive
-        (directive_keyword)
+        (section_keyword)
         (string_literal)
         (section_type)))
-    (directive_keyword)))
+    (pops_keyword)))
 
 ================================================================================
 Directives: stack operations
@@ -462,12 +467,12 @@ EXPORT #if, #section
   (inline_comment)
   (directive
     (include_directive
-      (directive_keyword)
+      (include_keyword)
       (argument_list
         (string_literal))))
   (directive
     (include_directive
-      (directive_keyword)
+      (include_keyword)
       (argument_list
         (string_literal))))
   (inline_comment)
@@ -533,13 +538,13 @@ PURGE #section, #else
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
@@ -570,12 +575,13 @@ SECTION "Code", ROMX, BANK[7]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))))))
 
 ================================================================================
@@ -589,12 +595,13 @@ SECTION "OAM Data", WRAM0, ALIGN[8]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))))
 
 ================================================================================
@@ -608,12 +615,13 @@ SECTION "Data", ROMX, ALIGN[4, 2]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)
             offset: (number_literal)))))))
 
@@ -628,8 +636,8 @@ SECTION "Fixed", ROM0[$100]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal)))))
@@ -645,8 +653,8 @@ SECTION "Data", ROMX[$4000]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal)))))
@@ -662,8 +670,8 @@ SECTION "Variables", WRAM0[$C000]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal)))))
@@ -679,8 +687,8 @@ SECTION "Test", ROM0[0]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal)))))
@@ -696,8 +704,8 @@ SECTION "Computed", ROM0[$100 * 2]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (binary_expression
@@ -715,14 +723,15 @@ SECTION "Cool Stuff", ROMX[$4567], BANK[3]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal))
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))))))
 
 ================================================================================
@@ -736,15 +745,17 @@ SECTION "VRAM Data", ROMX, BANK[2], ALIGN[4]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))))
 
 ================================================================================
@@ -758,17 +769,19 @@ SECTION "Complex", ROMX[$4000], BANK[5], ALIGN[8, 0]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_address
         address: (number_literal))
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)
             offset: (number_literal)))))))
 
@@ -783,16 +796,18 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      fragment: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      fragment: (fragment_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))))
 
 ================================================================================
@@ -879,18 +894,18 @@ REDEF n EQU 1
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier)
         (uniqueness_affix))
-      assign_type: (directive_keyword)
+      assign_type: (equ_keyword)
       value: (number_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equ_keyword)
       value: (number_literal))))
 
 ================================================================================
@@ -905,17 +920,17 @@ REDEF s EQUS "{s}world!"
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equs_keyword)
       value: (string_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equs_keyword)
       value: (string_literal
         (variable
           (identifier))))))
@@ -932,13 +947,13 @@ REDEF x = 20
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
       value: (number_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
       value: (number_literal))))
@@ -955,13 +970,13 @@ REDEF counter += 1
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
       value: (number_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
       value: (number_literal))))
@@ -980,25 +995,25 @@ ENDM ;
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
         (def_directive
-          keyword: (directive_keyword)
+          keyword: (def_keyword)
           name: (variable
             (identifier))
-          assign_type: (directive_keyword)
+          assign_type: (equ_keyword)
           value: (binary_expression
             left: (variable
               (identifier))
             right: (number_literal))))
       (directive
         (def_directive
-          keyword: (directive_keyword)
+          keyword: (def_keyword)
           name: (variable
             (identifier))
-          assign_type: (directive_keyword)
+          assign_type: (equ_keyword)
           value: (macro_argument)))
       end: (directive_keyword)))
   (inline_comment))
@@ -1015,15 +1030,17 @@ REDEF struct_b RW
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
+      assign_type: (r_keyword)
       value: (number_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
-        (identifier)))))
+        (identifier))
+      assign_type: (r_keyword))))
 
 ================================================================================
 Directives: REDEF with interpolatable identifier
@@ -1037,17 +1054,17 @@ REDEF {LIST_NAME} EQUS "["
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equs_keyword)
       value: (string_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equs_keyword)
       value: (string_literal))))
 
 ================================================================================
@@ -1062,17 +1079,17 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equ_keyword)
       value: (number_literal)))
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
-      assign_type: (directive_keyword)
+      assign_type: (equ_keyword)
       value: (binary_expression
         left: (variable
           (identifier))
@@ -1089,16 +1106,18 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      fragment: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      fragment: (fragment_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             bank: (number_literal)))
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))))
 
 ================================================================================
@@ -1149,49 +1168,49 @@ DB HiGh(100)
   (inline_comment)
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)))
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)))
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (directive
       (def_directive
-        keyword: (directive_keyword)
+        keyword: (def_keyword)
         name: (variable
           (identifier))
-        assign_type: (directive_keyword)
+        assign_type: (equ_keyword)
         value: (number_literal)))
     (directive
       (def_directive
-        keyword: (directive_keyword)
+        keyword: (def_keyword)
         name: (variable
           (identifier))
-        assign_type: (directive_keyword)
+        assign_type: (equ_keyword)
         value: (number_literal)))
     (directive
       (def_directive
-        keyword: (directive_keyword)
+        keyword: (def_keyword)
         name: (variable
           (identifier))
-        assign_type: (directive_keyword)
+        assign_type: (equ_keyword)
         value: (number_literal)))
     (directive
       (macro_definition
-        keyword: (directive_keyword)
+        keyword: (macro_keyword)
         name: (variable
           (identifier))
         end: (directive_keyword)))
     (directive
       (macro_definition
-        keyword: (directive_keyword)
+        keyword: (macro_keyword)
         name: (variable
           (identifier))
         end: (directive_keyword)))
@@ -1248,7 +1267,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      (directive_keyword)
+      (macro_keyword)
       (variable
         (identifier))
       (directive
@@ -1424,26 +1443,30 @@ DS ALIGN[8, $00], $AA, $BB
     (ds_directive
       keyword: (directive_keyword)
       (align_option
+        (align_option_keyword)
         align: (number_literal))))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
+        (align_option_keyword)
         align: (number_literal)
         offset: (number_literal))))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
+        (align_option_keyword)
         align: (number_literal))
-      size: (number_literal)))
+      value: (number_literal)))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
+        (align_option_keyword)
         align: (number_literal)
         offset: (number_literal))
-      size: (number_literal)
+      value: (number_literal)
       value: (number_literal))))
 
 ================================================================================

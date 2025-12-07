@@ -224,7 +224,7 @@ DEF x = #load + #LOAD
     (inline_comment)
     (directive
       (def_directive
-        (directive_keyword)
+        (def_keyword)
         (variable
           (identifier))
         (binary_expression
@@ -336,7 +336,7 @@ Start.local:
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (local_label_block
@@ -359,7 +359,7 @@ Start.local
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (local_label_block
@@ -387,7 +387,7 @@ Other.qualified
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (global_label_block
@@ -428,7 +428,7 @@ Global2:
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (global_label_block
@@ -463,7 +463,7 @@ MyFunc.entry::
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (local_label_block
@@ -491,7 +491,7 @@ Table.footer:
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (local_label_block
@@ -536,7 +536,7 @@ DEF TABLE_SIZE = Table.end - Table.start
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (local_label_block
@@ -554,7 +554,7 @@ DEF TABLE_SIZE = Table.end - Table.start
         (identifier))
       (directive
         (def_directive
-          (directive_keyword)
+          (def_keyword)
           (variable
             (identifier))
           (binary_expression

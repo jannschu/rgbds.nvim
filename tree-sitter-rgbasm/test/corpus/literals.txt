@@ -24,63 +24,63 @@ DEF HEX7 = 0x1234
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (inline_comment)
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -117,88 +117,88 @@ DEF OCT7 = 0o52
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
-      (variable
-        (identifier))
-      (number_literal)))
-  (directive
-    (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (inline_comment)
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (number_literal)))
+  (directive
+    (def_directive
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -219,25 +219,25 @@ DEF FP4 = 789.25
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -262,38 +262,38 @@ DEF GFX6 = `33221100
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (graphics_literal))))
@@ -314,7 +314,7 @@ DEF FPQ1 = 1.0q8
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -335,7 +335,7 @@ DEF CH1 = 'A'
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (char_literal))))
@@ -356,7 +356,7 @@ DEF NUM1 = 123_456
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))

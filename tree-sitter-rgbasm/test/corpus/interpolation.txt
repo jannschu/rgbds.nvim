@@ -10,7 +10,7 @@ PRINTLN "Value is {name}"
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
@@ -35,14 +35,14 @@ PRINTLN "The {{topic}} is {answer}"
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equs_keyword)
       (string_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
@@ -93,20 +93,20 @@ PURGE {prefix}
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equs_keyword)
       (string_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (for_block
-      (directive_keyword)
+      (for_keyword)
       (variable
         (identifier))
       (number_literal)
@@ -116,7 +116,7 @@ PURGE {prefix}
           (directive_keyword)
           (argument_list
             (string_literal))))
-      (directive_keyword)))
+      (endr_keyword)))
   (directive
     (simple_directive
       (directive_keyword)
@@ -152,7 +152,7 @@ DEF foo{bar}{d:{x}{y}_} = 0
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))

@@ -42,6 +42,7 @@ ds align [8, $C2]
     (ds_directive
       keyword: (directive_keyword)
       (align_option
+        (align_option_keyword)
         align: (number_literal)
         offset: (number_literal)))))
 
@@ -56,13 +57,14 @@ SECTION UNION "X", WRAM0, ALIGN[16]
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      union: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      union: (union_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))))
 
 ================================================================================
@@ -109,8 +111,8 @@ PURGE :-
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (directive
       (export_directive
@@ -161,7 +163,7 @@ test "デ"
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
@@ -194,7 +196,7 @@ label:
       (identifier))
     (directive
       (def_directive
-        keyword: (directive_keyword)
+        keyword: (def_keyword)
         name: (variable
           (identifier))
         value: (number_literal)))
@@ -254,15 +256,15 @@ both cpl
 (source_file
   (directive
     (macro_definition
-      (directive_keyword)
+      (macro_keyword)
       (variable
         (identifier))
       (directive
         (def_directive
-          (directive_keyword)
+          (def_keyword)
           (variable
             (identifier))
-          (directive_keyword)
+          (equs_keyword)
           (string_literal
             (escape))))
       (directive
@@ -329,7 +331,7 @@ test
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
@@ -371,18 +373,18 @@ test_mod 3, 2
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
         (def_directive
-          keyword: (directive_keyword)
+          keyword: (def_keyword)
           name: (variable
             (identifier))
           value: (macro_argument)))
       (directive
         (def_directive
-          keyword: (directive_keyword)
+          keyword: (def_keyword)
           name: (variable
             (identifier))
           value: (macro_argument)))
@@ -407,20 +409,22 @@ ds align[8, $ff], 6
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type)
       (section_options
         (section_option
           (align_option
+            (align_option_keyword)
             align: (number_literal)))))
     (directive
       (ds_directive
         keyword: (directive_keyword)
         (align_option
+          (align_option_keyword)
           align: (number_literal)
           offset: (number_literal))
-        size: (number_literal)))))
+        value: (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: ASSERT with lowercase severity
@@ -455,7 +459,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
@@ -496,7 +500,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (directive
@@ -522,7 +526,7 @@ PRINTLN "{d:X}"
 (source_file
   (directive
     (def_directive
-      keyword: (directive_keyword)
+      keyword: (def_keyword)
       name: (variable
         (identifier))
       value: (number_literal)))

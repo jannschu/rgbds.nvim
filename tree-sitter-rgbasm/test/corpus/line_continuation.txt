@@ -56,7 +56,7 @@ DEF X = 1 + 2 + \
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (binary_expression

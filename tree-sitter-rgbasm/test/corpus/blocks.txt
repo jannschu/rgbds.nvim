@@ -29,7 +29,7 @@ ENDM
   (inline_comment)
   (directive
     (if_block
-      (directive_keyword)
+      (if_keyword)
       (number_literal)
       (instruction_list
         (instruction
@@ -38,7 +38,7 @@ ENDM
             (register)
             (number_literal))))
       (elif_clause
-        (directive_keyword)
+        (elif_keyword)
         (number_literal)
         (instruction_list
           (instruction
@@ -47,22 +47,22 @@ ENDM
               (register)
               (number_literal)))))
       (else_clause
-        (directive_keyword)
+        (else_keyword)
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
               (number_literal)))))
-      (directive_keyword)))
+      (endc_keyword)))
   (inline_comment)
   (directive
     (rept_block
-      (directive_keyword)
+      (rept_keyword)
       (number_literal)
       (directive
         (for_block
-          (directive_keyword)
+          (for_keyword)
           (variable
             (identifier))
           (number_literal)
@@ -73,12 +73,12 @@ ENDM
               (argument_list
                 (variable
                   (identifier)))))
-          (directive_keyword)))
-      (directive_keyword)))
+          (endr_keyword)))
+      (endr_keyword)))
   (inline_comment)
   (directive
     (macro_definition
-      (directive_keyword)
+      (macro_keyword)
       (variable
         (identifier))
       (instruction_list
@@ -136,7 +136,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (instruction_list
@@ -213,7 +213,7 @@ ENDR
 (source_file
   (directive
     (macro_definition
-      (directive_keyword)
+      (macro_keyword)
       (variable
         (identifier))
       (directive
@@ -246,14 +246,14 @@ ENDR
       (directive_keyword)))
   (directive
     (rept_block
-      (directive_keyword)
+      (rept_keyword)
       (number_literal)
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
             (number_literal))))
-      (directive_keyword))))
+      (endr_keyword))))
 
 ================================================================================
 Blocks: BREAK in FOR block
@@ -273,7 +273,7 @@ ENDR
 (source_file
   (directive
     (for_block
-      (directive_keyword)
+      (for_keyword)
       (variable
         (identifier))
       (number_literal)
@@ -287,7 +287,7 @@ ENDR
                 (identifier))))))
       (directive
         (if_block
-          (directive_keyword)
+          (if_keyword)
           (binary_expression
             (variable
               (identifier))
@@ -300,13 +300,13 @@ ENDR
           (directive
             (simple_directive
               (directive_keyword)))
-          (directive_keyword)))
+          (endc_keyword)))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
             (string_literal))))
-      (directive_keyword))))
+      (endr_keyword))))
 
 ================================================================================
 Blocks: BREAK in REPT block
@@ -324,7 +324,7 @@ ENDR
 (source_file
   (directive
     (rept_block
-      (directive_keyword)
+      (rept_keyword)
       (number_literal)
       (directive
         (simple_directive
@@ -333,15 +333,15 @@ ENDR
             (number_literal))))
       (directive
         (if_block
-          (directive_keyword)
+          (if_keyword)
           (binary_expression
             (constant)
             (number_literal))
           (directive
             (simple_directive
               (directive_keyword)))
-          (directive_keyword)))
-      (directive_keyword))))
+          (endc_keyword)))
+      (endr_keyword))))
 
 ================================================================================
 Blocks: nested loops with BREAK
@@ -360,18 +360,18 @@ ENDR
 (source_file
   (directive
     (rept_block
-      (directive_keyword)
+      (rept_keyword)
       (number_literal)
       (directive
         (for_block
-          (directive_keyword)
+          (for_keyword)
           (variable
             (identifier))
           (number_literal)
           (number_literal)
           (directive
             (if_block
-              (directive_keyword)
+              (if_keyword)
               (binary_expression
                 (variable
                   (identifier))
@@ -379,9 +379,9 @@ ENDR
               (directive
                 (simple_directive
                   (directive_keyword)))
-              (directive_keyword)))
-          (directive_keyword)))
-      (directive_keyword))))
+              (endc_keyword)))
+          (endr_keyword)))
+      (endr_keyword))))
 
 ================================================================================
 Blocks: UNION / NEXTU / ENDU
@@ -433,21 +433,21 @@ ENDR
 (source_file
   (directive
     (rept_block
-      keyword: (directive_keyword)
+      keyword: (rept_keyword)
       count: (number_literal)
       (directive
         (union_block
           keyword: (directive_keyword)
           (directive
             (if_block
-              keyword: (directive_keyword)
+              keyword: (if_keyword)
               condition: (number_literal)
               (directive
                 (simple_directive
                   keyword: (directive_keyword)
                   (argument_list
                     (number_literal))))
-              end: (directive_keyword)))
+              end: (endc_keyword)))
           (nextu_block
             keyword: (directive_keyword)
             (directive
@@ -456,7 +456,7 @@ ENDR
                 (argument_list
                   (number_literal)))))
           end: (directive_keyword)))
-      end: (directive_keyword))))
+      end: (endr_keyword))))
 
 ================================================================================
 Blocks: LOAD / ENDL
@@ -477,11 +477,11 @@ ENDL
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (load_block
-      (directive_keyword)
+      (load_keyword)
       (string_literal)
       (section_type)
       (global_label_block
@@ -518,7 +518,7 @@ ENDL
               (directive_keyword)
               (argument_list
                 (string_literal))))))
-      (directive_keyword))))
+      (endl_keyword))))
 
 ================================================================================
 Blocks: LOAD closed by SECTION
@@ -532,16 +532,16 @@ SECTION "Main", ROM0
 
 (source_file
   (load_block
-    (directive_keyword)
+    (load_keyword)
     (string_literal)
     (section_type)
     (instruction_list
       (instruction
         (instruction_name)))
-    (directive_keyword))
+    (endl_keyword))
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))))
 
@@ -559,11 +559,11 @@ POPS
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (pushs_block
-      (directive_keyword)
+      (pushs_keyword)
       (string_literal)
       (section_type)
       (directive
@@ -571,7 +571,7 @@ POPS
           (directive_keyword)
           (argument_list
             (number_literal))))
-      (directive_keyword))))
+      (pops_keyword))))
 
 ================================================================================
 Blocks: PUSHS with label blocks
@@ -589,11 +589,11 @@ POPS
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (pushs_block
-      (directive_keyword)
+      (pushs_keyword)
       (string_literal)
       (section_type)
       (global_label_block
@@ -609,7 +609,7 @@ POPS
           (ds_directive
             (directive_keyword)
             (number_literal))))
-      (directive_keyword))))
+      (pops_keyword))))
 
 ================================================================================
 Blocks: PUSHS with section attributes (BANK, ALIGN)
@@ -625,15 +625,16 @@ POPS
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type)
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             (number_literal)))))
     (pushs_block
-      (directive_keyword)
+      (pushs_keyword)
       (string_literal)
       (section_type)
       (section_address
@@ -641,13 +642,14 @@ POPS
       (section_options
         (section_option
           (bank_option
+            (bank_option_keyword)
             (number_literal))))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
             (string_literal))))
-      (directive_keyword))))
+      (pops_keyword))))
 
 ================================================================================
 Blocks: Nested PUSHS blocks
@@ -667,11 +669,11 @@ POPS
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (pushs_block
-      (directive_keyword)
+      (pushs_keyword)
       (string_literal)
       (section_type)
       (directive
@@ -680,7 +682,7 @@ POPS
           (argument_list
             (number_literal))))
       (pushs_block
-        (directive_keyword)
+        (pushs_keyword)
         (string_literal)
         (section_type)
         (directive
@@ -688,13 +690,13 @@ POPS
             (directive_keyword)
             (argument_list
               (number_literal))))
-        (directive_keyword))
+        (pops_keyword))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
             (number_literal))))
-      (directive_keyword))))
+      (pops_keyword))))
 
 ================================================================================
 Blocks: PUSHS outside of section (pushes no-section context)
@@ -708,7 +710,7 @@ POPS
 
 (source_file
   (pushs_block
-    (directive_keyword)
+    (pushs_keyword)
     (string_literal)
     (section_type)
     (directive
@@ -716,7 +718,7 @@ POPS
         (directive_keyword)
         (argument_list
           (number_literal))))
-    (directive_keyword)))
+    (pops_keyword)))
 
 ================================================================================
 Blocks: PUSHS with instructions and local labels
@@ -735,7 +737,7 @@ wAnswer: db
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (global_label_block
@@ -748,7 +750,7 @@ wAnswer: db
             (register)
             (number_literal))))
       (pushs_block
-        (directive_keyword)
+        (pushs_keyword)
         (string_literal)
         (section_type)
         (global_label_block
@@ -757,7 +759,7 @@ wAnswer: db
           (directive
             (simple_directive
               (directive_keyword))))
-        (directive_keyword))
+        (pops_keyword))
       (instruction_list
         (instruction
           (instruction_name)
@@ -784,7 +786,7 @@ ENDL
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (directive
@@ -792,19 +794,19 @@ ENDL
         (directive_keyword)
         (number_literal)))
     (load_block
-      (directive_keyword)
+      (load_keyword)
       (string_literal)
       (section_type)
       (pushs_block
-        (directive_keyword)
+        (pushs_keyword)
         (string_literal)
         (section_type)
         (directive
           (ds_directive
             (directive_keyword)
             (number_literal)))
-        (directive_keyword))
-      (directive_keyword))))
+        (pops_keyword))
+      (endl_keyword))))
 
 ================================================================================
 Blocks: PUSHS with IF/REPT nested blocks
@@ -825,16 +827,16 @@ POPS
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (pushs_block
-      (directive_keyword)
+      (pushs_keyword)
       (string_literal)
       (section_type)
       (directive
         (if_block
-          (directive_keyword)
+          (if_keyword)
           (function_call
             (function_name)
             (variable
@@ -844,18 +846,18 @@ POPS
               (directive_keyword)
               (argument_list
                 (string_literal))))
-          (directive_keyword)))
+          (endc_keyword)))
       (directive
         (rept_block
-          (directive_keyword)
+          (rept_keyword)
           (number_literal)
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
                 (number_literal))))
-          (directive_keyword)))
-      (directive_keyword))))
+          (endr_keyword)))
+      (pops_keyword))))
 
 ================================================================================
 Blocks: ENDSECTION with content
@@ -870,13 +872,13 @@ ENDSECTION
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
       (instruction
         (instruction_name)))
-    (directive_keyword)))
+    (endsection_keyword)))
 
 ==================================================================================
 Blocks: ENDSECTION without content
@@ -892,9 +894,27 @@ ENDSECTION
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (inline_comment)
-    end: (directive_keyword))
+    end: (endsection_keyword))
   (inline_comment))
+
+==================================================================================
+Blocks: SECTION with expr as name
+==================================================================================
+
+SECTION "level" ++ LEVEL_NUM, ROM0
+
+---
+
+(source_file
+  (section_block
+    (section_directive
+      (section_keyword)
+      (binary_expression
+        (string_literal)
+        (variable
+          (identifier)))
+      (section_type))))

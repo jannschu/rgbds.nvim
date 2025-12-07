@@ -10,13 +10,13 @@ DEF foo{name} = 2
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal)))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -51,7 +51,7 @@ DEF #if = 100
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -67,7 +67,7 @@ DEF #if{suffix} = 200
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))
@@ -83,7 +83,7 @@ DEF IF{num} = 250
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (number_literal))))

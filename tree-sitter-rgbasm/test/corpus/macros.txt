@@ -20,8 +20,8 @@ spam_macro ;
   (directive
     (macro_invocation
       (variable
-        (identifier))
-      (inline_comment))))
+        (identifier))))
+  (inline_comment))
 
 ================================================================================
 Macros: expression arguments with numbers
@@ -173,13 +173,13 @@ testmacro ; another comment
   (directive
     (macro_invocation
       (variable
-        (identifier))
-      (inline_comment)))
+        (identifier))))
+  (inline_comment)
   (directive
     (macro_invocation
       (variable
-        (identifier))
-      (inline_comment))))
+        (identifier))))
+  (inline_comment))
 
 ================================================================================
 Macros: block comment then RAW text

@@ -22,10 +22,10 @@ ASSERT "a" !== "b"
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equs_keyword)
       (string_literal
         (escape)
         (escape)
@@ -35,18 +35,18 @@ ASSERT "a" !== "b"
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equs_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
-      (directive_keyword)
+      (equs_keyword)
       (raw_string_literal)))
   (inline_comment)
   (directive
@@ -63,3 +63,47 @@ ASSERT "a" !== "b"
       (binary_expression
         (string_literal)
         (string_literal)))))
+
+================================================================================
+Strings: double quotes in triple-quoted strings
+================================================================================
+
+DEF X EQUS """This string contains a ""double quote"" inside."""
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (equs_keyword)
+      (string_literal))))
+
+================================================================================
+Strings: raw strings
+================================================================================
+
+DEF RAW1 EQUS #"\n\t\" ; \ does not escape in raw strings
+DEF RAW2 EQUS #""" ""
+"""
+
+---
+
+(source_file
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (equs_keyword)
+      (raw_string_literal)))
+  (inline_comment)
+  (directive
+    (def_directive
+      (def_keyword)
+      (variable
+        (identifier))
+      (equs_keyword)
+      (raw_string_literal))))

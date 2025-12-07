@@ -87,7 +87,7 @@ DEF y = /* before */ 3 * /* after */ 4
 (source_file
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (binary_expression
@@ -96,7 +96,7 @@ DEF y = /* before */ 3 * /* after */ 4
         (number_literal))))
   (directive
     (def_directive
-      (directive_keyword)
+      (def_keyword)
       (variable
         (identifier))
       (block_comment)

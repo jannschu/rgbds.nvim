@@ -85,10 +85,6 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.condition_code, $.register],  // both accept 'C'
-    // FIXME: check this, why is it needed?
-    [$._qualified_label_header, $._local_label_header],
-    [$.macro_invocation],
-    [$.ds_directive],
     [$.global_label_block],
     [$.local_label_block],
     [$.qualified_label_block],
@@ -206,12 +202,14 @@ module.exports = grammar({
       ),
 
     _qualified_label_header: $ =>
-      seq(
-        field(
-          'name',
-          $.qualified_symbol,
+      prec(10,
+        seq(
+          field(
+            'name',
+            $.qualified_symbol,
+          ),
+          optional(token.immediate(':')),
         ),
-        optional(token.immediate(':')),
       ),
 
     // ----- Section statements -----
@@ -241,7 +239,7 @@ module.exports = grammar({
         repeat($.global_label_block),
         optional(
           seq(
-            field('end', alias(KW.ENDSECTION, $.directive_keyword)),
+            field('end', alias(KW.ENDSECTION, $.endsection_keyword)),
             optional($.inline_comment),
             $._eol,
             optional($._section_end_explicit),
@@ -251,16 +249,16 @@ module.exports = grammar({
 
     _section_args: $ =>
       seq(
-        optional(field('fragment', alias(KW.FRAGMENT, $.directive_keyword))),
-        optional(field('union', alias(KW.UNION, $.directive_keyword))),
-        $.string_literal,
+        optional(field('fragment', alias(KW.FRAGMENT, $.fragment_keyword))),
+        optional(field('union', alias(KW.UNION, $.union_keyword))),
+        field('name', $.expression),
         optional(seq(',', $.section_type, optional($.section_address))),
         optional($.section_options)
       ),
 
     section_directive: $ =>
       seq(
-        field('keyword', alias(KW.SECTION, $.directive_keyword)),
+        field('keyword', alias(token(prec(1, KW.SECTION)), $.section_keyword)),
         optional($._section_start),
         $._section_args,
       ),
@@ -285,7 +283,7 @@ module.exports = grammar({
 
     bank_option: $ =>
       seq(
-        alias(KW.BANK, 'BANK'),
+        alias(token(prec(1, KW.BANK)), $.bank_option_keyword),
         '[',
         field('bank', $.expression),
         ']'
@@ -293,7 +291,7 @@ module.exports = grammar({
 
     align_option: $ =>
       seq(
-        alias(KW.ALIGN, 'ALIGN'),
+        alias(token(prec(1, KW.ALIGN)), $.align_option_keyword),
         '[',
         field('align', $.expression),
         optional(seq(',', field('offset', $.expression))),
@@ -302,19 +300,19 @@ module.exports = grammar({
 
     load_block: $ =>
       seq(
-        field('keyword', alias(KW.LOAD, $.directive_keyword)),
+        field('keyword', alias(KW.LOAD, $.load_keyword)),
         $._section_args,
         optional($.inline_comment),
         $._eol,
         repeat($._statement),
         repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
-        field('end', alias(choice(KW.ENDL, $._load_end), $.directive_keyword)),
+        field('end', alias(choice(KW.ENDL, $._load_end), $.endl_keyword)),
       ),
 
     pushs_block: $ =>
       seq(
-        field('keyword', alias(KW.PUSHS, $.directive_keyword)),
+        field('keyword', alias(KW.PUSHS, $.pushs_keyword)),
         $._section_args,
         optional($.inline_comment),
         $._eol,
@@ -322,7 +320,7 @@ module.exports = grammar({
         repeat(alias($.qualified_label_block, $.local_label_block)),
         repeat($.global_label_block),
         repeat($.section_block),
-        field('end', alias(KW.POPS, $.directive_keyword)),
+        field('end', alias(KW.POPS, $.pops_keyword)),
       ),
 
     // ----- Directives -----
@@ -350,15 +348,17 @@ module.exports = grammar({
       seq(
         field('keyword', alias(KW.DS, $.directive_keyword)),
         choice(
+          // DS ALIGN[...] [, value...]
           seq(
             $.align_option,
-            optional(seq(',', field('size', $.expression))),
+            repeat(seq(',', field('value', $.expression)))
           ),
+          // DS size [, value...]
           seq(
             field('size', $.expression),
+            repeat(seq(',', field('value', $.expression)))
           ),
         ),
-        optional(seq(',', field('value', $.expression))),
       ),
 
     union_block: $ =>
@@ -381,17 +381,20 @@ module.exports = grammar({
 
     def_directive: $ =>
       seq(
-        field('keyword', alias(choice(KW.DEF, KW.REDEF), $.directive_keyword)),
+        field('keyword', alias(choice(
+          token(prec(1, KW.DEF)),
+          KW.REDEF,
+        ), $.def_keyword)),
         field('name', $.variable),
         choice(
           // String constant: DEF name EQUS "value" or #"value"
           seq(
-            field('assign_type', alias(KW.EQUS, $.directive_keyword)),
+            field('assign_type', alias(KW.EQUS, $.equs_keyword)),
             field('value', choice($.string_literal, $.raw_string_literal))
           ),
           // Numeric constant (immutable): DEF name EQU value
           seq(
-            field('assign_type', alias(KW.EQU, $.directive_keyword)),
+            field('assign_type', alias(KW.EQU, $.equ_keyword)),
             field('value', $.expression)
           ),
           // Variable (mutable): DEF name = value
@@ -401,7 +404,7 @@ module.exports = grammar({
           ),
           // RS offset constants: DEF name RB/RW/RL count
           seq(
-            field('assign_type', choice(KW.RB, KW.RW, KW.RL)),
+            field('assign_type', alias(choice(KW.RB, KW.RW, KW.RL), $.r_keyword)),
             optional(field('value', $.expression))
           ),
         ),
@@ -484,7 +487,7 @@ module.exports = grammar({
 
     include_directive: $ =>
       seq(
-        field('keyword', alias(KW.INCLUDE, $.directive_keyword)),
+        field('keyword', alias(KW.INCLUDE, $.include_keyword)),
         optional(alias('?', $.quiet)),
         optional($.argument_list),
       ),
@@ -499,7 +502,7 @@ module.exports = grammar({
 
     macro_definition: $ =>
       seq(
-        field('keyword', alias(KW.MACRO, $.directive_keyword)),
+        field('keyword', alias(KW.MACRO, $.macro_keyword)),
         optional(alias('?', $.quiet)),
         field('name', $.expression),
         optional($.inline_comment),
@@ -538,28 +541,25 @@ module.exports = grammar({
         optional(
           alias($._macro_args, $.argument_list),
         ),
-        optional($.inline_comment),
-        // $._eol,
-        // /\r?\n/,
       ),
 
     // ----- Control structures -----
 
     if_block: $ =>
       seq(
-        field('keyword', alias(KW.IF, $.directive_keyword)),
+        field('keyword', alias(KW.IF, $.if_keyword)),
         field('condition', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
         repeat($.elif_clause),
         optional($.else_clause),
-        field('end', alias(KW.ENDC, $.directive_keyword)),
+        field('end', alias(KW.ENDC, $.endc_keyword)),
       ),
 
     elif_clause: $ =>
       seq(
-        alias(KW.ELIF, $.directive_keyword),
+        alias(KW.ELIF, $.elif_keyword),
         $.expression,
         optional($.inline_comment),
         $._eol,
@@ -568,7 +568,7 @@ module.exports = grammar({
 
     else_clause: $ =>
       seq(
-        alias(KW.ELSE, $.directive_keyword),
+        alias(KW.ELSE, $.else_keyword),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
@@ -576,18 +576,18 @@ module.exports = grammar({
 
     rept_block: $ =>
       seq(
-        field('keyword', alias(KW.REPT, $.directive_keyword)),
+        field('keyword', alias(KW.REPT, $.rept_keyword)),
         optional(alias('?', $.quiet)),
         field('count', $.expression),
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        field('end', alias(KW.ENDR, $.directive_keyword)),
+        field('end', alias(KW.ENDR, $.endr_keyword)),
       ),
 
     for_block: $ =>
       seq(
-        field('keyword', alias(KW.FOR, $.directive_keyword)),
+        field('keyword', alias(KW.FOR, $.for_keyword)),
         optional(alias('?', $.quiet)),
         $.expression,
         repeat(
@@ -599,7 +599,7 @@ module.exports = grammar({
         optional($.inline_comment),
         $._eol,
         _top_level_statements($),
-        field('end', alias(KW.ENDR, $.directive_keyword)),
+        field('end', alias(KW.ENDR, $.endr_keyword)),
       ),
 
     // ----- Comments -----
@@ -719,6 +719,18 @@ module.exports = grammar({
       $.expression,
     ),
 
+    function_name: $ =>
+      choice(
+        // NOTE: SIZEOF and STARTOF are handled specially, they accept a section_type
+        KW.ACOS, KW.ASIN, KW.ATAN2, KW.ATAN, KW.BANK, KW.BITWIDTH, KW.BYTELEN, KW.CEIL, KW.CHARCMP,
+        KW.CHARLEN, KW.CHARSIZE, KW.CHARVAL, KW.COS, KW.DEF, KW.DIV, KW.FLOOR, KW.FMOD, KW.HIGH,
+        KW.LOW, KW.INCHARMAP, KW.ISCONST, KW.LOG, KW.MUL, KW.POW, KW.READFILE, KW.REVCHAR, KW.ROUND,
+        KW.SECTION, KW.SIN, KW.STRBYTE, KW.STRCAT, KW.STRCHAR, KW.STRCMP, KW.STRFIND, KW.STRFMT,
+        KW.STRLEN, KW.STRLWR, KW.STRRFIND, KW.STRRPL, KW.STRSLICE, KW.STRUPR, KW.TAN, KW.TZCOUNT,
+        // deprecated
+        KW.CHARSUB, KW.STRIN, KW.STRRIN, KW.STRSUB,
+      ),
+
     function_call: $ =>
       choice(
         $.startof_function,
@@ -805,6 +817,8 @@ module.exports = grammar({
     graphics_literal: $ =>
       token(seq('`', /[0-3A-Za-z.#@]+/)),
 
+    // ----- Strings -----
+
     string_literal: $ =>
       choice(
         $._triple_quote_string,
@@ -835,6 +849,18 @@ module.exports = grammar({
 
     escape: $ => /\\./,
 
+    raw_string_literal: $ =>
+      token(
+        choice(
+          // Triple-quoted raw strings (multi-line)
+          /#"""[\s\S]*?"""/,
+          // Single-line raw strings (no escapes, no inner ")
+          /#"[^\n"]*"/
+        )
+      ),
+
+    // ----- Macro arguments -----
+
     // Macro argument escapes usable inside macro/rept bodies
     macro_argument: $ =>
       token(seq(
@@ -849,29 +875,6 @@ module.exports = grammar({
 
     macro_arguments_spread: $ =>
       token(seq('\\', '#')),
-
-    raw_string_literal: $ =>
-      token(
-        choice(
-          // Triple-quoted raw strings (multi-line)
-          /#"""[\s\S]*?"""/,
-          // Single-line raw strings (no escapes, no inner ")
-          /#"[^\n"]*"/
-        )
-      ),
-
-    // 
-
-    function_name: $ => prec(-1, choice(
-      // NOTE: SIZEOF and STARTOF are handled specially, they accept a section_type
-      KW.ACOS, KW.ASIN, KW.ATAN2, KW.ATAN, KW.BANK, KW.BITWIDTH, KW.BYTELEN, KW.CEIL, KW.CHARCMP,
-      KW.CHARLEN, KW.CHARSIZE, KW.CHARVAL, KW.COS, KW.DEF, KW.DIV, KW.FLOOR, KW.FMOD, KW.HIGH,
-      KW.LOW, KW.INCHARMAP, KW.ISCONST, KW.LOG, KW.MUL, KW.POW, KW.READFILE, KW.REVCHAR, KW.ROUND,
-      KW.SECTION, KW.SIN, KW.STRBYTE, KW.STRCAT, KW.STRCHAR, KW.STRCMP, KW.STRFIND, KW.STRFMT,
-      KW.STRLEN, KW.STRLWR, KW.STRRFIND, KW.STRRPL, KW.STRSLICE, KW.STRUPR, KW.TAN, KW.TZCOUNT,
-      // deprecated
-      KW.CHARSUB, KW.STRIN, KW.STRRIN, KW.STRSUB,
-    )),
 
     // ---- Identifiers and symbols -----
 

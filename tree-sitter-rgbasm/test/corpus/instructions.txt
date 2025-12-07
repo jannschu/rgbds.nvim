@@ -10,7 +10,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -55,8 +55,8 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (instruction_list
       (instruction
@@ -124,7 +124,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -195,7 +195,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -250,7 +250,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -399,7 +399,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -481,7 +481,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -550,7 +550,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -591,7 +591,7 @@ Global:: jp nz, Global
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (anonymous_label)
@@ -654,7 +654,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -760,7 +760,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -829,7 +829,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -943,7 +943,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -1095,7 +1095,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1163,7 +1163,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1242,7 +1242,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1301,7 +1301,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1361,7 +1361,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -1492,7 +1492,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (inline_comment)
@@ -1581,7 +1581,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1630,7 +1630,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list
@@ -1681,7 +1681,7 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      (directive_keyword)
+      (section_keyword)
       (string_literal)
       (section_type))
     (instruction_list

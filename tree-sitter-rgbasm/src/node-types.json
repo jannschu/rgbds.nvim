@@ -116,6 +116,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "align_option_keyword",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -221,6 +231,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "bank_option_keyword",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -410,7 +430,15 @@
             "named": false
           },
           {
-            "type": "directive_keyword",
+            "type": "equ_keyword",
+            "named": true
+          },
+          {
+            "type": "equs_keyword",
+            "named": true
+          },
+          {
+            "type": "r_keyword",
             "named": true
           },
           {
@@ -424,7 +452,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "def_keyword",
             "named": true
           }
         ]
@@ -552,7 +580,7 @@
         ]
       },
       "value": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -594,7 +622,7 @@
           "named": true
         },
         {
-          "type": "directive_keyword",
+          "type": "elif_keyword",
           "named": true
         },
         {
@@ -653,7 +681,7 @@
           "named": true
         },
         {
-          "type": "directive_keyword",
+          "type": "else_keyword",
           "named": true
         },
         {
@@ -731,7 +759,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "endr_keyword",
             "named": true
           }
         ]
@@ -741,7 +769,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "for_keyword",
             "named": true
           }
         ]
@@ -996,7 +1024,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "endc_keyword",
             "named": true
           }
         ]
@@ -1006,7 +1034,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "if_keyword",
             "named": true
           }
         ]
@@ -1076,7 +1104,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "include_keyword",
             "named": true
           }
         ]
@@ -1179,7 +1207,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "endl_keyword",
             "named": true
           }
         ]
@@ -1189,7 +1217,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "fragment_keyword",
             "named": true
           }
         ]
@@ -1199,7 +1227,17 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "load_keyword",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -1209,7 +1247,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "union_keyword",
             "named": true
           }
         ]
@@ -1217,7 +1255,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "anonymous_label",
@@ -1265,10 +1303,6 @@
         },
         {
           "type": "section_type",
-          "named": true
-        },
-        {
-          "type": "string_literal",
           "named": true
         }
       ]
@@ -1366,7 +1400,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "macro_keyword",
             "named": true
           }
         ]
@@ -1443,10 +1477,6 @@
       "types": [
         {
           "type": "argument_list",
-          "named": true
-        },
-        {
-          "type": "inline_comment",
           "named": true
         },
         {
@@ -1646,7 +1676,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "pops_keyword",
             "named": true
           }
         ]
@@ -1656,7 +1686,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "fragment_keyword",
             "named": true
           }
         ]
@@ -1666,7 +1696,17 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "pushs_keyword",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -1676,7 +1716,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "union_keyword",
             "named": true
           }
         ]
@@ -1684,7 +1724,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "anonymous_label",
@@ -1737,10 +1777,6 @@
         {
           "type": "section_type",
           "named": true
-        },
-        {
-          "type": "string_literal",
-          "named": true
         }
       ]
     }
@@ -1788,7 +1824,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "endr_keyword",
             "named": true
           }
         ]
@@ -1798,7 +1834,7 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "rept_keyword",
             "named": true
           }
         ]
@@ -1880,7 +1916,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "endsection_keyword",
             "named": true
           }
         ]
@@ -1942,7 +1978,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "fragment_keyword",
             "named": true
           }
         ]
@@ -1952,7 +1988,17 @@
         "required": true,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "section_keyword",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -1962,7 +2008,7 @@
         "required": false,
         "types": [
           {
-            "type": "directive_keyword",
+            "type": "union_keyword",
             "named": true
           }
         ]
@@ -1970,7 +2016,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "section_address",
@@ -1982,10 +2028,6 @@
         },
         {
           "type": "section_type",
-          "named": true
-        },
-        {
-          "type": "string_literal",
           "named": true
         }
       ]
@@ -2457,14 +2499,6 @@
     "named": false
   },
   {
-    "type": "ALIGN",
-    "named": false
-  },
-  {
-    "type": "BANK",
-    "named": false
-  },
-  {
     "type": "[",
     "named": false
   },
@@ -2493,11 +2527,19 @@
     "named": false
   },
   {
+    "type": "align_option_keyword",
+    "named": true
+  },
+  {
     "type": "anonymous_label",
     "named": true
   },
   {
     "type": "anonymous_label_ref",
+    "named": true
+  },
+  {
+    "type": "bank_option_keyword",
     "named": true
   },
   {
@@ -2510,6 +2552,50 @@
     "named": true
   },
   {
+    "type": "def_keyword",
+    "named": true
+  },
+  {
+    "type": "elif_keyword",
+    "named": true
+  },
+  {
+    "type": "else_keyword",
+    "named": true
+  },
+  {
+    "type": "endc_keyword",
+    "named": true
+  },
+  {
+    "type": "endl_keyword",
+    "named": true
+  },
+  {
+    "type": "endr_keyword",
+    "named": true
+  },
+  {
+    "type": "endsection_keyword",
+    "named": true
+  },
+  {
+    "type": "equ_keyword",
+    "named": true
+  },
+  {
+    "type": "equs_keyword",
+    "named": true
+  },
+  {
+    "type": "for_keyword",
+    "named": true
+  },
+  {
+    "type": "fragment_keyword",
+    "named": true
+  },
+  {
     "type": "graphics_literal",
     "named": true
   },
@@ -2518,9 +2604,21 @@
     "named": true
   },
   {
+    "type": "if_keyword",
+    "named": true
+  },
+  {
+    "type": "include_keyword",
+    "named": true
+  },
+  {
     "type": "inline_comment",
     "named": true,
     "extra": true
+  },
+  {
+    "type": "load_keyword",
+    "named": true
   },
   {
     "type": "macro_arg_raw",
@@ -2535,7 +2633,19 @@
     "named": true
   },
   {
+    "type": "macro_keyword",
+    "named": true
+  },
+  {
     "type": "number_literal",
+    "named": true
+  },
+  {
+    "type": "pops_keyword",
+    "named": true
+  },
+  {
+    "type": "pushs_keyword",
     "named": true
   },
   {
@@ -2543,7 +2653,23 @@
     "named": true
   },
   {
+    "type": "r_keyword",
+    "named": true
+  },
+  {
     "type": "raw_string_literal",
+    "named": true
+  },
+  {
+    "type": "rept_keyword",
+    "named": true
+  },
+  {
+    "type": "section_keyword",
+    "named": true
+  },
+  {
+    "type": "union_keyword",
     "named": true
   },
   {

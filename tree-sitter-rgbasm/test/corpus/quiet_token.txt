@@ -11,7 +11,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       (quiet)
       name: (variable
         (identifier))
@@ -33,7 +33,7 @@ ENDM
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       (quiet)
       name: (variable
         (identifier))
@@ -54,8 +54,8 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (directive
       (macro_invocation
@@ -75,8 +75,8 @@ SECTION "Test", ROM0
 (source_file
   (section_block
     (section_directive
-      keyword: (directive_keyword)
-      (string_literal)
+      keyword: (section_keyword)
+      name: (string_literal)
       (section_type))
     (directive
       (macro_invocation
@@ -98,13 +98,13 @@ ENDR
 (source_file
   (directive
     (rept_block
-      keyword: (directive_keyword)
+      keyword: (rept_keyword)
       (quiet)
       count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
-      end: (directive_keyword))))
+      end: (endr_keyword))))
 
 ================================================================================
 Quiet REPT with space
@@ -119,13 +119,13 @@ ENDR
 (source_file
   (directive
     (rept_block
-      keyword: (directive_keyword)
+      keyword: (rept_keyword)
       (quiet)
       count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
-      end: (directive_keyword))))
+      end: (endr_keyword))))
 
 ================================================================================
 Quiet FOR block
@@ -140,7 +140,7 @@ ENDR
 (source_file
   (directive
     (for_block
-      keyword: (directive_keyword)
+      keyword: (for_keyword)
       (quiet)
       (variable
         (identifier))
@@ -152,7 +152,7 @@ ENDR
           (argument_list
             (variable
               (identifier)))))
-      end: (directive_keyword))))
+      end: (endr_keyword))))
 
 ================================================================================
 Quiet INCLUDE directive
@@ -165,7 +165,7 @@ INCLUDE? "file.inc"
 (source_file
   (directive
     (include_directive
-      keyword: (directive_keyword)
+      keyword: (include_keyword)
       (quiet)
       (argument_list
         (string_literal)))))
@@ -181,7 +181,7 @@ INCLUDE ? "file.inc"
 (source_file
   (directive
     (include_directive
-      keyword: (directive_keyword)
+      keyword: (include_keyword)
       (quiet)
       (argument_list
         (string_literal)))))
@@ -209,7 +209,7 @@ INCLUDE "file.inc"
 (source_file
   (directive
     (macro_definition
-      keyword: (directive_keyword)
+      keyword: (macro_keyword)
       name: (variable
         (identifier))
       (instruction_list
@@ -218,15 +218,15 @@ INCLUDE "file.inc"
       end: (directive_keyword)))
   (directive
     (rept_block
-      keyword: (directive_keyword)
+      keyword: (rept_keyword)
       count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
-      end: (directive_keyword)))
+      end: (endr_keyword)))
   (directive
     (for_block
-      keyword: (directive_keyword)
+      keyword: (for_keyword)
       (variable
         (identifier))
       (number_literal)
@@ -237,9 +237,9 @@ INCLUDE "file.inc"
           (argument_list
             (variable
               (identifier)))))
-      end: (directive_keyword)))
+      end: (endr_keyword)))
   (directive
     (include_directive
-      keyword: (directive_keyword)
+      keyword: (include_keyword)
       (argument_list
         (string_literal)))))
