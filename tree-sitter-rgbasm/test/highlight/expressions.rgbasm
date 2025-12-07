@@ -2,7 +2,6 @@ PRINTLN DEF(FOO)
 ; <- keyword.directive
 ;       ^^^ function.builtin
 ;          ^ punctuation.bracket
-;           ^^^ constant
 ;              ^ punctuation.bracket
 
 

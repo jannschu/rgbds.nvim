@@ -3,23 +3,18 @@ main:
 ;   ^ punctuation.bracket.label
 main::
 ; <- module.builtin
-;   ^ punctuation.bracket.label.export
+;   ^ punctuation.delimiter
 main.local
 ; ^ label
-;   ^ punctuation.delimiter
-;      ^ label
+
 main.local:
 ; ^ label
-;   ^ punctuation.delimiter
 ;         ^ punctuation.bracket
-;      ^ label
 
 .local
-; <- punctuation.delimiter
-; ^ label
+; <- label
 .foo:
-; <- punctuation.delimiter
-; ^ label
+; <- label
 ;   ^ punctuation.bracket
 :
 ; <- label
@@ -29,11 +24,9 @@ main\@:
 ;   ^^ punctuation.special
 ;     ^ punctuation.bracket.label
 .local\@:
-; <- punctuation.delimiter
-; ^ label
+; <- label
 ;     ^^punctuation.special
 ;       ^ punctuation.bracket
 .local\@
-; <- punctuation.delimiter
-; ^ label
+; <- label
 ;     ^^ punctuation.special

@@ -38,7 +38,6 @@ ENDR
 
 FOR i, 0, 10
 ; <- keyword.repeat
-;   ^ variable
 ;    ^ punctuation.delimiter
 ;      ^ number
 ;       ^ punctuation.delimiter
@@ -57,7 +56,6 @@ ENDR
 FOR? i, 10
 ; <- keyword.repeat
 ;  ^ punctuation.special
-;    ^ variable
 ;     ^ punctuation.delimiter
 ;       ^ number
 ENDR
