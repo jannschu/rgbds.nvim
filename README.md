@@ -5,7 +5,6 @@ syntax highlighting based on [tree-sitter](https://tree-sitter.github.io/tree-si
 
 <img width="846" height="664" alt="SCR-20251205-prlx" src="https://github.com/user-attachments/assets/ab8847ac-e8a3-4a02-9a0f-975f8d280e9c" />
 
-
 ## Features
 
 - Extensive syntax highlighting for rgbasm source files based on a tree-sitter grammar.
@@ -29,7 +28,7 @@ Using [packer.nvim](https://github.com/wbthomason/packer.nvim):
 use {
   "jannschu/rgbds.nvim",
   requires = { "nvim-treesitter/nvim-treesitter" },
-  run = ":TSUpdate rgbasm",
+  run = ":TSUpdate rgbasm rgbasm_identifier",
 }
 ```
 
