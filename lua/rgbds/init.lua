@@ -33,7 +33,8 @@ local function register(dir)
 	vim.api.nvim_create_autocmd("User", {
 		pattern = "TSUpdate",
 		callback = function()
-			require("nvim-treesitter.parsers").rgbasm = {
+			local parsers = require("nvim-treesitter.parsers")
+			parsers.rgbasm = {
 				install_info = {
 					path = dir,
 					location = "tree-sitter-rgbasm",
@@ -41,6 +42,15 @@ local function register(dir)
 					queries = "tree-sitter-rgbasm/queries",
 				},
 				filetype = "rgbasm",
+			}
+			parsers.rgbasm_identifier = {
+				install_info = {
+					path = dir,
+					location = "tree-sitter-rgbasm/identifier",
+					generate = false,
+					queries = "tree-sitter-rgbasm/identifier/queries",
+				},
+				filetype = "rgbasm_identifier",
 			}
 		end,
 	})

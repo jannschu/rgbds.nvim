@@ -52,7 +52,7 @@ def inject_vars(hardware_inc: str, vars: list[str]) -> str:
 
 
 if __name__ == "__main__":
-    path = Path(__file__).parent.parent / "tree-sitter-rgbasm" / "queries" / "highlights.scm"
+    path = Path(__file__).parent.parent / "tree-sitter-rgbasm" / "identifier" / "queries" / "highlights.scm"
     assert path.exists(), "path does not exist"
     hardware_inc = download_hardware_inc()
     vars = parse_vars(hardware_inc)
