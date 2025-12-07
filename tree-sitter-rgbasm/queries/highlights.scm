@@ -36,7 +36,19 @@
 ; Instructions
 ; ==============================================================================
 
-(instruction
+(generic_instruction
+  mnemonic: (instruction_name) @function.call)
+
+(call_instruction
+  mnemonic: (instruction_name) @function.call)
+
+(jp_instruction
+  mnemonic: (instruction_name) @function.call)
+
+(jr_instruction
+  mnemonic: (instruction_name) @function.call)
+
+(ret_instruction
   mnemonic: (instruction_name) @function.call)
 
 (register) @variable.builtin

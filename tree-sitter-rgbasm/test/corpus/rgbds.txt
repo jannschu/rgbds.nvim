@@ -289,9 +289,7 @@ both cpl
       (variable
         (identifier))
       (argument_list
-        (register)
-        (variable
-          (identifier))))))
+        (instruction_name)))))
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps

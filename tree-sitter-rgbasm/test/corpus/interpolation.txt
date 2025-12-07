@@ -161,11 +161,12 @@ Interpolation: # followed by {
 (source_file
   (instruction_list
     (instruction
-      mnemonic: (instruction_name)
-      (operand_list
-        (register)
-        (variable
-          (identifier))))))
+      (generic_instruction
+        mnemonic: (instruction_name)
+        (operand_list
+          (register)
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation: boundaries

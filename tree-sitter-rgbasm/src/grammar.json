@@ -131,10 +131,6 @@
         },
         {
           "type": "PATTERN",
-          "value": "[\\x63\\x43][\\x61\\x41][\\x6c\\x4c][\\x6c\\x4c]"
-        },
-        {
-          "type": "PATTERN",
           "value": "[\\x63\\x43][\\x63\\x43][\\x66\\x46]"
         },
         {
@@ -171,14 +167,6 @@
         },
         {
           "type": "PATTERN",
-          "value": "[\\x6a\\x4a][\\x70\\x50]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x6a\\x4a][\\x72\\x52]"
-        },
-        {
-          "type": "PATTERN",
           "value": "[\\x6c\\x4c][\\x64\\x44]"
         },
         {
@@ -212,10 +200,6 @@
         {
           "type": "PATTERN",
           "value": "[\\x72\\x52][\\x65\\x45][\\x73\\x53]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x72\\x52][\\x65\\x45][\\x74\\x54]"
         },
         {
           "type": "PATTERN",
@@ -400,57 +384,61 @@
       ]
     },
     "register": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "PATTERN",
-          "value": "[\\x61\\x41]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x62\\x42]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x63\\x43]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x64\\x44]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x65\\x45]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x68\\x48]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x6c\\x4c]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x61\\x41][\\x66\\x46]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x62\\x42][\\x63\\x43]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x64\\x44][\\x65\\x45]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x68\\x48][\\x6c\\x4c]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[\\x73\\x53][\\x70\\x50]"
-        }
-      ]
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[\\x61\\x41]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x62\\x42]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x63\\x43]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x64\\x44]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x65\\x45]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x68\\x48]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x6c\\x4c]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x61\\x41][\\x66\\x46]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x62\\x42][\\x63\\x43]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x64\\x44][\\x65\\x45]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x68\\x48][\\x6c\\x4c]"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[\\x73\\x53][\\x70\\x50]"
+          }
+        ]
+      }
     },
     "condition_code": {
       "type": "SEQ",
@@ -2613,6 +2601,14 @@
           },
           {
             "type": "SYMBOL",
+            "name": "condition_code"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "instruction_name"
+          },
+          {
+            "type": "SYMBOL",
             "name": "section_type"
           },
           {
@@ -3486,6 +3482,202 @@
       ]
     },
     "instruction": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "call_instruction"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "jp_instruction"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "jr_instruction"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ret_instruction"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "generic_instruction"
+        }
+      ]
+    },
+    "call_instruction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "mnemonic",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x63\\x43][\\x61\\x41][\\x6c\\x4c][\\x6c\\x4c]"
+            },
+            "named": true,
+            "value": "instruction_name"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "condition_code"
+                },
+                {
+                  "type": "STRING",
+                  "value": ","
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expression"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            }
+          ]
+        }
+      ]
+    },
+    "jp_instruction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "mnemonic",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x6a\\x4a][\\x70\\x50]"
+            },
+            "named": true,
+            "value": "instruction_name"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "condition_code"
+                },
+                {
+                  "type": "STRING",
+                  "value": ","
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expression"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "PATTERN",
+                "value": "[\\x68\\x48][\\x6c\\x4c]"
+              },
+              "named": true,
+              "value": "register"
+            }
+          ]
+        }
+      ]
+    },
+    "jr_instruction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "mnemonic",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x6a\\x4a][\\x72\\x52]"
+            },
+            "named": true,
+            "value": "instruction_name"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "condition_code"
+                },
+                {
+                  "type": "STRING",
+                  "value": ","
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expression"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            }
+          ]
+        }
+      ]
+    },
+    "ret_instruction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "mnemonic",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[\\x72\\x52][\\x65\\x45][\\x74\\x54]"
+            },
+            "named": true,
+            "value": "instruction_name"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "condition_code"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "generic_instruction": {
       "type": "SEQ",
       "members": [
         {
@@ -3538,10 +3730,6 @@
     "_operand": {
       "type": "CHOICE",
       "members": [
-        {
-          "type": "SYMBOL",
-          "name": "condition_code"
-        },
         {
           "type": "SYMBOL",
           "name": "address"
@@ -5410,10 +5598,6 @@
     }
   ],
   "conflicts": [
-    [
-      "condition_code",
-      "register"
-    ],
     [
       "global_label_block"
     ],

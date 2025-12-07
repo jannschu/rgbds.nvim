@@ -51,10 +51,10 @@ const RESERVED = [
 
 const KW = Object.fromEntries(RESERVED.map(kw => [kw, ci(kw)]));
 
-const MNEMONICS = [
-  'ADC', 'ADD', 'AND', 'BIT', 'CALL', 'CCF', 'CP', 'CPL', 'DAA', 'DEC', 'DI',
-  'EI', 'HALT', 'INC', 'JP', 'JR', 'LD', 'LDD', 'LDH', 'LDI', 'NOP', 'OR', 'POP',
-  'PUSH', 'RES', 'RET', 'RETI', 'RL', 'RLA', 'RLC', 'RLCA', 'RR', 'RRA', 'RRC',
+const GENERIC_MNEMONICS = [
+  'ADC', 'ADD', 'AND', 'BIT', 'CCF', 'CP', 'CPL', 'DAA', 'DEC', 'DI',
+  'EI', 'HALT', 'INC', 'LD', 'LDD', 'LDH', 'LDI', 'NOP', 'OR', 'POP',
+  'PUSH', 'RES', 'RETI', 'RL', 'RLA', 'RLC', 'RLCA', 'RR', 'RRA', 'RRC',
   'RRCA', 'RST', 'SBC', 'SCF', 'SET', 'SLA', 'SRA', 'SRL', 'STOP', 'SUB', 'SWAP', 'XOR',
 ];
 
@@ -83,7 +83,6 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
-    [$.condition_code, $.register],  // both accept 'C'
     [$.global_label_block],
     [$.local_label_block],
     [$.qualified_label_block],
@@ -122,7 +121,7 @@ module.exports = grammar({
 
     // ----- Reserved keywords -----
 
-    instruction_name: $ => choice(...MNEMONICS.map(kw => KW[kw])),
+    instruction_name: $ => choice(...GENERIC_MNEMONICS.map(kw => KW[kw])),
 
     _dot: $ => token('.'),
 
@@ -140,7 +139,7 @@ module.exports = grammar({
       $._dot,
     ),
 
-    register: $ => choice(KW.A, KW.B, KW.C, KW.D, KW.E, KW.H, KW.L, KW.AF, KW.BC, KW.DE, KW.HL, KW.SP),
+    register: $ => prec(1, choice(KW.A, KW.B, KW.C, KW.D, KW.E, KW.H, KW.L, KW.AF, KW.BC, KW.DE, KW.HL, KW.SP)),
 
     condition_code: $ => seq(
       optional('!'),
@@ -521,6 +520,8 @@ module.exports = grammar({
 
     _macro_arg: $ => repeat1(choice(
       $._operand,
+      $.condition_code,
+      $.instruction_name,
       $.section_type,
       $.section_option,
       $.severity,
@@ -640,6 +641,49 @@ module.exports = grammar({
       ),
 
     instruction: $ =>
+      choice(
+        $.call_instruction,
+        $.jp_instruction,
+        $.jr_instruction,
+        $.ret_instruction,
+        $.generic_instruction,
+      ),
+
+    call_instruction: $ =>
+      seq(
+        field('mnemonic', alias(KW.CALL, $.instruction_name)),
+        choice(
+          seq($.condition_code, ',', $.expression),
+          $.expression,
+        ),
+      ),
+
+    jp_instruction: $ =>
+      seq(
+        field('mnemonic', alias(KW.JP, $.instruction_name)),
+        choice(
+          seq($.condition_code, ',', $.expression),
+          $.expression,
+          alias(KW.HL, $.register),
+        ),
+      ),
+
+    jr_instruction: $ =>
+      seq(
+        field('mnemonic', alias(KW.JR, $.instruction_name)),
+        choice(
+          seq($.condition_code, ',', $.expression),
+          $.expression,
+        ),
+      ),
+
+    ret_instruction: $ =>
+      seq(
+        field('mnemonic', alias(KW.RET, $.instruction_name)),
+        optional($.condition_code),
+      ),
+
+    generic_instruction: $ =>
       seq(
         field('mnemonic', $.instruction_name),
         optional($.operand_list),
@@ -653,7 +697,6 @@ module.exports = grammar({
 
     _operand: $ =>
       choice(
-        $.condition_code,
         $.address,
         $.register,
         $.expression,

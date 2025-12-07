@@ -17,7 +17,8 @@ ENDM
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -39,7 +40,8 @@ ENDM
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -103,7 +105,8 @@ ENDR
       count: (number_literal)
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (endr_keyword))))
 
 ================================================================================
@@ -124,7 +127,8 @@ ENDR
       count: (number_literal)
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (endr_keyword))))
 
 ================================================================================
@@ -214,7 +218,8 @@ INCLUDE "file.inc"
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (directive_keyword)))
   (directive
     (rept_block
@@ -222,7 +227,8 @@ INCLUDE "file.inc"
       count: (number_literal)
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       end: (endr_keyword)))
   (directive
     (for_block

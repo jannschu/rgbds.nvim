@@ -1130,12 +1130,14 @@ add [[ nop ]]
 (source_file
   (instruction_list
     (instruction
-      (instruction_name)
-      (operand_list
-        (fragment_literal
-          (instruction_list
-            (instruction
-              (instruction_name))))))))
+      (generic_instruction
+        (instruction_name)
+        (operand_list
+          (fragment_literal
+            (instruction_list
+              (instruction
+                (generic_instruction
+                  (instruction_name))))))))))
 
 ================================================================================
 Directives: Case-insensitivity (RGBASM spec compliance)

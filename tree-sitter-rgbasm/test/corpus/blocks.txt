@@ -33,27 +33,30 @@ ENDM
       (number_literal)
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
-            (register)
-            (number_literal))))
+          (generic_instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (number_literal)))))
       (elif_clause
         (elif_keyword)
         (number_literal)
         (instruction_list
           (instruction
-            (instruction_name)
-            (operand_list
-              (register)
-              (number_literal)))))
+            (generic_instruction
+              (instruction_name)
+              (operand_list
+                (register)
+                (number_literal))))))
       (else_clause
         (else_keyword)
         (instruction_list
           (instruction
-            (instruction_name)
-            (operand_list
-              (register)
-              (number_literal)))))
+            (generic_instruction
+              (instruction_name)
+              (operand_list
+                (register)
+                (number_literal))))))
       (endc_keyword)))
   (inline_comment)
   (directive
@@ -83,11 +86,12 @@ ENDM
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
-            (register)
-            (variable
-              (identifier)))))
+          (generic_instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (variable
+                (identifier))))))
       (directive_keyword))))
 
 ================================================================================
@@ -141,11 +145,12 @@ ENDM
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)
-          (operand_list
-            (macro_argument)
-            (paren
-              (macro_argument)))))
+          (generic_instruction
+            mnemonic: (instruction_name)
+            (operand_list
+              (macro_argument)
+              (paren
+                (macro_argument))))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
@@ -180,8 +185,8 @@ ENDM
             (uniqueness_affix))
           (instruction_list
             (instruction
-              mnemonic: (instruction_name)
-              (operand_list
+              (jr_instruction
+                mnemonic: (instruction_name)
                 (local_symbol
                   (identifier)
                   (uniqueness_affix)))))
@@ -488,21 +493,23 @@ ENDL
           (identifier))
         (instruction_list
           (instruction
-            (instruction_name)
-            (operand_list
-              (register)
-              (local_symbol
-                (identifier)))))
+            (generic_instruction
+              (instruction_name)
+              (operand_list
+                (register)
+                (local_symbol
+                  (identifier))))))
         (instruction_list
           (instruction
-            (instruction_name)
-            (operand_list
-              (register)
-              (number_literal))))
+            (generic_instruction
+              (instruction_name)
+              (operand_list
+                (register)
+                (number_literal)))))
         (instruction_list
           (instruction
-            (instruction_name)
-            (operand_list
+            (jr_instruction
+              (instruction_name)
               (fragment_literal
                 (directive
                   (simple_directive
@@ -536,7 +543,8 @@ SECTION "Main", ROM0
     (section_type)
     (instruction_list
       (instruction
-        (instruction_name)))
+        (generic_instruction
+          (instruction_name))))
     (endl_keyword))
   (section_block
     (section_directive
@@ -744,10 +752,11 @@ wAnswer: db
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
-            (register)
-            (number_literal))))
+          (generic_instruction
+            (instruction_name)
+            (operand_list
+              (register)
+              (number_literal)))))
       (pushs_block
         (pushs_keyword)
         (string_literal)
@@ -761,12 +770,13 @@ wAnswer: db
         (pops_keyword))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
-            (address
-              (variable
-                (identifier)))
-            (register)))))))
+          (generic_instruction
+            (instruction_name)
+            (operand_list
+              (address
+                (variable
+                  (identifier)))
+              (register))))))))
 
 ================================================================================
 Blocks: PUSHS within LOAD block
@@ -876,7 +886,8 @@ ENDSECTION
       (section_type))
     (instruction_list
       (instruction
-        (instruction_name)))
+        (generic_instruction
+          (instruction_name))))
     (endsection_keyword)))
 
 ==================================================================================

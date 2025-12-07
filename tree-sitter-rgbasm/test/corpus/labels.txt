@@ -30,7 +30,8 @@ Global.local:
       (anonymous_label)
       (instruction_list
         (instruction
-          (instruction_name))))))
+          (generic_instruction
+            (instruction_name)))))))
 
 ================================================================================
 Labels: Lonely
@@ -104,8 +105,8 @@ AnotherGlobal.local:
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
+          (jr_instruction
+            (instruction_name)
             (local_symbol
               (identifier))))))
     (local_label_block
@@ -113,7 +114,8 @@ AnotherGlobal.local:
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name)))))
+          (generic_instruction
+            (instruction_name))))))
   (global_label_block
     (global_symbol
       (identifier))
@@ -123,22 +125,24 @@ AnotherGlobal.local:
       (inline_comment)
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
+          (jr_instruction
+            (instruction_name)
             (anonymous_label_ref))))
       (anonymous_label)
       (instruction_list
         (instruction
-          (instruction_name)))
+          (generic_instruction
+            (instruction_name))))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
+          (jr_instruction
+            (instruction_name)
             (anonymous_label_ref))))
       (anonymous_label)
       (instruction_list
         (instruction
-          (instruction_name))))))
+          (ret_instruction
+            (instruction_name)))))))
 
 ================================================================================
 Labels: whitespace sensitivity (no space vs space before colon)
@@ -167,30 +171,36 @@ Loop::
       (identifier))
     (instruction_list
       (instruction
-        mnemonic: (instruction_name))))
+        (generic_instruction
+          mnemonic: (instruction_name)))))
   (global_label_block
     name: (global_symbol
       (identifier))
     (instruction_list
       (instruction
-        mnemonic: (instruction_name)))
+        (ret_instruction
+          mnemonic: (instruction_name))))
     (inline_comment)
     (anonymous_label)
     (instruction_list
       (instruction
-        mnemonic: (instruction_name)))
+        (generic_instruction
+          mnemonic: (instruction_name))))
     (instruction_list
       (instruction
-        mnemonic: (instruction_name)
-        (operand_list
-          (register)
-          (number_literal))))
+        (generic_instruction
+          mnemonic: (instruction_name)
+          (operand_list
+            (register)
+            (number_literal)))))
     (inline_comment)
     (instruction_list
       (instruction
-        mnemonic: (instruction_name))
+        (generic_instruction
+          mnemonic: (instruction_name)))
       (instruction
-        mnemonic: (instruction_name)))))
+        (ret_instruction
+          mnemonic: (instruction_name))))))
 
 ================================================================================
 Labels: raw identifiers with # prefix
@@ -264,13 +274,15 @@ GlobalLabel:
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name))))
+          (generic_instruction
+            mnemonic: (instruction_name)))))
     (local_label_block
       name: (local_symbol
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))))
+          (ret_instruction
+            mnemonic: (instruction_name))))))
   (global_label_block
     name: (global_symbol
       (identifier))
@@ -279,7 +291,8 @@ GlobalLabel:
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name))))))
+          (generic_instruction
+            mnemonic: (instruction_name)))))))
 
 ================================================================================
 Labels: qualified references with raw identifiers
@@ -308,18 +321,19 @@ Labels: qualified references with raw identifiers
         (identifier))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)))
+          (generic_instruction
+            mnemonic: (instruction_name))))
       (inline_comment)
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)
-          (operand_list
+          (jp_instruction
+            mnemonic: (instruction_name)
             (qualified_symbol
               (identifier)))))
       (instruction_list
         (instruction
-          mnemonic: (instruction_name)
-          (operand_list
+          (call_instruction
+            mnemonic: (instruction_name)
             (qualified_symbol
               (identifier))))))))
 
@@ -344,7 +358,8 @@ Start.local:
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name))))))
+          (generic_instruction
+            (instruction_name)))))))
 
 ================================================================================
 Qualified local labels: outside global scope without colon
@@ -367,7 +382,8 @@ Start.local
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name))))))
+          (generic_instruction
+            (instruction_name)))))))
 
 ================================================================================
 Qualified local labels: mix with global and unqualified local
@@ -398,19 +414,22 @@ Other.qualified
           (identifier))
         (instruction_list
           (instruction
-            (instruction_name))))
+            (generic_instruction
+              (instruction_name)))))
       (local_label_block
         (qualified_symbol
           (identifier))
         (instruction_list
           (instruction
-            (instruction_name))))
+            (generic_instruction
+              (instruction_name)))))
       (local_label_block
         (qualified_symbol
           (identifier))
         (instruction_list
           (instruction
-            (instruction_name)))))))
+            (generic_instruction
+              (instruction_name))))))))
 
 ================================================================================
 Qualified local labels: reference from different scope
@@ -439,14 +458,15 @@ Global2:
           (identifier))
         (instruction_list
           (instruction
-            (instruction_name)))))
+            (generic_instruction
+              (instruction_name))))))
     (global_label_block
       (global_symbol
         (identifier))
       (instruction_list
         (instruction
-          (instruction_name)
-          (operand_list
+          (jr_instruction
+            (instruction_name)
             (qualified_symbol
               (identifier))))))))
 
@@ -472,7 +492,8 @@ MyFunc.entry::
       (anonymous_label)
       (instruction_list
         (instruction
-          (instruction_name))))))
+          (generic_instruction
+            (instruction_name)))))))
 
 ================================================================================
 Qualified local labels: multiple in sequence

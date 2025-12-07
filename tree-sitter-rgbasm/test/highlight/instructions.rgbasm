@@ -1,73 +1,27 @@
 main:
   add a, b
-  ; <- function.method.call
+  ; <- function.call
   ;   ^ variable.builtin
   ;    ^ punctuation.delimiter
   ;      ^ variable.builtin
 
   jr nc, :+
-  ; <- function.method.call
+  ; <- function.call
   ;  ^^ keyword.conditional
   ;    ^ punctuation.delimiter
   ;      ^^ label
 
   ld hl, $1234
-  ; <- function.method.call
+  ; <- function.call
   ;  ^^ variable.builtin
   ;    ^ punctuation.delimiter
   ;      ^^^^^ number
 
   ldi a, [hl]
-  ; <- function.method.call
+  ; <- function.call
   ;   ^ variable.builtin
   ;    ^ punctuation.delimiter
   ;      ^ punctuation.bracket
   ;       ^ variable.builtin
   ;         ^ punctuation.bracket
-
-  jr [HL], [HL+]
-  ; <- function.method.call
-  ;  ^ punctuation.bracket
-  ;   ^^ variable.builtin
-  ;     ^ punctuation.bracket
-  ;      ^ punctuation.delimiter
-  ;        ^ punctuation.bracket
-  ;         ^^^ variable.builtin
-  ;            ^ punctuation.bracket
-
-  jr [HLI], [HLD]
-  ; <- function.method.call
-  ;  ^ punctuation.bracket
-  ;   ^^^ variable.builtin
-  ;      ^ punctuation.bracket
-  ;       ^ punctuation.delimiter
-  ;         ^ punctuation.bracket
-  ;          ^^^ variable.builtin
-  ;             ^ punctuation.bracket
-
-  jr  [HL-]
-  ; <- function.method.call
-  ;   ^ punctuation.bracket
-  ;    ^^^ variable.builtin
-  ;       ^ punctuation.bracket
-
-  jr [$1000]
-  ; <- function.method.call
-  ;  ^ punctuation.bracket
-  ;   ^^^^^ number
-  ;        ^ punctuation.bracket
-
-  jr [FOO]
-  ; <- function.method.call
-  ;  ^ punctuation.bracket
-  ;   ^^^ constant
-  ;      ^ punctuation.bracket
-
-  jr [.ok\@]
-  ; <- function.method.call
-  ;  ^ punctuation.bracket
-  ;   ^ punctuation.delimiter
-  ;    ^ label
-  ;      ^^ punctuation.special
-  ;        ^ punctuation.bracket
 

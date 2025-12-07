@@ -80,12 +80,13 @@ Line continuation: in instruction
 (source_file
   (instruction_list
     (instruction
-      (instruction_name)
-      (operand_list
-        (register)
-        (line_continuation)
-        (address
-          (register))))))
+      (generic_instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (line_continuation)
+          (address
+            (register)))))))
 
 ================================================================================
 Line continuation: with comment

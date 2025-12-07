@@ -149,6 +149,10 @@
           "named": true
         },
         {
+          "type": "instruction_name",
+          "named": true
+        },
+        {
           "type": "macro_arg_raw",
           "named": true
         },
@@ -369,6 +373,36 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "call_instruction",
+    "named": true,
+    "fields": {
+      "mnemonic": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition_code",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -928,6 +962,32 @@
     "fields": {}
   },
   {
+    "type": "generic_instruction",
+    "named": true,
+    "fields": {
+      "mnemonic": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "operand_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "global_label_block",
     "named": true,
     "fields": {
@@ -1123,24 +1183,29 @@
   {
     "type": "instruction",
     "named": true,
-    "fields": {
-      "mnemonic": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "instruction_name",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "operand_list",
+          "type": "call_instruction",
+          "named": true
+        },
+        {
+          "type": "generic_instruction",
+          "named": true
+        },
+        {
+          "type": "jp_instruction",
+          "named": true
+        },
+        {
+          "type": "jr_instruction",
+          "named": true
+        },
+        {
+          "type": "ret_instruction",
           "named": true
         }
       ]
@@ -1165,6 +1230,70 @@
     "type": "instruction_name",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "jp_instruction",
+    "named": true,
+    "fields": {
+      "mnemonic": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition_code",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "register",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "jr_instruction",
+    "named": true,
+    "fields": {
+      "mnemonic": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition_code",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "line_continuation",
@@ -1560,10 +1689,6 @@
           "named": true
         },
         {
-          "type": "condition_code",
-          "named": true
-        },
-        {
           "type": "expression",
           "named": true
         },
@@ -1881,6 +2006,32 @@
         },
         {
           "type": "section_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "ret_instruction",
+    "named": true,
+    "fields": {
+      "mnemonic": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "instruction_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "condition_code",
           "named": true
         }
       ]

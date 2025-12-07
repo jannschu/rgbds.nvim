@@ -16,14 +16,16 @@ Start:
       (identifier))
     (instruction_list
       (instruction
-        (instruction_name)))
+        (generic_instruction
+          (instruction_name))))
     (inline_comment)
     (instruction_list
       (instruction
-        (instruction_name)
-        (operand_list
-          (register)
-          (register))))
+        (generic_instruction
+          (instruction_name)
+          (operand_list
+            (register)
+            (register)))))
     (inline_comment)))
 
 ================================================================================
@@ -66,14 +68,16 @@ Start:
     (block_comment)
     (instruction_list
       (instruction
-        (instruction_name)))
+        (generic_instruction
+          (instruction_name))))
     (instruction_list
       (instruction
-        (instruction_name)
-        (operand_list
-          (register)
-          (register)
-          (register))))))
+        (generic_instruction
+          (instruction_name)
+          (operand_list
+            (register)
+            (register)
+            (register)))))))
 
 ================================================================================
 Comments: block comments in expressions
@@ -129,14 +133,16 @@ Start: /* block after label */
     (block_comment)
     (instruction_list
       (instruction
-        (instruction_name)
-        (block_comment)
-        (operand_list
-          (register))))
+        (generic_instruction
+          (instruction_name)
+          (block_comment)
+          (operand_list
+            (register)))))
     (inline_comment)
     (instruction_list
       (instruction
-        (instruction_name)))))
+        (ret_instruction
+          (instruction_name))))))
 
 ================================================================================
 Comments: comments with special characters
@@ -158,5 +164,6 @@ Start:
       (identifier))
     (instruction_list
       (instruction
-        (instruction_name)))
+        (generic_instruction
+          (instruction_name))))
     (inline_comment)))
