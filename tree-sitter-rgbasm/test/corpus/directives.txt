@@ -35,31 +35,25 @@ RSSET 10
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))
-          (expression
-            (number_literal)))))
+          (number_literal)
+          (number_literal)
+          (number_literal))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (directive
       (ds_directive
         keyword: (directive_keyword)
-        size: (expression
-          (number_literal))))
+        size: (number_literal)))
     (inline_comment)
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (global_identifier
-          global: (symbol))
-        value: (expression
-          (number_literal))))
+        name: (variable
+          (identifier))
+        value: (number_literal)))
     (directive
       (simple_directive
         keyword: (directive_keyword)))
@@ -67,8 +61,7 @@ RSSET 10
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (number_literal)))))))
+          (number_literal))))))
 
 ================================================================================
 Directives: compound assignment operators
@@ -94,80 +87,69 @@ DEF x ^= $FF
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Directives: EQU vs = (constants vs variables)
@@ -196,64 +178,57 @@ DEF str_word RW 2
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
-      (expression
-        (number_literal))))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
-      (expression
-        (number_literal))))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Directives: RL (reserve long)
@@ -275,24 +250,21 @@ DEF struct_byte RB 1
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Directives: STATIC_ASSERT regression
@@ -307,14 +279,10 @@ STATIC_ASSERT FATAL, foo == 42
     (assert_directive
       (directive_keyword)
       (severity)
-      (expression
-        (binary_expression
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal)))))))
+      (binary_expression
+        (variable
+          (identifier))
+        (number_literal)))))
 
 ================================================================================
 Directives: ASSERT and STATIC_ASSERT
@@ -340,100 +308,67 @@ STATIC_ASSERT FATAL, foo == 42
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
-        (binary_expression
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol))))))
-          (expression
-            (number_literal))))))
+      (binary_expression
+        (function_call
+          (function_name)
+          (variable
+            (identifier)))
+        (number_literal))))
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
-        (binary_expression
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol))))))
-          (expression
-            (number_literal))))))
+      (binary_expression
+        (function_call
+          (function_name)
+          (variable
+            (identifier)))
+        (number_literal))))
   (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
-        (binary_expression
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal))))
+      (binary_expression
+        (variable
+          (identifier))
+        (number_literal))
       (string_literal)))
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
+      (binary_expression
         (binary_expression
-          (expression
-            (binary_expression
-              (expression
-                (identifier
-                  (local_identifier
-                    (local_symbol))))
-              (expression
-                (identifier
-                  (local_identifier
-                    (local_symbol))))))
-          (expression
-            (number_literal))))
+          (local_symbol
+            (identifier))
+          (local_symbol
+            (identifier)))
+        (number_literal))
       (string_literal)))
   (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)
       (severity)
-      (expression
-        (binary_expression
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal))))))
+      (binary_expression
+        (variable
+          (identifier))
+        (number_literal))))
   (directive
     (assert_directive
       (directive_keyword)
       (severity)
-      (expression
-        (binary_expression
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal))))
+      (binary_expression
+        (variable
+          (identifier))
+        (number_literal))
       (string_literal)))
   (directive
     (assert_directive
       (directive_keyword)
       (severity)
-      (expression
-        (binary_expression
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal)))))))
+      (binary_expression
+        (variable
+          (identifier))
+        (number_literal)))))
 
 ================================================================================
 Directives: PUSHS and SECTION
@@ -493,10 +428,8 @@ POPC
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword))))
@@ -531,74 +464,56 @@ EXPORT #if, #section
     (include_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (directive
     (include_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (export_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier))
+        (variable
+          (identifier)))))
   (directive
     (export_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier)))))
   (directive
     (export_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (raw_symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (raw_symbol))))))))
+        (variable
+          (identifier))
+        (variable
+          (identifier))))))
 
 ================================================================================
 Directives: PURGE with raw identifiers
@@ -619,38 +534,30 @@ PURGE #section, #else
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (raw_symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (raw_symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (raw_symbol)))))))
+        (variable
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (raw_symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (raw_symbol))))))))
+        (variable
+          (identifier))
+        (variable
+          (identifier))))))
 
 ================================================================================
 Directives: SECTION with BANK option
@@ -669,8 +576,7 @@ SECTION "Code", ROMX, BANK[7]
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))))))
+            bank: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION with ALIGN option
@@ -689,8 +595,7 @@ SECTION "OAM Data", WRAM0, ALIGN[8]
       (section_options
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))))
+            align: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION with ALIGN option and offset
@@ -709,10 +614,8 @@ SECTION "Data", ROMX, ALIGN[4, 2]
       (section_options
         (section_option
           (align_option
-            align: (expression
-              (number_literal))
-            offset: (expression
-              (number_literal))))))))
+            align: (number_literal)
+            offset: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION with address (ROM0)
@@ -729,8 +632,7 @@ SECTION "Fixed", ROM0[$100]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal))))))
+        address: (number_literal)))))
 
 ================================================================================
 Directives: SECTION with address (ROMX)
@@ -747,8 +649,7 @@ SECTION "Data", ROMX[$4000]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal))))))
+        address: (number_literal)))))
 
 ================================================================================
 Directives: SECTION with address (WRAM0)
@@ -765,8 +666,7 @@ SECTION "Variables", WRAM0[$C000]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal))))))
+        address: (number_literal)))))
 
 ================================================================================
 Directives: SECTION with address (decimal)
@@ -783,8 +683,7 @@ SECTION "Test", ROM0[0]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal))))))
+        address: (number_literal)))))
 
 ================================================================================
 Directives: SECTION with address (expression)
@@ -801,12 +700,9 @@ SECTION "Computed", ROM0[$100 * 2]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (binary_expression
-            left: (expression
-              (number_literal))
-            right: (expression
-              (number_literal))))))))
+        address: (binary_expression
+          left: (number_literal)
+          right: (number_literal))))))
 
 ================================================================================
 Directives: SECTION with address and BANK option
@@ -823,13 +719,11 @@ SECTION "Cool Stuff", ROMX[$4567], BANK[3]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal)))
+        address: (number_literal))
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))))))
+            bank: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION with multiple options
@@ -848,12 +742,10 @@ SECTION "VRAM Data", ROMX, BANK[2], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))
+            bank: (number_literal)))
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))))
+            align: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION with address and multiple options
@@ -870,19 +762,15 @@ SECTION "Complex", ROMX[$4000], BANK[5], ALIGN[8, 0]
       (string_literal)
       (section_type)
       (section_address
-        address: (expression
-          (number_literal)))
+        address: (number_literal))
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))
+            bank: (number_literal)))
         (section_option
           (align_option
-            align: (expression
-              (number_literal))
-            offset: (expression
-              (number_literal))))))))
+            align: (number_literal)
+            offset: (number_literal)))))))
 
 ================================================================================
 Directives: SECTION FRAGMENT
@@ -902,12 +790,10 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))
+            bank: (number_literal)))
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))))
+            align: (number_literal)))))))
 
 ================================================================================
 Directives: CHARMAP / NEWCHARMAP / SETCHARMAP
@@ -930,72 +816,53 @@ POPC
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (char_literal))
-        (expression
-          (number_literal)))))
+        (char_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier))
+        (variable
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol)))))))
+        (variable
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword))))
@@ -1013,20 +880,18 @@ REDEF n EQU 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol)
+      name: (variable
+        (identifier)
         (uniqueness_affix))
       assign_type: (directive_keyword)
-      value: (expression
-        (number_literal))))
+      value: (number_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
-      value: (expression
-        (number_literal)))))
+      value: (number_literal))))
 
 ================================================================================
 Directives: REDEF with EQUS (redefine string constant)
@@ -1041,19 +906,19 @@ REDEF s EQUS "{s}world!"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
       value: (string_literal
-        (interpolation
-          (symbol))))))
+        (variable
+          (identifier))))))
 
 ================================================================================
 Directives: REDEF with = (redefine variable)
@@ -1068,17 +933,15 @@ REDEF x = 20
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal))))
+      name: (variable
+        (identifier))
+      value: (number_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal)))))
+      name: (variable
+        (identifier))
+      value: (number_literal))))
 
 ================================================================================
 Directives: REDEF with compound assignment
@@ -1093,17 +956,15 @@ REDEF counter += 1
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal))))
+      name: (variable
+        (identifier))
+      value: (number_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal)))))
+      name: (variable
+        (identifier))
+      value: (number_literal))))
 
 ================================================================================
 Directives: REDEF in macro (typical use case)
@@ -1120,32 +981,25 @@ ENDM ;
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (global_identifier
-            global: (symbol))
+          name: (variable
+            (identifier))
           assign_type: (directive_keyword)
-          value: (expression
-            (binary_expression
-              left: (expression
-                (identifier
-                  (global_identifier
-                    global: (symbol))))
-              right: (expression
-                (number_literal))))))
+          value: (binary_expression
+            left: (variable
+              (identifier))
+            right: (number_literal))))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (global_identifier
-            global: (symbol))
+          name: (variable
+            (identifier))
           assign_type: (directive_keyword)
-          value: (expression
-            (macro_argument))))
+          value: (macro_argument)))
       end: (directive_keyword)))
   (inline_comment))
 
@@ -1162,15 +1016,14 @@ REDEF struct_b RW
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal))))
+      name: (variable
+        (identifier))
+      value: (number_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol)))))
+      name: (variable
+        (identifier)))))
 
 ================================================================================
 Directives: REDEF with interpolatable identifier
@@ -1185,16 +1038,15 @@ REDEF {LIST_NAME} EQUS "["
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
       value: (string_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (interpolation
-          (symbol)))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
       value: (string_literal))))
 
@@ -1211,25 +1063,20 @@ REDEF MAX_SIZE EQU MAX_SIZE * 2
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
-      value: (expression
-        (number_literal))))
+      value: (number_literal)))
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
+      name: (variable
+        (identifier))
       assign_type: (directive_keyword)
-      value: (expression
-        (binary_expression
-          left: (expression
-            (identifier
-              (global_identifier
-                global: (symbol))))
-          right: (expression
-            (number_literal)))))))
+      value: (binary_expression
+        left: (variable
+          (identifier))
+        right: (number_literal)))))
 
 ================================================================================
 Directives: SECTION FRAGMENT
@@ -1249,12 +1096,10 @@ SECTION FRAGMENT "Frag", ROMX, BANK[1], ALIGN[4]
       (section_options
         (section_option
           (bank_option
-            bank: (expression
-              (number_literal))))
+            bank: (number_literal)))
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))))
+            align: (number_literal)))))))
 
 ================================================================================
 Directives: Fragment literals
@@ -1269,11 +1114,10 @@ add [[ nop ]]
     (instruction
       (instruction_name)
       (operand_list
-        (expression
-          (fragment_literal
-            (instruction_list
-              (instruction
-                (instruction_name)))))))))
+        (fragment_literal
+          (instruction_list
+            (instruction
+              (instruction_name))))))))
 
 ================================================================================
 Directives: Case-insensitivity (RGBASM spec compliance)
@@ -1321,71 +1165,58 @@ DB HiGh(100)
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (global_identifier
-          global: (symbol))
+        name: (variable
+          (identifier))
         assign_type: (directive_keyword)
-        value: (expression
-          (number_literal))))
+        value: (number_literal)))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (global_identifier
-          global: (symbol))
+        name: (variable
+          (identifier))
         assign_type: (directive_keyword)
-        value: (expression
-          (number_literal))))
+        value: (number_literal)))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (global_identifier
-          global: (symbol))
+        name: (variable
+          (identifier))
         assign_type: (directive_keyword)
-        value: (expression
-          (number_literal))))
+        value: (number_literal)))
     (directive
       (macro_definition
         keyword: (directive_keyword)
-        name: (expression
-          (identifier
-            (global_identifier
-              global: (symbol))))
+        name: (variable
+          (identifier))
         end: (directive_keyword)))
     (directive
       (macro_definition
         keyword: (directive_keyword)
-        name: (expression
-          (identifier
-            (global_identifier
-              global: (symbol))))
+        name: (variable
+          (identifier))
         end: (directive_keyword)))
     (inline_comment)
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))
+          (function_call
+            (function_name)
+            (number_literal)))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))
+          (function_call
+            (function_name)
+            (number_literal)))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (number_literal)))))))))
+          (function_call
+            (function_name)
+            (number_literal)))))))
 
 ================================================================================
 Directives: OPT with escaped comma
@@ -1418,10 +1249,8 @@ ENDM
   (directive
     (macro_definition
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (symbol))))
+      (variable
+        (identifier))
       (directive
         (opt_directive
           (directive_keyword)
@@ -1473,17 +1302,14 @@ WARN "Value is {d:x}"
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              format: (format_spec)
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Directives: FAIL
@@ -1499,17 +1325,14 @@ FAIL "Invalid argument: {d:arg}"
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              format: (format_spec)
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Directives: FATAL
@@ -1524,8 +1347,7 @@ FATAL "Critical error - aborting"
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))))))
+        (string_literal)))))
 
 ================================================================================
 Directives: ALIGN
@@ -1542,24 +1364,19 @@ ALIGN 8, $C2
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (number_literal)))))
+        (number_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))
-        (expression
-          (number_literal)))))
+        (number_literal)
+        (number_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Directives: INCBIN
@@ -1576,26 +1393,20 @@ INCBIN "music.bin", 16, 256
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal)))))
+        (string_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (string_literal)
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Directives: DS ALIGN
@@ -1613,36 +1424,27 @@ DS ALIGN[8, $00], $AA, $BB
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (expression
-          (number_literal)))))
+        align: (number_literal))))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (expression
-          (number_literal))
-        offset: (expression
-          (number_literal)))))
+        align: (number_literal)
+        offset: (number_literal))))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (expression
-          (number_literal)))
-      size: (expression
-        (number_literal))))
+        align: (number_literal))
+      size: (number_literal)))
   (directive
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (expression
-          (number_literal))
-        offset: (expression
-          (number_literal)))
-      size: (expression
-        (number_literal))
-      value: (expression
-        (number_literal)))))
+        align: (number_literal)
+        offset: (number_literal))
+      size: (number_literal)
+      value: (number_literal))))
 
 ================================================================================
 Directives: PUSHO and POPO basic

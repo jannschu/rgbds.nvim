@@ -11,21 +11,15 @@ DEF foo{name} = 2
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (interpolation
-          (symbol))
-        (symbol_fragment))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol)
-        (interpolation
-          (symbol)))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Interpolation: raw identifier
@@ -40,10 +34,9 @@ PRINTLN "{#if}"
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (raw_symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation: raw identifier in DEF
@@ -59,10 +52,9 @@ DEF #if = 100
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (raw_symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Interpolation: raw identifier with interpolation
@@ -76,12 +68,9 @@ DEF #if{suffix} = 200
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol)
-        (interpolation
-          (symbol)))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ===============================================================================
 Interpolation: keyword with interpolation
@@ -95,12 +84,9 @@ DEF IF{num} = 250
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol)
-        (interpolation
-          (symbol)))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ===============================================================================
 Invalid: space between identifier and curly brace
@@ -134,15 +120,11 @@ Main{x}::
 
 (source_file
   (global_label_block
-    (global_identifier
-      (symbol)
-      (interpolation
-        (symbol))))
+    (global_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (interpolation
-        (symbol))
-      (symbol_fragment))))
+    (global_symbol
+      (identifier))))
 
 ================================================================================
 Interpolation: Local label
@@ -158,33 +140,17 @@ x{y}.{x}a{ok}y
 
 (source_file
   (local_label_block
-    (qualified_identifier
-      (interpolation
-        (symbol))
-      (local_symbol)))
+    (qualified_symbol
+      (identifier)))
   (local_label_block
-    (qualified_identifier
-      (symbol)
-      (interpolation
-        (symbol))
-      (interpolation
-        (symbol))
-      (local_symbol)
-      (interpolation
-        (symbol))
-      (local_symbol)))
+    (qualified_symbol
+      (identifier)))
   (local_label_block
-    (local_identifier
-      (interpolation
-        (symbol))))
+    (local_symbol
+      (identifier)))
   (local_label_block
-    (local_identifier
-      (local_symbol)
-      (interpolation
-        (symbol))))
+    (local_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (interpolation
-        (symbol)
-        (interpolation
-          (symbol))))))
+    (global_symbol
+      (identifier))))

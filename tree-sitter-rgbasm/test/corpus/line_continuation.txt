@@ -12,13 +12,10 @@ DB 1, \
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))
+        (number_literal)
         (line_continuation)
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Line continuation: multiple lines
@@ -35,26 +32,17 @@ DB 1, 2, 3, \
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))
+        (number_literal)
+        (number_literal)
+        (number_literal)
         (line_continuation)
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))
+        (number_literal)
+        (number_literal)
+        (number_literal)
         (line_continuation)
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (number_literal)
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Line continuation: in expression
@@ -69,23 +57,16 @@ DEF X = 1 + 2 + \
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (binary_expression
         (binary_expression
-          (expression
-            (binary_expression
-              (expression
-                (binary_expression
-                  (expression
-                    (number_literal))
-                  (expression
-                    (number_literal))))
-              (line_continuation)
-              (expression
-                (number_literal))))
-          (expression
-            (number_literal)))))))
+          (binary_expression
+            (number_literal)
+            (number_literal))
+          (line_continuation)
+          (number_literal))
+        (number_literal)))))
 
 ================================================================================
 Line continuation: in instruction
@@ -122,42 +103,32 @@ Line continuation: with comment
 (source_file
   (directive
     (macro_invocation
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (number_literal))
+        (number_literal)
         (line_continuation
           (inline_comment))
-        (expression
-          (number_literal)))))
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (function_call
-            (function_name)
-            (expression
-              (string_literal))
-            (line_continuation
-              (inline_comment)))))))
+        (function_call
+          (function_name)
+          (string_literal)
+          (line_continuation
+            (inline_comment))))))
   (directive
     (macro_invocation
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
         (line_continuation
           (inline_comment))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))))))
+        (variable
+          (identifier))))))

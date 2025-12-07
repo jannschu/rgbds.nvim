@@ -30,26 +30,22 @@ ENDM
   (directive
     (if_block
       (directive_keyword)
-      (expression
-        (number_literal))
+      (number_literal)
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
             (register)
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (elif_clause
         (directive_keyword)
-        (expression
-          (number_literal))
+        (number_literal)
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
-              (expression
-                (number_literal))))))
+              (number_literal)))))
       (else_clause
         (directive_keyword)
         (instruction_list
@@ -57,53 +53,41 @@ ENDM
             (instruction_name)
             (operand_list
               (register)
-              (expression
-                (number_literal))))))
+              (number_literal)))))
       (directive_keyword)))
   (inline_comment)
   (directive
     (rept_block
       (directive_keyword)
-      (expression
-        (number_literal))
+      (number_literal)
       (directive
         (for_block
           (directive_keyword)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))
+          (variable
+            (identifier))
+          (number_literal)
+          (number_literal)
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
-                (expression
-                  (identifier
-                    (global_identifier
-                      (symbol)))))))
+                (variable
+                  (identifier)))))
           (directive_keyword)))
       (directive_keyword)))
   (inline_comment)
   (directive
     (macro_definition
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (symbol))))
+      (variable
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
             (register)
-            (expression
-              (identifier
-                (global_identifier
-                  (symbol)))))))
+            (variable
+              (identifier)))))
       (directive_keyword))))
 
 ================================================================================
@@ -118,16 +102,16 @@ if\@:
 
 (source_file
   (global_label_block
-    (global_identifier
-      (symbol)
+    (global_symbol
+      (identifier)
       (uniqueness_affix))
     (local_label_block
-      (local_identifier
-        (local_symbol)
+      (local_symbol
+        (identifier)
         (uniqueness_affix)))
     (local_label_block
-      (local_identifier
-        (local_symbol)
+      (local_symbol
+        (identifier)
         (uniqueness_affix)))))
 
 ================================================================================
@@ -153,74 +137,59 @@ ENDM
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)
           (operand_list
-            (expression
-              (macro_argument))
-            (expression
-              (expression
-                (macro_argument))))))
+            (macro_argument)
+            (paren
+              (macro_argument)))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument))
-            (expression
-              (macro_argument)))))
+            (macro_argument)
+            (macro_argument))))
       (global_label_block
-        name: (global_identifier
-          global: (symbol)
+        name: (global_symbol
+          (identifier)
           (uniqueness_affix))
         (local_label_block
-          name: (qualified_identifier
-            global: (symbol)
-            local: (local_symbol)
+          name: (qualified_symbol
+            (identifier)
             (uniqueness_affix))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
-                (expression
-                  (identifier
-                    (global_identifier
-                      global: (symbol)
-                      (uniqueness_affix)))))))
+                (variable
+                  (identifier)
+                  (uniqueness_affix)))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
-                (expression
-                  (identifier
-                    (qualified_identifier
-                      global: (symbol)
-                      local: (local_symbol)
-                      (uniqueness_affix))))))))
+                (qualified_symbol
+                  (identifier)
+                  (uniqueness_affix))))))
         (local_label_block
-          name: (local_identifier
-            (local_symbol)
+          name: (local_symbol
+            (identifier)
             (uniqueness_affix))
           (instruction_list
             (instruction
               mnemonic: (instruction_name)
               (operand_list
-                (expression
-                  (identifier
-                    (local_identifier
-                      (local_symbol)
-                      (uniqueness_affix)))))))
+                (local_symbol
+                  (identifier)
+                  (uniqueness_affix)))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
-                (expression
-                  (macro_arguments_spread)))))))
+                (macro_arguments_spread))))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -245,20 +214,15 @@ ENDR
   (directive
     (macro_definition
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (symbol))))
+      (variable
+        (identifier))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument))
-            (expression
-              (macro_argument))
-            (expression
-              (macro_argument)))))
+            (macro_argument)
+            (macro_argument)
+            (macro_argument))))
       (directive
         (simple_directive
           (directive_keyword)))
@@ -266,36 +230,29 @@ ENDR
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument))
-            (expression
-              (macro_argument)))))
+            (macro_argument)
+            (macro_argument))))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (unary_expression
-                (expression
-                  (number_literal)))))))
+            (unary_expression
+              (number_literal)))))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument)))))
+            (macro_argument))))
       (directive_keyword)))
   (directive
     (rept_block
       (directive_keyword)
-      (expression
-        (number_literal))
+      (number_literal)
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -317,40 +274,29 @@ ENDR
   (directive
     (for_block
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (symbol))))
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))
+      (variable
+        (identifier))
+      (number_literal)
+      (number_literal)
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal
-                (interpolation
-                  (format_spec)
-                  (symbol)))))))
+            (string_literal
+              (variable
+                (identifier))))))
       (directive
         (if_block
           (directive_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol))))
-              (expression
-                (number_literal))))
+          (binary_expression
+            (variable
+              (identifier))
+            (number_literal))
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
-                (expression
-                  (string_literal)))))
+                (string_literal))))
           (directive
             (simple_directive
               (directive_keyword)))
@@ -359,8 +305,7 @@ ENDR
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal)))))
+            (string_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -380,23 +325,18 @@ ENDR
   (directive
     (rept_block
       (directive_keyword)
-      (expression
-        (number_literal))
+      (number_literal)
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive
         (if_block
           (directive_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (constant))
-              (expression
-                (number_literal))))
+          (binary_expression
+            (constant)
+            (number_literal))
           (directive
             (simple_directive
               (directive_keyword)))
@@ -421,30 +361,21 @@ ENDR
   (directive
     (rept_block
       (directive_keyword)
-      (expression
-        (number_literal))
+      (number_literal)
       (directive
         (for_block
           (directive_keyword)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))
+          (variable
+            (identifier))
+          (number_literal)
+          (number_literal)
           (directive
             (if_block
               (directive_keyword)
-              (expression
-                (binary_expression
-                  (expression
-                    (identifier
-                      (global_identifier
-                        (symbol))))
-                  (expression
-                    (number_literal))))
+              (binary_expression
+                (variable
+                  (identifier))
+                (number_literal))
               (directive
                 (simple_directive
                   (directive_keyword)))
@@ -472,18 +403,15 @@ ENDU
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (nextu_block
         keyword: (directive_keyword)
         (directive
           (simple_directive
             keyword: (directive_keyword)
             (argument_list
-              (expression
-                (number_literal))
-              (expression
-                (number_literal))))))
+              (number_literal)
+              (number_literal)))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -506,22 +434,19 @@ ENDR
   (directive
     (rept_block
       keyword: (directive_keyword)
-      count: (expression
-        (number_literal))
+      count: (number_literal)
       (directive
         (union_block
           keyword: (directive_keyword)
           (directive
             (if_block
               keyword: (directive_keyword)
-              condition: (expression
-                (number_literal))
+              condition: (number_literal)
               (directive
                 (simple_directive
                   keyword: (directive_keyword)
                   (argument_list
-                    (expression
-                      (number_literal)))))
+                    (number_literal))))
               end: (directive_keyword)))
           (nextu_block
             keyword: (directive_keyword)
@@ -529,8 +454,7 @@ ENDR
               (simple_directive
                 keyword: (directive_keyword)
                 (argument_list
-                  (expression
-                    (number_literal))))))
+                  (number_literal)))))
           end: (directive_keyword)))
       end: (directive_keyword))))
 
@@ -561,45 +485,39 @@ ENDL
       (string_literal)
       (section_type)
       (global_label_block
-        (global_identifier
-          (symbol))
+        (global_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
-              (expression
-                (identifier
-                  (local_identifier
-                    (local_symbol)))))))
+              (local_symbol
+                (identifier)))))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
-              (expression
-                (number_literal)))))
+              (number_literal))))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
-              (expression
-                (fragment_literal
-                  (directive
-                    (simple_directive
-                      (directive_keyword)
-                      (argument_list
-                        (expression
-                          (number_literal))))))))))
+              (fragment_literal
+                (directive
+                  (simple_directive
+                    (directive_keyword)
+                    (argument_list
+                      (number_literal))))))))
         (local_label_block
-          (local_identifier
-            (local_symbol))
+          (local_symbol
+            (identifier))
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
-                (expression
-                  (string_literal)))))))
+                (string_literal))))))
       (directive_keyword))))
 
 ================================================================================
@@ -652,8 +570,7 @@ POPS
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -680,19 +597,18 @@ POPS
       (string_literal)
       (section_type)
       (global_label_block
-        (global_identifier
-          (symbol))
+        (global_symbol
+          (identifier))
         (directive
           (simple_directive
             (directive_keyword))))
       (global_label_block
-        (global_identifier
-          (symbol))
+        (global_symbol
+          (identifier))
         (directive
           (ds_directive
             (directive_keyword)
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -715,26 +631,22 @@ POPS
       (section_options
         (section_option
           (bank_option
-            (expression
-              (number_literal))))))
+            (number_literal)))))
     (pushs_block
       (directive_keyword)
       (string_literal)
       (section_type)
       (section_address
-        (expression
-          (number_literal)))
+        (number_literal))
       (section_options
         (section_option
           (bank_option
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal)))))
+            (string_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -766,8 +678,7 @@ POPS
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (pushs_block
         (directive_keyword)
         (string_literal)
@@ -776,15 +687,13 @@ POPS
           (simple_directive
             (directive_keyword)
             (argument_list
-              (expression
-                (number_literal)))))
+              (number_literal))))
         (directive_keyword))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (directive_keyword))))
 
 ================================================================================
@@ -806,8 +715,7 @@ POPS
       (simple_directive
         (directive_keyword)
         (argument_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (directive_keyword)))
 
 ================================================================================
@@ -831,22 +739,21 @@ wAnswer: db
       (string_literal)
       (section_type))
     (global_label_block
-      (global_identifier
-        (symbol))
+      (global_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
             (register)
-            (expression
-              (number_literal)))))
+            (number_literal))))
       (pushs_block
         (directive_keyword)
         (string_literal)
         (section_type)
         (global_label_block
-          (global_identifier
-            (symbol))
+          (global_symbol
+            (identifier))
           (directive
             (simple_directive
               (directive_keyword))))
@@ -856,10 +763,8 @@ wAnswer: db
           (instruction_name)
           (operand_list
             (address
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol)))))
+              (variable
+                (identifier)))
             (register)))))))
 
 ================================================================================
@@ -885,8 +790,7 @@ ENDL
     (directive
       (ds_directive
         (directive_keyword)
-        (expression
-          (number_literal))))
+        (number_literal)))
     (load_block
       (directive_keyword)
       (string_literal)
@@ -898,8 +802,7 @@ ENDL
         (directive
           (ds_directive
             (directive_keyword)
-            (expression
-              (number_literal))))
+            (number_literal)))
         (directive_keyword))
       (directive_keyword))))
 
@@ -932,31 +835,25 @@ POPS
       (directive
         (if_block
           (directive_keyword)
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol))))))
+          (function_call
+            (function_name)
+            (variable
+              (identifier)))
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
-                (expression
-                  (string_literal)))))
+                (string_literal))))
           (directive_keyword)))
       (directive
         (rept_block
           (directive_keyword)
-          (expression
-            (number_literal))
+          (number_literal)
           (directive
             (simple_directive
               (directive_keyword)
               (argument_list
-                (expression
-                  (number_literal)))))
+                (number_literal))))
           (directive_keyword)))
       (directive_keyword))))
 

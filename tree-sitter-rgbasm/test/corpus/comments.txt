@@ -12,8 +12,8 @@ Start:
 (source_file
   (inline_comment)
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -39,8 +39,8 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (inline_comment)))
 
 ================================================================================
@@ -61,8 +61,8 @@ Start:
 (source_file
   (block_comment)
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (block_comment)
     (instruction_list
       (instruction
@@ -88,28 +88,22 @@ DEF y = /* before */ 3 * /* after */ 4
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (block_comment)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (block_comment)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (block_comment)
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (block_comment)
-          (expression
-            (number_literal)))))))
+      (binary_expression
+        (number_literal)
+        (block_comment)
+        (number_literal)))))
 
 ================================================================================
 Comments: nested and complex cases
@@ -129,8 +123,8 @@ Start: /* block after label */
 (source_file
   (inline_comment)
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (block_comment)
     (block_comment)
     (instruction_list
@@ -160,8 +154,8 @@ Start:
   (inline_comment)
   (block_comment)
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (instruction_list
       (instruction
         (instruction_name)))

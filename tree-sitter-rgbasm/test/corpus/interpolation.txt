@@ -11,18 +11,16 @@ PRINTLN "Value is {name}"
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation: nested interpolation
@@ -38,28 +36,25 @@ PRINTLN "The {{topic}} is {answer}"
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
       (string_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (interpolation
-                (symbol)))
-            (interpolation
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation: format specifier
@@ -74,17 +69,13 @@ PRINTLN "Hex {X:X} dec {d:X} bin {b:X}"
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (format_spec)
-              (symbol))
-            (interpolation
-              (format_spec)
-              (symbol))
-            (interpolation
-              (format_spec)
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier))
+          (variable
+            (identifier))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation in names: DEF/FOR/PURGE
@@ -103,46 +94,35 @@ PURGE {prefix}
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
       (string_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (interpolation
-          (symbol)))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (for_block
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (interpolation
-              (symbol)))))
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))
+      (variable
+        (identifier))
+      (number_literal)
+      (number_literal)
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal)))))
+            (string_literal))))
       (directive_keyword)))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (interpolation
-                (symbol)))))))))
+        (variable
+          (identifier))))))
 
 ================================================================================
 Interpolation: raw identifier inside braces
@@ -157,10 +137,9 @@ PRINTLN "{#if}"
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (raw_symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Interpolation: Nested and concatenated
@@ -174,19 +153,9 @@ DEF foo{bar}{d:{x}{y}_} = 0
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol)
-        (interpolation
-          (symbol))
-        (interpolation
-          (format_spec)
-          (interpolation
-            (symbol))
-          (interpolation
-            (symbol))
-          (symbol_fragment)))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Interpolation: # followed by {
@@ -202,8 +171,5 @@ Interpolation: # followed by {
       mnemonic: (instruction_name)
       (operand_list
         (register)
-        (expression
-          (identifier
-            (global_identifier
-              global: (interpolation
-                (symbol)))))))))
+        (variable
+          (identifier))))))

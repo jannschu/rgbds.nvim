@@ -32,10 +32,8 @@ PRINTLN .loop
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (identifier
-            (local_identifier
-              (local_symbol))))))))
+        (local_symbol
+          (identifier))))))
 
 ================================================================================
 Instructions: arithmetic A with register, immediate, or memory
@@ -81,14 +79,12 @@ SECTION "Test", ROM0
         mnemonic: (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)
@@ -153,14 +149,12 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -186,8 +180,7 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))))
+          (number_literal))))))
 
 ================================================================================
 Instructions: CPL
@@ -282,57 +275,12 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (register)
-          (address
-            (register)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (address
-            (register)))))
-    (inline_comment)
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (register)
-          (register))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (register))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (register))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (register)
-          (expression
-            (number_literal)))))
-    (instruction_list
-      (instruction
-        (instruction_name)
-        (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -368,14 +316,53 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (address
+            (register)))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (address
+            (register)))))
+    (inline_comment)
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (register)
+          (number_literal))))
+    (instruction_list
+      (instruction
+        (instruction_name)
+        (operand_list
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -503,8 +490,7 @@ SECTION "Test", ROM0
         (operand_list
           (address
             (register))
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -518,8 +504,7 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (inline_comment)
     (instruction_list
       (instruction
@@ -533,8 +518,7 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -549,8 +533,7 @@ SECTION "Test", ROM0
         (operand_list
           (register)
           (address
-            (expression
-              (number_literal))))))))
+            (number_literal)))))))
 
 ================================================================================
 Instructions: Jumps
@@ -575,28 +558,24 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))))
+          (number_literal))))))
 
 ================================================================================
 Instructions: Label jump
@@ -621,32 +600,27 @@ Global:: jp nz, Global
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (anonymous_label_ref)))))
+          (anonymous_label_ref))))
     (global_label_block
-      (global_identifier
-        (symbol))
+      (global_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
             (condition_code)
-            (expression
-              (identifier
-                (global_identifier
-                  (symbol)))))))
+            (variable
+              (identifier)))))
       (local_label_block
-        (local_identifier
-          (local_symbol))
+        (local_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name)
             (operand_list
               (register)
-              (expression
-                (identifier
-                  (local_identifier
-                    (local_symbol)))))))))))
+              (local_symbol
+                (identifier)))))))))
 
 ================================================================================
 Instructions: SUB and SBC
@@ -705,14 +679,12 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -748,14 +720,12 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -814,14 +784,12 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -869,22 +837,19 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (address
             (register)))))
     (inline_comment)
@@ -892,22 +857,19 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (address
             (register)))))
     (inline_comment)
@@ -915,22 +877,19 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal))
+          (number_literal)
           (address
             (register)))))))
 
@@ -1211,38 +1170,32 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))
+          (variable
+            (identifier)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1296,50 +1249,42 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))))
+          (number_literal))))))
 
 ================================================================================
 Instructions: LDH (high memory)
@@ -1364,8 +1309,7 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (number_literal)))
+            (number_literal))
           (register))))
     (instruction_list
       (instruction
@@ -1373,8 +1317,7 @@ SECTION "Test", ROM0
         (operand_list
           (register)
           (address
-            (expression
-              (number_literal))))))
+            (number_literal)))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -1522,11 +1465,9 @@ ld hl, sp + $10
       (instruction_name)
       (operand_list
         (register)
-        (expression
-          (binary_expression
-            (register)
-            (expression
-              (number_literal))))))))
+        (binary_expression
+          (register)
+          (number_literal))))))
 
 ================================================================================
 Instructions: LD with r16 and SP
@@ -1589,36 +1530,30 @@ SECTION "Test", ROM0
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (address
-            (expression
-              (number_literal)))
+            (number_literal))
           (register))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (binary_expression
-              (register)
-              (expression
-                (number_literal)))))))
+          (binary_expression
+            (register)
+            (number_literal)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (binary_expression
-              (register)
-              (expression
-                (number_literal)))))))
+          (binary_expression
+            (register)
+            (number_literal)))))
     (instruction_list
       (instruction
         (instruction_name)
@@ -1662,8 +1597,7 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (instruction_list
       (instruction
         (instruction_name)))
@@ -1703,46 +1637,36 @@ SECTION "Test", ROM0
       (instruction
         (instruction_name)
         (operand_list
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))
+          (variable
+            (identifier)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))
+          (variable
+            (identifier)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))
+          (variable
+            (identifier)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (condition_code)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))
+          (variable
+            (identifier)))))
     (instruction_list
       (instruction
         (instruction_name)
         (operand_list
           (register)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol)))))))))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Instructions: JP HL

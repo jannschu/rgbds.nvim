@@ -11,10 +11,8 @@ align 4, 2
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: PRINTLN current address symbol
@@ -29,8 +27,7 @@ println @
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (constant))))))
+        (constant)))))
 
 ================================================================================
 Test Name: RGBDS import: DS ALIGN helper call
@@ -45,10 +42,8 @@ ds align [8, $C2]
     (ds_directive
       keyword: (directive_keyword)
       (align_option
-        align: (expression
-          (number_literal))
-        offset: (expression
-          (number_literal))))))
+        align: (number_literal)
+        offset: (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: SECTION UNION with ALIGN option
@@ -68,8 +63,7 @@ SECTION UNION "X", WRAM0, ALIGN[16]
       (section_options
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))))
+            align: (number_literal)))))))
 
 ================================================================================
 Test Name: RGBDS import: macro call with free-form args
@@ -82,38 +76,24 @@ print_all This test, probably, passes\,, but who knows, ?
 (source_file
   (directive
     (macro_invocation
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
         (macro_arg_raw)
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
+        (variable
+          (identifier))
         (macro_arg_raw)))))
 
 ================================================================================
@@ -136,14 +116,12 @@ PURGE :-
       (export_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (anonymous_label_ref)))))
+          (anonymous_label_ref))))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (anonymous_label_ref)))))))
+          (anonymous_label_ref))))))
 
 ================================================================================
 Test Name: RGBDS import: character literals in CHARMAP/CHAR
@@ -159,19 +137,15 @@ char 'c{s}e', 3
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (char_literal))
-        (expression
-          (number_literal)))))
+        (char_literal)
+        (number_literal))))
   (directive
     (macro_invocation
-      (global_identifier
-        global: (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (char_literal))
-        (expression
-          (number_literal))))))
+        (char_literal)
+        (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: CHARMAP with macro argument key
@@ -188,26 +162,21 @@ test "デ"
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument))
-            (expression
-              (number_literal)))))
+            (macro_argument)
+            (number_literal))))
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (global_identifier
-        global: (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (string_literal))))))
+        (string_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: DEF inside scoped label
@@ -221,23 +190,20 @@ label:
 
 (source_file
   (global_label_block
-    name: (global_identifier
-      global: (symbol))
+    name: (global_symbol
+      (identifier))
     (directive
       (def_directive
         keyword: (directive_keyword)
-        name: (global_identifier
-          global: (symbol))
-        value: (expression
-          (number_literal))))
+        name: (variable
+          (identifier))
+        value: (number_literal)))
     (directive
       (simple_directive
         keyword: (directive_keyword)
         (argument_list
-          (expression
-            (identifier
-              (global_identifier
-                global: (symbol)))))))))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Test Name: RGBDS import: deprecated functions
@@ -254,33 +220,22 @@ println CHARSUB("a", 123), STRIN(A, 2), STRRIN("foo", 2), STRSUB("bar", "baz")
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (function_call
-            (function_name)
-            (expression
-              (string_literal))
-            (expression
-              (number_literal))))
-        (expression
-          (function_call
-            (function_name)
-            (register)
-            (expression
-              (number_literal))))
-        (expression
-          (function_call
-            (function_name)
-            (expression
-              (string_literal))
-            (expression
-              (number_literal))))
-        (expression
-          (function_call
-            (function_name)
-            (expression
-              (string_literal))
-            (expression
-              (string_literal))))))))
+        (function_call
+          (function_name)
+          (string_literal)
+          (number_literal))
+        (function_call
+          (function_name)
+          (register)
+          (number_literal))
+        (function_call
+          (function_name)
+          (string_literal)
+          (number_literal))
+        (function_call
+          (function_name)
+          (string_literal)
+          (string_literal))))))
 
 ================================================================================
 Test Name: RGBDS import: destination A optional
@@ -300,48 +255,41 @@ both cpl
   (directive
     (macro_definition
       (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            (symbol))))
+      (variable
+        (identifier))
       (directive
         (def_directive
           (directive_keyword)
-          (global_identifier
-            (symbol))
+          (variable
+            (identifier))
           (directive_keyword)
-          (string_literal)))
+          (string_literal
+            (escape))))
       (directive
         (simple_directive
           (directive_keyword)))
       (directive
         (macro_invocation
-          (global_identifier
-            (interpolation
-              (symbol)))
+          (variable
+            (identifier))
           (argument_list
-            (expression
-              (macro_arguments_spread)))))
+            (macro_arguments_spread))))
       (directive
         (macro_invocation
-          (global_identifier
-            (interpolation
-              (symbol)))
+          (variable
+            (identifier))
           (argument_list
             (register)
-            (expression
-              (macro_arguments_spread)))))
+            (macro_arguments_spread))))
       (directive_keyword)))
   (directive
     (macro_invocation
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (argument_list
         (register)
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))))))
+        (variable
+          (identifier))))))
 
 ================================================================================
 Test Name: RGBDS import: diagnostic parameter caps
@@ -361,8 +309,7 @@ db 999
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (number_literal))))))
+        (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: disable warnings
@@ -383,35 +330,31 @@ test
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (assert_directive
           keyword: (directive_keyword)
           (severity)
-          condition: (expression
-            (number_literal))))
+          condition: (number_literal)))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (string_literal)))))
+            (string_literal))))
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (global_identifier
-        global: (symbol))))
+      (variable
+        (identifier))))
   (directive
     (opt_directive
       keyword: (directive_keyword)
       (opt_arg)))
   (directive
     (macro_invocation
-      (global_identifier
-        global: (symbol)))))
+      (variable
+        (identifier)))))
 
 ================================================================================
 Test Name: RGBDS import: div/mod macro arithmetic
@@ -429,34 +372,28 @@ test_mod 3, 2
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (global_identifier
-            global: (symbol))
-          value: (expression
-            (macro_argument))))
+          name: (variable
+            (identifier))
+          value: (macro_argument)))
       (directive
         (def_directive
           keyword: (directive_keyword)
-          name: (global_identifier
-            global: (symbol))
-          value: (expression
-            (macro_argument))))
+          name: (variable
+            (identifier))
+          value: (macro_argument)))
       end: (directive_keyword)))
   (directive
     (macro_invocation
-      (global_identifier
-        global: (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (number_literal))
-        (expression
-          (number_literal))))))
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: ds align inline forms
@@ -476,18 +413,14 @@ ds align[8, $ff], 6
       (section_options
         (section_option
           (align_option
-            align: (expression
-              (number_literal))))))
+            align: (number_literal)))))
     (directive
       (ds_directive
         keyword: (directive_keyword)
         (align_option
-          align: (expression
-            (number_literal))
-          offset: (expression
-            (number_literal)))
-        size: (expression
-          (number_literal))))))
+          align: (number_literal)
+          offset: (number_literal))
+        size: (number_literal)))))
 
 ================================================================================
 Test Name: RGBDS import: ASSERT with lowercase severity
@@ -502,16 +435,11 @@ assert fatal, 2 + 2 == 5, "there are four lights"
     (assert_directive
       keyword: (directive_keyword)
       (severity)
-      condition: (expression
-        (binary_expression
-          left: (expression
-            (binary_expression
-              left: (expression
-                (number_literal))
-              right: (expression
-                (number_literal))))
-          right: (expression
-            (number_literal))))
+      condition: (binary_expression
+        left: (binary_expression
+          left: (number_literal)
+          right: (number_literal))
+        right: (number_literal))
       message: (string_literal))))
 
 ================================================================================
@@ -528,16 +456,13 @@ ENDM
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (macro_argument)))))
+            (macro_argument))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -551,13 +476,11 @@ foo passes\,
 (source_file
   (directive
     (macro_invocation
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (argument_list
-        (expression
-          (identifier
-            (global_identifier
-              (symbol))))
+        (variable
+          (identifier))
         (macro_arg_raw)))))
 
 ================================================================================
@@ -574,20 +497,15 @@ ENDM
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (binary_expression
-                left: (expression
-                  (constant))
-                right: (expression
-                  (number_literal)))))))
+            (binary_expression
+              left: (constant)
+              right: (number_literal)))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -605,33 +523,27 @@ PRINTLN "{d:X}"
   (directive
     (def_directive
       keyword: (directive_keyword)
-      name: (global_identifier
-        global: (symbol))
-      value: (expression
-        (number_literal))))
+      name: (variable
+        (identifier))
+      value: (number_literal)))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (symbol)))))))
+        (string_literal
+          (variable
+            (identifier))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              format: (format_spec)
-              (symbol)))))))
+        (string_literal
+          (variable
+            (identifier))))))
   (directive
     (simple_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              format: (format_spec)
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))

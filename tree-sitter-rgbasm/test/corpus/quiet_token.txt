@@ -13,10 +13,8 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (quiet)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -37,10 +35,8 @@ ENDM
     (macro_definition
       keyword: (directive_keyword)
       (quiet)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -63,8 +59,8 @@ SECTION "Test", ROM0
       (section_type))
     (directive
       (macro_invocation
-        (global_identifier
-          global: (symbol))
+        (variable
+          (identifier))
         (quiet)))))
 
 ================================================================================
@@ -84,8 +80,8 @@ SECTION "Test", ROM0
       (section_type))
     (directive
       (macro_invocation
-        (global_identifier
-          global: (symbol))
+        (variable
+          (identifier))
         (argument_list
           (macro_arg_raw))))))
 
@@ -104,8 +100,7 @@ ENDR
     (rept_block
       keyword: (directive_keyword)
       (quiet)
-      count: (expression
-        (number_literal))
+      count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -126,8 +121,7 @@ ENDR
     (rept_block
       keyword: (directive_keyword)
       (quiet)
-      count: (expression
-        (number_literal))
+      count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -148,22 +142,16 @@ ENDR
     (for_block
       keyword: (directive_keyword)
       (quiet)
-      (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))
+      (variable
+        (identifier))
+      (number_literal)
+      (number_literal)
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (identifier
-                (global_identifier
-                  global: (symbol)))))))
+            (variable
+              (identifier)))))
       end: (directive_keyword))))
 
 ================================================================================
@@ -180,8 +168,7 @@ INCLUDE? "file.inc"
       keyword: (directive_keyword)
       (quiet)
       (argument_list
-        (expression
-          (string_literal))))))
+        (string_literal)))))
 
 ================================================================================
 Quiet INCLUDE with space
@@ -197,8 +184,7 @@ INCLUDE ? "file.inc"
       keyword: (directive_keyword)
       (quiet)
       (argument_list
-        (expression
-          (string_literal))))))
+        (string_literal)))))
 
 ================================================================================
 Non-quiet directives (normal usage)
@@ -224,10 +210,8 @@ INCLUDE "file.inc"
   (directive
     (macro_definition
       keyword: (directive_keyword)
-      name: (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
+      name: (variable
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -235,8 +219,7 @@ INCLUDE "file.inc"
   (directive
     (rept_block
       keyword: (directive_keyword)
-      count: (expression
-        (number_literal))
+      count: (number_literal)
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -244,26 +227,19 @@ INCLUDE "file.inc"
   (directive
     (for_block
       keyword: (directive_keyword)
-      (expression
-        (identifier
-          (global_identifier
-            global: (symbol))))
-      (expression
-        (number_literal))
-      (expression
-        (number_literal))
+      (variable
+        (identifier))
+      (number_literal)
+      (number_literal)
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (expression
-              (identifier
-                (global_identifier
-                  global: (symbol)))))))
+            (variable
+              (identifier)))))
       end: (directive_keyword)))
   (directive
     (include_directive
       keyword: (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))))))
+        (string_literal)))))

@@ -7,25 +7,20 @@
 #include <string.h>
 #include <wctype.h>
 
-#define MAX_IDENTIFIER_LENGTH 255
+#define MAX_IDENTIFIER_LENGTH 20
 #define DEBUG_SCANNER 0
 
 enum TokenType {
-  SYMBOL_TOKEN,
-  RAW_SYMBOL_BEGIN,
-  RAW_SYMBOL_TOKEN,
-  LOCAL_SYMBOL_TOKEN,
-  SYMBOL_FRAGMENT_TOKEN,
-
-  IDENTIFIER_BOUNDARY_TOKEN,
-
+  IDENTIFIER_TOKEN,
   // Looking ahead for start of identifiers, which need considerable
   // lookahead information
-  GLOBAL_SYMBOL_BEGIN,
-  LOCAL_SYMBOL_BEGIN,
-  QUALIFIED_LOCAL_SYMBOL_BEGIN,
+  GLOBAL_IDENTIFIER_BEGIN,
+  LOCAL_IDENTIFIER_BEGIN,
+  QUALIFIED_LOCAL_IDENTIFIER_BEGIN,
+  INSIDE_INTERPOLATION,
 
-  FORMAT_SPEC,
+  STRING_CONTENT,
+  TRIPLE_STRING_CONTENT,
 
   // A statement is ended either at the end of line/file, or by a ']]' token,
   // which closes a fragment literal. Latter must not be consumed.
@@ -51,19 +46,21 @@ enum TokenType {
   ERROR,
 };
 
-typedef struct ScannerState {
-  int section_state;
-} ScannerState;
-
-enum SectionState {
+typedef enum SectionState {
   SECTION_STATE_NONE = 0,
   SECTION_STATE_STARTED,
   SECTION_STATE_ENDED,
-};
+} SectionState;
+
+typedef struct ScannerState {
+  SectionState section_state;
+  int peeked_identifier_length;
+} ScannerState;
 
 void *tree_sitter_rgbasm_external_scanner_create() {
   ScannerState *state = (ScannerState *)ts_calloc(1, sizeof(ScannerState));
   state->section_state = SECTION_STATE_NONE;
+  state->peeked_identifier_length = 0;
   return state;
 }
 
@@ -75,8 +72,11 @@ unsigned tree_sitter_rgbasm_external_scanner_serialize(void *payload,
                                                        char *buffer) {
 
   ScannerState *state = (ScannerState *)payload;
-  buffer[0] = (char)(state->section_state & 0xFF);
-  return 1;
+  memcpy(buffer, &(state->section_state), sizeof(state->section_state));
+  memcpy(buffer + sizeof(state->section_state),
+         &(state->peeked_identifier_length),
+         sizeof(state->peeked_identifier_length));
+  return sizeof(state->section_state) + sizeof(state->peeked_identifier_length);
 }
 
 void tree_sitter_rgbasm_external_scanner_deserialize(void *payload,
@@ -84,7 +84,7 @@ void tree_sitter_rgbasm_external_scanner_deserialize(void *payload,
                                                      unsigned length) {
   if (length > 0) {
     ScannerState *state = (ScannerState *)payload;
-    state->section_state = (enum SectionState)(buffer[0] & 0xFF);
+    state->section_state = (enum SectionState)(buffer[0]);
   }
 }
 
@@ -219,303 +219,128 @@ static inline bool swallow_uniqueness_affix(TSLexer *lexer) {
   return false;
 }
 
-static inline bool is_format_char(int32_t c) {
-  return (c == 'd' || c == 'u' || c == 'x' || c == 'X' || c == 'b' ||
-          c == 'o' || c == 'f' || c == 's');
-}
+static inline int min(int a, int b) { return (a < b) ? a : b; }
 
-static inline bool scan_format_spec(TSLexer *lexer) {
-  if (lexer->lookahead == '+' || lexer->lookahead == ' ') {
-    advance(lexer);
-  }
-  if (lexer->lookahead == '#') {
-    advance(lexer);
-  }
-  do {
-    advance(lexer);
-  } while (lexer->lookahead >= '0' && lexer->lookahead <= '9');
-  if (lexer->lookahead == 'q') {
-    advance(lexer);
-    int digits = 0;
-    do {
-      advance(lexer);
-      digits += 1;
-    } while (lexer->lookahead >= '0' && lexer->lookahead <= '9');
-    if (digits == 0) {
-      return false;
-    }
-  }
-  if (is_format_char(lexer->lookahead)) {
-    advance(lexer);
-  }
-  if (lexer->lookahead == ':') {
-    lexer->mark_end(lexer);
-    lexer->result_symbol = FORMAT_SPEC;
-    return true;
-  }
-  return false;
-}
-
-// Scan an identifier and classify as SYMBOL, LOCAL, or LABEL
-static bool scan_identifier_token(TSLexer *lexer, const bool *valid_symbols) {
-  char start = lexer->lookahead;
-  if (start == '+' || start == ' ' || start == '-' ||
-      (start >= '0' && start <= '9')) {
-    return scan_format_spec(lexer);
-  }
-  bool raw = false;
-  bool local = is_identifier_char(start);
-  bool symbol = is_identifier_start(start);
-
-  if (!symbol) {
-    // could still be raw or local
-    if (local) {
-      raw = (lexer->lookahead == '#');
-      lexer->mark_end(lexer);
-      advance(lexer);
-      start = lexer->lookahead;
-    } else {
-      return false;
-    }
-  }
-
-  if (raw && (start == '-' || (start >= '0' && start <= '9'))) {
-    return scan_format_spec(lexer);
-  }
-
-  if (!symbol && !local && !raw) {
-    return false;
-  }
-
-  // Scan the identifier into a buffer
-  size_t len = 0;
-  char name[MAX_IDENTIFIER_LENGTH + 1];
-  while (is_identifier_char(lexer->lookahead) && len < sizeof(name) - 1) {
-    char c = (char)lexer->lookahead;
-    name[len++] = c;
-    advance(lexer);
-  }
-  name[len] = '\0';
-
-#if DEBUG_SCANNER
-  printf("# Scanned identifier: '%s' (len=%zu), symbol=%d, local=%d, raw=%d\n",
-         name, len, symbol, local, raw);
-#endif
-
-  // Check what follows the identifier
-  int32_t next = lexer->lookahead;
-
-  if (valid_symbols[FORMAT_SPEC] && len == 1 && next == ':' &&
-      is_format_char(name[0])) {
-    lexer->mark_end(lexer);
-    lexer->result_symbol = FORMAT_SPEC;
-    return true;
-  }
-
-  // if this is only the raw symbol begin, we marked the end already,
-  // otherwise we mark here, because we do not want to include the potential \@
-  if (!raw || !valid_symbols[RAW_SYMBOL_BEGIN]) {
-    lexer->mark_end(lexer);
-  }
-  const bool had_affix = swallow_uniqueness_affix(lexer);
-  if (had_affix) {
-    next = lexer->lookahead;
-  }
-  if (valid_symbols[SYMBOL_FRAGMENT_TOKEN]) {
-    // if local symbol is also valid here, we prefer it
-    if (valid_symbols[LOCAL_SYMBOL_TOKEN] && local && next != '{') {
-      lexer->result_symbol = LOCAL_SYMBOL_TOKEN;
-    } else {
-      lexer->result_symbol = SYMBOL_FRAGMENT_TOKEN;
-    }
-    return true;
-  }
-  // only fragments are allowed before interpolation
-  if (next == '{') {
-    return false;
-  }
-  // presence of an affix means this is no longer a reserved word
-  const bool reserved = symbol && !had_affix && is_reserved_word(name, len);
-  if (reserved) {
-    symbol = false;
-#if DEBUG_SCANNER
-    printf("  Identifier is a reserved word: '%s'\n", name);
-#endif
-  }
-
-#if DEBUG_SCANNER
-  printf("# Identifier classification: symbol=%d, local=%d, raw=%d\n", symbol,
-         local, raw);
-#endif
-
-  if (raw) {
-    if (valid_symbols[RAW_SYMBOL_BEGIN]) {
-      lexer->result_symbol = RAW_SYMBOL_BEGIN;
-      return true;
-    }
-    return false;
-  } else if (symbol) {
-    if (valid_symbols[SYMBOL_TOKEN]) {
-      lexer->result_symbol = SYMBOL_TOKEN;
-      return true;
-    }
-    return false;
-  } else if (local) {
-    if (valid_symbols[LOCAL_SYMBOL_TOKEN]) {
-      lexer->result_symbol = LOCAL_SYMBOL_TOKEN;
-      return true;
-    }
-    return false;
-  }
-
-  return false;
-}
-
-static bool scan_identifier_start(TSLexer *lexer, const bool *valid_symbols) {
+static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
+                              const bool peek) {
   lexer->mark_end(lexer);
   bool raw = lexer->lookahead == '#';
+  int len = 0;
   if (raw) {
+    len += 1;
     advance(lexer);
   }
   size_t interpolation = 0;
-  bool interpolated = false;
-  size_t len = 0;
+  size_t name_len = 0;
   char name[MAX_IDENTIFIER_LENGTH + 1];
   int dot = -1;
+  int first_interpolation_pos = -1;
 
   while (interpolation > 0 || is_identifier_char(lexer->lookahead) ||
          lexer->lookahead == '.' || lexer->lookahead == '{') {
     int32_t c = lexer->lookahead;
-    name[len] = (char)c;
+    if (name_len < MAX_IDENTIFIER_LENGTH) {
+      name[name_len] = c < 256 ? (char)c : 0;
+      name_len += 1;
+    }
     if (c == '{') {
+      if (first_interpolation_pos == -1) {
+        first_interpolation_pos = (int)len;
+      }
       interpolation += 1;
-      interpolated = true;
     } else if (interpolation > 0) {
       if (c == '}') {
         interpolation -= 1;
       }
       if (c == '\r' || c == '\n' || c == '\0') {
         // unterminated interpolation
-        return false;
+        return 0;
       }
     } else if (c == '.') {
       if (dot != -1) {
         // multiple dots not allowed
-        return false;
+        return 0;
       }
       dot = (int)len;
     } else if (len == 0 && !is_identifier_start(c)) {
-      return false;
+      return 0;
     }
     advance(lexer);
     len += 1;
   }
   if (len == 0) {
-    return false;
+    return 0;
   }
   if (raw && dot == 0) {
-    // raw local symbol cannot start with #
-    return false;
+    // raw local symbol ("#." + ...), not allowed
+    return 0;
   }
+
+  // check uniqueness_affix
+  if (!peek) {
+    lexer->mark_end(lexer);
+  }
+  const bool unique = swallow_uniqueness_affix(lexer);
+  const bool interpolated = first_interpolation_pos != -1;
+
   if (dot == 0) {
     // local symbol
-    if (valid_symbols[LOCAL_SYMBOL_BEGIN]) {
-      lexer->result_symbol = LOCAL_SYMBOL_BEGIN;
-      return true;
+    if (valid_symbols[LOCAL_IDENTIFIER_BEGIN]) {
+      lexer->result_symbol = LOCAL_IDENTIFIER_BEGIN;
+      return len;
     }
     return false;
   } else if (dot > 0) {
     // qualified local symbol
-    if (valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN]) {
-      if (!raw && !interpolated && is_reserved_word(name, dot)) {
+    if (valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN]) {
+      // part before dot must not be a reserved word,
+      // uniqueness, i.e. \@, doesn't matter here
+      if (!raw && (!interpolated || first_interpolation_pos > dot) &&
+          is_reserved_word(name, dot)) {
         lexer->result_symbol = ERROR;
-        return true;
+        return len;
       }
-      lexer->result_symbol = QUALIFIED_LOCAL_SYMBOL_BEGIN;
-      return true;
+      lexer->result_symbol = QUALIFIED_LOCAL_IDENTIFIER_BEGIN;
+      return len;
     }
     return false;
   } else {
-    if (!raw && !interpolated && is_reserved_word(name, len)) {
+    if (!raw && !interpolated && !unique && is_reserved_word(name, name_len)) {
       if (valid_symbols[LOAD_END_TOKEN]) {
         const size_t match = matches_any(
-            name, len,
+            name, name_len,
             (const char *const[]){"ENDL", "SECTION", "ENDSECTION", "POPS"}, 4);
         if (match != -1) {
           lexer->result_symbol = LOAD_END_TOKEN;
           // if ENDL, consume it
           if (match == 0) {
+            // peek value is expected to be false here
             lexer->mark_end(lexer);
           }
-          return true;
+          return len;
         }
       }
-
-      const bool had_affix = swallow_uniqueness_affix(lexer);
-      if (!had_affix) {
-        // reserved word cannot be global symbol
-        return false;
-      }
+      // reserved word, global symbol not allowed
+      // this is also checked by the grammar, but we catch it earlier here
+      return 0;
     }
     // global symbol
-    if (valid_symbols[GLOBAL_SYMBOL_BEGIN]) {
-      lexer->result_symbol = GLOBAL_SYMBOL_BEGIN;
-      return true;
+    if (valid_symbols[GLOBAL_IDENTIFIER_BEGIN]) {
+      lexer->result_symbol = GLOBAL_IDENTIFIER_BEGIN;
+      return len;
     }
-    return false;
+    return 0;
   }
 }
 
 static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
                  const bool error) {
   if (!error) {
-    // ----- Raw symbol token -----
-    //
-    // A raw symbol, like #if, is first scanned as RAW_SYMBOL_BEGIN (see below),
-    // which already validates that a valid raw symbol follows, so we blindly
-    // scan it here now. This relies on correct ussage of the two token pairs in
-    // the grammar.
-    //
-    // This allows to separately lex '#' and the rest.
-    if (valid_symbols[RAW_SYMBOL_TOKEN]) {
-#if DEBUG_SCANNER
-      printf("# Scanning for RAW_SYMBOL_TOKEN\n");
-      printf("  lookahead: '%c' (0x%02X)\n",
-             (lexer->lookahead >= 32 && lexer->lookahead <= 126)
-                 ? (char)lexer->lookahead
-                 : '?',
-             (unsigned int)lexer->lookahead);
-#endif
-      size_t len = 0;
-      while (is_identifier_char(lexer->lookahead) &&
-             len < MAX_IDENTIFIER_LENGTH) {
-        len += 1;
-        advance(lexer);
-      }
-      lexer->mark_end(lexer);
-      lexer->result_symbol = RAW_SYMBOL_TOKEN;
-      // this should always be fulfilled due to the valid positions for this
-      // token in the grammar
-      return len > 0;
-    }
-
-    // ----- Identifier boundary -----
-    //
-    // A simple lookahead
-
-    if (valid_symbols[IDENTIFIER_BOUNDARY_TOKEN]) {
-      if (is_identifier_boundary(lexer->lookahead)) {
-        lexer->mark_end(lexer);
-        lexer->result_symbol = IDENTIFIER_BOUNDARY_TOKEN;
-        return true;
-      }
-    }
-
     // ----- Section handling -----
     //
     // We use markers for start and explicit ends via ENDSECTION and save that
-    // in the state. The start and end tokens are assumed to be optional, so we
-    // always return false (virtual token anyway).
+    // in the state. The start and end tokens are assumed to be optional, so
+    // we always return false (virtual token anyway).
 
     if (valid_symbols[SECTION_START]) {
       state->section_state = SECTION_STATE_STARTED;
@@ -535,10 +360,51 @@ static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
       lexer->result_symbol = SECTION_TRAILER;
       return true;
     }
+
+    if (valid_symbols[STRING_CONTENT] || valid_symbols[TRIPLE_STRING_CONTENT]) {
+      size_t len = 0;
+      while (!lexer->eof(lexer)) {
+        const int32_t next = lexer->lookahead;
+        if (next == '{' || next == '\\') {
+          break;
+        }
+        if (!valid_symbols[TRIPLE_STRING_CONTENT] &&
+            (next == '\n' || next == '\r')) {
+          break;
+        }
+        // check for end of string
+        if (valid_symbols[TRIPLE_STRING_CONTENT]) {
+          if (next == '"') {
+            lexer->mark_end(lexer);
+            advance(lexer);
+            if (lexer->lookahead == '"') {
+              advance(lexer);
+              if (lexer->lookahead == '"') {
+                // end of triple-quoted string
+                break;
+              }
+            }
+          }
+        } else if (valid_symbols[STRING_CONTENT] && next == '"') {
+          break;
+        }
+
+        advance(lexer);
+        lexer->mark_end(lexer);
+        len += 1;
+      } // while
+
+      if (len > 0) {
+        printf("# Scanned string content of length %zu\n", len);
+        lexer->result_symbol = valid_symbols[TRIPLE_STRING_CONTENT]
+                                   ? TRIPLE_STRING_CONTENT
+                                   : STRING_CONTENT;
+        return true;
+      }
+    }
   }
 
   // Skip blanks
-
   while (is_blank(lexer->lookahead)) {
     skip(lexer);
   }
@@ -584,18 +450,45 @@ static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
     return false;
   }
 
-  if (valid_symbols[GLOBAL_SYMBOL_BEGIN] || valid_symbols[LOCAL_SYMBOL_BEGIN] ||
-      valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ||
+  if (valid_symbols[GLOBAL_IDENTIFIER_BEGIN] ||
+      valid_symbols[LOCAL_IDENTIFIER_BEGIN] ||
+      valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN] ||
       valid_symbols[LOAD_END_TOKEN]) {
-    if (scan_identifier_start(lexer, valid_symbols)) {
+    int len = scan_identifier(lexer, valid_symbols, true);
+    if (len > 0) {
+      if (valid_symbols[INSIDE_INTERPOLATION]) {
+        while (is_blank(lexer->lookahead)) {
+          skip(lexer);
+        }
+        if (lexer->lookahead != '}') {
+          return false;
+        }
+      }
+      state->peeked_identifier_length = len;
       return true;
     }
-  } else if ((valid_symbols[SYMBOL_TOKEN] || valid_symbols[RAW_SYMBOL_BEGIN] ||
-              valid_symbols[LOCAL_SYMBOL_TOKEN] ||
-              valid_symbols[SYMBOL_FRAGMENT_TOKEN] ||
-              valid_symbols[FORMAT_SPEC]) &&
-             scan_identifier_token(lexer, valid_symbols)) {
-    return true;
+  } else if (valid_symbols[IDENTIFIER_TOKEN]) {
+    if (state->peeked_identifier_length > 0) {
+      // consume previously peeked identifier
+      for (int i = 0; i < state->peeked_identifier_length; i++) {
+        advance(lexer);
+      }
+      state->peeked_identifier_length = 0;
+      lexer->result_symbol = IDENTIFIER_TOKEN;
+      return true;
+    } else {
+      bool valid[] = {
+          [GLOBAL_IDENTIFIER_BEGIN] = true,
+          [LOCAL_IDENTIFIER_BEGIN] = true,
+          [QUALIFIED_LOCAL_IDENTIFIER_BEGIN] = true,
+          [LOAD_END_TOKEN] = false,
+      };
+      int len = scan_identifier(lexer, valid, false);
+      if (len > 0) {
+        lexer->result_symbol = IDENTIFIER_TOKEN;
+        return true;
+      }
+    }
   }
 
   return false;
@@ -621,25 +514,23 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
     repr = buf;
   }
   const char *section_state_names[] = {"NONE", "STARTED", "ENDED"};
-  printf("# External scanner. Lookahead: %-2s (0x%02X), section %s", repr,
-         (unsigned int)lexer->lookahead,
-         section_state_names[state->section_state]);
+  printf("# External scanner. Lookahead: %-2s (0x%02X), section %s, peek %i",
+         repr, (unsigned int)lexer->lookahead,
+         section_state_names[state->section_state],
+         state->peeked_identifier_length);
 
   // Print valid symbols presence by lower and upper case
   printf(" Valid symbols: ");
-  printf("%c", valid_symbols[SYMBOL_TOKEN] ? 'S' : '.');
-  printf("%c", valid_symbols[RAW_SYMBOL_BEGIN] ? '#' : '.');
-  printf("%c", valid_symbols[RAW_SYMBOL_TOKEN] ? 'R' : '.');
-  printf("%c", valid_symbols[LOCAL_SYMBOL_TOKEN] ? 'L' : '.');
-  printf("%c ", valid_symbols[SYMBOL_FRAGMENT_TOKEN] ? 'F' : '.');
+  const char del1 = valid_symbols[INSIDE_INTERPOLATION] ? '{' : '(';
+  const char del2 = valid_symbols[INSIDE_INTERPOLATION] ? '}' : ')';
+  printf("%c%c", valid_symbols[IDENTIFIER_TOKEN] ? 'I' : '.', del1);
+  printf("%c", valid_symbols[GLOBAL_IDENTIFIER_BEGIN] ? 'G' : '.');
+  printf("%c", valid_symbols[LOCAL_IDENTIFIER_BEGIN] ? 'l' : '.');
+  printf("%c%c ", valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN] ? 'Q' : '.',
+         del2);
 
-  printf("%c ", valid_symbols[IDENTIFIER_BOUNDARY_TOKEN] ? 'B' : '.');
-
-  printf("%c", valid_symbols[GLOBAL_SYMBOL_BEGIN] ? 'G' : '.');
-  printf("%c", valid_symbols[LOCAL_SYMBOL_BEGIN] ? 'l' : '.');
-  printf("%c ", valid_symbols[QUALIFIED_LOCAL_SYMBOL_BEGIN] ? 'Q' : '.');
-
-  printf("%c ", valid_symbols[FORMAT_SPEC] ? 'T' : '.');
+  printf("\":%c", valid_symbols[TRIPLE_STRING_CONTENT] ? '3' : '.');
+  printf("%c ", valid_symbols[STRING_CONTENT] ? '1' : '.');
 
   printf("%c ", valid_symbols[EOL_TOKEN] ? 'E' : '.');
 
@@ -657,36 +548,23 @@ bool tree_sitter_rgbasm_external_scanner_scan(ScannerState *state,
   char *symbol = "<none>";
   if (result) {
     switch (lexer->result_symbol) {
-    case SYMBOL_TOKEN:
-      symbol = "S";
+    case IDENTIFIER_TOKEN:
+      symbol = "I";
       break;
-    case RAW_SYMBOL_BEGIN:
-      symbol = "#";
-      break;
-    case RAW_SYMBOL_TOKEN:
-      symbol = "R";
-      break;
-    case LOCAL_SYMBOL_TOKEN:
-      symbol = "L";
-      break;
-    case SYMBOL_FRAGMENT_TOKEN:
-      symbol = "F";
-      break;
-    case IDENTIFIER_BOUNDARY_TOKEN:
-      symbol = "B";
-      break;
-    case GLOBAL_SYMBOL_BEGIN:
+    case GLOBAL_IDENTIFIER_BEGIN:
       symbol = "G";
       break;
-    case LOCAL_SYMBOL_BEGIN:
+    case LOCAL_IDENTIFIER_BEGIN:
       symbol = "l";
       break;
-    case QUALIFIED_LOCAL_SYMBOL_BEGIN:
+    case QUALIFIED_LOCAL_IDENTIFIER_BEGIN:
       symbol = "Q";
       break;
-    case FORMAT_SPEC:
-      symbol = "T";
+    case STRING_CONTENT:
+      symbol = "1";
       break;
+    case TRIPLE_STRING_CONTENT:
+      symbol = "3";
     case EOL_TOKEN:
       symbol = "E";
       break;

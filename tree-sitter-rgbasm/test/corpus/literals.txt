@@ -25,75 +25,65 @@ DEF HEX7 = 0x1234
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Literals: binary and octal (working)
@@ -128,104 +118,90 @@ DEF OCT7 = 0o52
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Literals: fixed-point numbers (working)
@@ -244,31 +220,27 @@ DEF FP4 = 789.25
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal))))
+      (variable
+        (identifier))
+      (number_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Literals: graphics constants (working)
@@ -291,46 +263,40 @@ DEF GFX6 = `33221100
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal))))
+      (variable
+        (identifier))
+      (graphics_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal))))
+      (variable
+        (identifier))
+      (graphics_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal))))
+      (variable
+        (identifier))
+      (graphics_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal))))
+      (variable
+        (identifier))
+      (graphics_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal))))
+      (variable
+        (identifier))
+      (graphics_literal)))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (graphics_literal)))))
+      (variable
+        (identifier))
+      (graphics_literal))))
 
 ================================================================================
 Literals: precise fixed-point with q notation (working)
@@ -349,10 +315,9 @@ DEF FPQ1 = 1.0q8
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))
 
 ================================================================================
 Literals: character constants (working)
@@ -371,10 +336,9 @@ DEF CH1 = 'A'
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (char_literal)))))
+      (variable
+        (identifier))
+      (char_literal))))
 
 ================================================================================
 Literals: numbers with underscores (working)
@@ -393,7 +357,6 @@ DEF NUM1 = 123_456
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (number_literal)))))
+      (variable
+        (identifier))
+      (number_literal))))

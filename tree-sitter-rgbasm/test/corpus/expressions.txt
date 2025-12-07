@@ -24,101 +24,72 @@ PRINTLN "The value is {X}"
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
         (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (binary_expression
-              (expression
-                (number_literal))
-              (expression
-                (number_literal))))))))
+          (number_literal)
+          (number_literal)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (expression
-              (binary_expression
-                (expression
-                  (number_literal))
-                (expression
-                  (number_literal)))))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (paren
+          (binary_expression
+            (number_literal)
+            (number_literal)))
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
         (binary_expression
-          (expression
+          (binary_expression
+            (number_literal)
             (number_literal))
-          (expression
-            (binary_expression
-              (expression
-                (binary_expression
-                  (expression
-                    (number_literal))
-                  (expression
-                    (number_literal))))
-              (expression
-                (number_literal))))))))
+          (number_literal)))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (binary_expression
         (binary_expression
-          (expression
-            (binary_expression
-              (expression
-                (number_literal))
-              (expression
-                (number_literal))))
-          (expression
-            (number_literal))))))
+          (number_literal)
+          (number_literal))
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal
-            (interpolation
-              (symbol))))))))
+        (string_literal
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Expressions: all operators
@@ -156,172 +127,127 @@ DEF GE = 2 >= 1
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
         (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (binary_expression
-              (expression
-                (number_literal))
-              (expression
-                (number_literal))))))))
+          (number_literal)
+          (number_literal)))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (unary_expression
-          (expression
-            (binary_expression
-              (expression
-                (number_literal))
-              (expression
-                (number_literal))))))))
+      (variable
+        (identifier))
+      (unary_expression
+        (binary_expression
+          (number_literal)
+          (number_literal)))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (unary_expression
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (unary_expression
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (unary_expression
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (unary_expression
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (unary_expression
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (unary_expression
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (binary_expression
-          (expression
-            (number_literal))
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (binary_expression
+        (number_literal)
+        (number_literal)))))
 
 ================================================================================
 Expressions: built-in functions
@@ -343,77 +269,62 @@ DEF TZ = TZCOUNT(8)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (register)))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (expression
-              (identifier
-                (global_identifier
-                  (symbol)))))))))
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
+          (function_name)
+          (variable
+            (identifier))))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)))))
 
 ================================================================================
 Expressions: ATAN2
@@ -428,13 +339,10 @@ PRINTLN ATAN2(1.0, 1.0)
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (function_call
-            (function_name)
-            (expression
-              (number_literal))
-            (expression
-              (number_literal))))))))
+        (function_call
+          (function_name)
+          (number_literal)
+          (number_literal))))))
 
 ================================================================================
 Expressions: fixed-point functions
@@ -471,185 +379,144 @@ DEF NESTED = MUL(64.0, SIN(ANGLE))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
         (function_call
           (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (function_call
-              (function_name)
-              (expression
-                (identifier
-                  (global_identifier
-                    (symbol)))))))))))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Expressions: string functions
@@ -675,112 +542,85 @@ DEF RFIND = STRRFIND("abcabc", "bc")
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal)
+        (string_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal)))))
 
 ================================================================================
 Expressions: byte/char functions
@@ -798,37 +638,29 @@ DEF BYTE2 = STRBYTE("ABC", 1)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal)))))
 
 ================================================================================
 Expressions: STRFMT function
@@ -846,39 +678,30 @@ DEF MSG3 = STRFMT("Pi = %f", 3.14)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal)))))
 
 ================================================================================
 Expressions: symbol query functions
@@ -897,47 +720,38 @@ DEF SEC_START = STARTOF(VRAM)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type)))))))
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (section_type))))))
 
 ================================================================================
 Expressions: Constants
@@ -970,116 +784,98 @@ PRINTLN __ISO_8601_LOCAL__
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (local_symbol
+          (identifier)))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant)))))
+        (constant))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (constant))))))
+        (constant)))))
 
 ================================================================================
 Expressions: functions with non-expression parameters
@@ -1128,255 +924,216 @@ DEF FILE_PART = READFILE("data.bin", 256)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (section_type))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (section_type))))))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (startof_function
-            (function_name)
-            (expression
-              (string_literal)))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (expression
-              (string_literal)))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
           (function_name)
-          (expression
-            (string_literal))))))
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
+          (function_name)
+          (section_type)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
+          (function_name)
+          (section_type)))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
+      (variable
+        (identifier))
+      (function_call
+        (startof_function
+          (function_name)
+          (string_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
+          (function_name)
+          (string_literal)))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (register))))
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
           (function_name)
           (register)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
+      (variable
+        (identifier))
+      (function_call
+        (sizeof_function
           (function_name)
           (register)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (register)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (register)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (register)))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (register))))))
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (sizeof_function
-            (function_name)
-            (register))))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (constant))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (constant))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (raw_symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (identifier
-              (global_identifier
-                (raw_symbol))))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (variable
+          (identifier)))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal)))))
 
 ================================================================================
 Expressions: charmap functions
@@ -1411,178 +1168,137 @@ DEF STR2 = STRCHAR("A:)", 1)
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal))))
   (directive
     (simple_directive
       (directive_keyword)
       (argument_list
-        (expression
-          (string_literal))
-        (expression
-          (number_literal))
-        (expression
-          (number_literal)))))
+        (string_literal)
+        (number_literal)
+        (number_literal))))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (number_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (number_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (string_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (string_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal))))
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (expression
-        (function_call
-          (function_name)
-          (expression
-            (string_literal))
-          (expression
-            (number_literal)))))))
+      (variable
+        (identifier))
+      (function_call
+        (function_name)
+        (string_literal)
+        (number_literal)))))

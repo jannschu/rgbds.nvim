@@ -23,46 +23,43 @@ ASSERT "a" !== "b"
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
+      (directive_keyword)
+      (string_literal
+        (escape)
+        (escape)
+        (escape)
+        (escape)
+        (escape))))
+  (inline_comment)
+  (directive
+    (def_directive
+      (directive_keyword)
+      (variable
+        (identifier))
       (directive_keyword)
       (string_literal)))
   (inline_comment)
   (directive
     (def_directive
       (directive_keyword)
-      (global_identifier
-        (symbol))
-      (directive_keyword)
-      (string_literal)))
-  (inline_comment)
-  (directive
-    (def_directive
-      (directive_keyword)
-      (global_identifier
-        (symbol))
+      (variable
+        (identifier))
       (directive_keyword)
       (raw_string_literal)))
   (inline_comment)
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
+      (binary_expression
         (binary_expression
-          (expression
-            (binary_expression
-              (expression
-                (string_literal))
-              (expression
-                (string_literal))))
-          (expression
-            (string_literal))))))
+          (string_literal)
+          (string_literal))
+        (string_literal))))
   (directive
     (assert_directive
       (directive_keyword)
-      (expression
-        (binary_expression
-          (expression
-            (string_literal))
-          (expression
-            (string_literal)))))))
+      (binary_expression
+        (string_literal)
+        (string_literal)))))

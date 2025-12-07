@@ -13,22 +13,20 @@ Global.local:
 
 (source_file
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))))
+      (qualified_symbol
+        (identifier))))
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (local_label_block
-      (local_identifier
-        (local_symbol)))
+      (local_symbol
+        (identifier)))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (anonymous_label)
       (instruction_list
         (instruction
@@ -50,15 +48,15 @@ Labels: Lonely
 (source_file
   (inline_comment)
   (local_label_block
-    (local_identifier
-      (local_symbol)))
+    (local_symbol
+      (identifier)))
   (local_label_block
-    (local_identifier
-      (local_symbol))
+    (local_symbol
+      (identifier))
     (inline_comment))
   (local_label_block
-    (local_identifier
-      (local_symbol))
+    (local_symbol
+      (identifier))
     (inline_comment)
     (anonymous_label)
     (anonymous_label)
@@ -92,46 +90,42 @@ AnotherGlobal.local:
 (source_file
   (inline_comment)
   (global_label_block
-    (global_identifier
-      (symbol)))
+    (global_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (inline_comment))
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (local_label_block
-      (local_identifier
-        (local_symbol))
+      (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (identifier
-                (local_identifier
-                  (local_symbol))))))))
+            (local_symbol
+              (identifier))))))
     (local_label_block
-      (local_identifier
-        (local_symbol))
+      (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)))))
   (global_label_block
-    (global_identifier
-      (symbol))
+    (global_symbol
+      (identifier))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (inline_comment)
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (anonymous_label_ref)))))
+            (anonymous_label_ref))))
       (anonymous_label)
       (instruction_list
         (instruction
@@ -140,8 +134,7 @@ AnotherGlobal.local:
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (anonymous_label_ref)))))
+            (anonymous_label_ref))))
       (anonymous_label)
       (instruction_list
         (instruction
@@ -170,14 +163,14 @@ Loop::
 (source_file
   (inline_comment)
   (global_label_block
-    name: (global_identifier
-      global: (symbol))
+    name: (global_symbol
+      (identifier))
     (instruction_list
       (instruction
         mnemonic: (instruction_name))))
   (global_label_block
-    name: (global_identifier
-      global: (symbol))
+    name: (global_symbol
+      (identifier))
     (instruction_list
       (instruction
         mnemonic: (instruction_name)))
@@ -191,8 +184,7 @@ Loop::
         mnemonic: (instruction_name)
         (operand_list
           (register)
-          (expression
-            (number_literal)))))
+          (number_literal))))
     (inline_comment)
     (instruction_list
       (instruction
@@ -218,33 +210,28 @@ DEF x = #load + #LOAD
 (source_file
   (inline_comment)
   (global_label_block
-    (global_identifier
-      (raw_symbol)))
+    (global_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (raw_symbol)))
+    (global_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (raw_symbol)))
+    (global_symbol
+      (identifier)))
   (global_label_block
-    (global_identifier
-      (raw_symbol))
+    (global_symbol
+      (identifier))
     (inline_comment)
     (directive
       (def_directive
         (directive_keyword)
-        (global_identifier
-          (symbol))
-        (expression
-          (binary_expression
-            (expression
-              (identifier
-                (global_identifier
-                  (raw_symbol))))
-            (expression
-              (identifier
-                (global_identifier
-                  (raw_symbol))))))))))
+        (variable
+          (identifier))
+        (binary_expression
+          (variable
+            (identifier))
+          (variable
+            (identifier)))))))
 
 ================================================================================
 Labels: local labels with # character in name
@@ -270,26 +257,26 @@ GlobalLabel:
   (inline_comment)
   (inline_comment)
   (global_label_block
-    name: (global_identifier
-      global: (symbol))
+    name: (global_symbol
+      (identifier))
     (local_label_block
-      name: (local_identifier
-        (local_symbol))
+      name: (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name))))
     (local_label_block
-      name: (local_identifier
-        (local_symbol))
+      name: (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))))
   (global_label_block
-    name: (global_identifier
-      global: (raw_symbol))
+    name: (global_symbol
+      (identifier))
     (local_label_block
-      name: (local_identifier
-        (local_symbol))
+      name: (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name))))))
@@ -314,11 +301,11 @@ Labels: qualified references with raw identifiers
   (inline_comment)
   (inline_comment)
   (global_label_block
-    name: (global_identifier
-      global: (raw_symbol))
+    name: (global_symbol
+      (identifier))
     (local_label_block
-      name: (local_identifier
-        (local_symbol))
+      name: (local_symbol
+        (identifier))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)))
@@ -327,20 +314,14 @@ Labels: qualified references with raw identifiers
         (instruction
           mnemonic: (instruction_name)
           (operand_list
-            (expression
-              (identifier
-                (qualified_identifier
-                  global: (raw_symbol)
-                  local: (local_symbol)))))))
+            (qualified_symbol
+              (identifier)))))
       (instruction_list
         (instruction
           mnemonic: (instruction_name)
           (operand_list
-            (expression
-              (identifier
-                (qualified_identifier
-                  global: (raw_symbol)
-                  local: (local_symbol))))))))))
+            (qualified_symbol
+              (identifier))))))))
 
 ================================================================================
 Qualified local labels: outside global scope with colon
@@ -359,9 +340,8 @@ Start.local:
       (string_literal)
       (section_type))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name))))))
@@ -383,9 +363,8 @@ Start.local
       (string_literal)
       (section_type))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name))))))
@@ -412,25 +391,23 @@ Other.qualified
       (string_literal)
       (section_type))
     (global_label_block
-      (global_identifier
-        (symbol))
+      (global_symbol
+        (identifier))
       (local_label_block
-        (local_identifier
-          (local_symbol))
+        (local_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name))))
       (local_label_block
-        (qualified_identifier
-          (symbol)
-          (local_symbol))
+        (qualified_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name))))
       (local_label_block
-        (qualified_identifier
-          (symbol)
-          (local_symbol))
+        (qualified_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name)))))))
@@ -455,26 +432,23 @@ Global2:
       (string_literal)
       (section_type))
     (global_label_block
-      (global_identifier
-        (symbol))
+      (global_symbol
+        (identifier))
       (local_label_block
-        (local_identifier
-          (local_symbol))
+        (local_symbol
+          (identifier))
         (instruction_list
           (instruction
             (instruction_name)))))
     (global_label_block
-      (global_identifier
-        (symbol))
+      (global_symbol
+        (identifier))
       (instruction_list
         (instruction
           (instruction_name)
           (operand_list
-            (expression
-              (identifier
-                (qualified_identifier
-                  (symbol)
-                  (local_symbol))))))))))
+            (qualified_symbol
+              (identifier))))))))
 
 ================================================================================
 Qualified local labels: can be exported
@@ -493,9 +467,8 @@ MyFunc.entry::
       (string_literal)
       (section_type))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (anonymous_label)
       (instruction_list
         (instruction
@@ -522,39 +495,31 @@ Table.footer:
       (string_literal)
       (section_type))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal))))))
+            (string_literal)))))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal))
-            (expression
-              (number_literal))
-            (expression
-              (number_literal))))))
+            (number_literal)
+            (number_literal)
+            (number_literal)))))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (string_literal))))))))
+            (string_literal)))))))
 
 ================================================================================
 Qualified local labels: used in expressions and directives
@@ -575,40 +540,28 @@ DEF TABLE_SIZE = Table.end - Table.start
       (string_literal)
       (section_type))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (directive
         (simple_directive
           (directive_keyword)
           (argument_list
-            (expression
-              (number_literal))
-            (expression
-              (number_literal))
-            (expression
-              (number_literal))))))
+            (number_literal)
+            (number_literal)
+            (number_literal)))))
     (local_label_block
-      (qualified_identifier
-        (symbol)
-        (local_symbol))
+      (qualified_symbol
+        (identifier))
       (directive
         (def_directive
           (directive_keyword)
-          (global_identifier
-            (symbol))
-          (expression
-            (binary_expression
-              (expression
-                (identifier
-                  (qualified_identifier
-                    (symbol)
-                    (local_symbol))))
-              (expression
-                (identifier
-                  (qualified_identifier
-                    (symbol)
-                    (local_symbol)))))))))))
+          (variable
+            (identifier))
+          (binary_expression
+            (qualified_symbol
+              (identifier))
+            (qualified_symbol
+              (identifier))))))))
 
 ================================================================================
 Invalid: qualified local starting with keyword (EXPORT)
@@ -806,9 +759,8 @@ INCLUDEfoo.bar
 
 (source_file
   (local_label_block
-    (qualified_identifier
-      (symbol)
-      (local_symbol))))
+    (qualified_symbol
+      (identifier))))
 
 ================================================================================
 Label: macro call + expr must not parse as qualified local label
@@ -822,9 +774,8 @@ foo.local
 (source_file
   (inline_comment)
   (local_label_block
-    (qualified_identifier
-      (symbol)
-      (local_symbol))))
+    (qualified_symbol
+      (identifier))))
 
 ================================================================================
 Invalid: unqualified local after qualified local (no scope change)
