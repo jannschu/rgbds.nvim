@@ -3,21 +3,75 @@
   "name": "rgbasm_identifier",
   "rules": {
     "input": {
-      "type": "CHOICE",
+      "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "global"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "global"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "qualified"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "local"
+            }
+          ]
         },
         {
-          "type": "SYMBOL",
-          "name": "qualified"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "local"
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "\n"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "global"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "qualified"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "local"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "comment"
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
+    },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": ";"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\n]*"
+          }
+        ]
+      }
     },
     "qualified": {
       "type": "SEQ",

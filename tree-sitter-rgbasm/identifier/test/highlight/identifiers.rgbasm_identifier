@@ -1,0 +1,62 @@
+my_var
+; <- variable
+;^^^^^ variable
+
+; Global constant
+ACCLATCH0_START
+; <- constant
+;^^^^^^^^^^^^^^ constant
+
+; Local label
+.local_lbl
+; <- punctuation.delimiter
+;^^^^^^^^^^^^ label
+
+; Qualified identifier
+my_module.local_lbl
+; <- module
+;        ^ punctuation.delimiter
+;         ^^^^^^^^^ label
+
+; Interpolation
+{my_var}
+; <- punctuation.special.interpolatio
+;^^^^^^ variable
+;      ^ punctuation.special.interpolatio
+
+; Interpolation with format
+{x:my_var}
+; <- punctuation.special.interpolatio
+;^ string.escape
+; ^ punctuation.delimiter
+;  ^^^^^^ variable
+;        ^ punctuation.special.interpolatio
+
+; Raw identifier
+#raw
+; <- punctuation.delimiter
+;^^^ variable
+
+; Complex interpolation
+my_{var}_name
+;  ^ punctuation.special.interpolatio
+;   ^ variable
+;      ^ punctuation.special.interpolatio
+
+; Qualified with interpolation
+mod_{part}.loc_{part}
+; <- module
+;   ^ punctuation.special.interpolatio
+;    ^^^^ variable
+;        ^ punctuation.special.interpolatio
+;         ^ punctuation.delimiter
+;          ^^^^ label
+;              ^ punctuation.special.interpolatio
+;               ^^^^ variable
+;                   ^ punctuation.special.interpolatio
+
+; Interpolation with constant
+{ACCLATCH0_START}
+; <- punctuation.special.interpolatio
+;^^^^^^^^^^^^^^^ constant
+;               ^ punctuation.special.interpolatio

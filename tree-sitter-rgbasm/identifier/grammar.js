@@ -16,11 +16,27 @@ export default grammar({
   ],
 
   rules: {
-    input: $ => choice(
-      $.global,
-      $.qualified,
-      $.local,
+    input: $ => seq(
+      choice(
+        $.global,
+        $.qualified,
+        $.local,
+      ),
+      // for testing
+      repeat(
+        seq(
+          '\n',
+          choice(
+            $.global,
+            $.qualified,
+            $.local,
+            $.comment,
+          ),
+        ),
+      ),
     ),
+
+    comment: $ => token(seq(';', /[^\n]*/)),
 
     qualified: $ => seq(
       $.global,

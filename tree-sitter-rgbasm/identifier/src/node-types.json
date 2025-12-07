@@ -24,9 +24,13 @@
     "root": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
         {
           "type": "global",
           "named": true
@@ -96,12 +100,20 @@
     }
   },
   {
+    "type": "\n",
+    "named": false
+  },
+  {
     "type": ".",
     "named": false
   },
   {
     "type": ":",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
   },
   {
     "type": "format_string",
