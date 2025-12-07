@@ -3,7 +3,7 @@
 A Neovim plugin for the [rgbasm](https://rgbds.gbdev.io/) assembler providing
 syntax highlighting based on [tree-sitter](https://tree-sitter.github.io/tree-sitter/).
 
-<img width="846" height="664" alt="SCR-20251205-prlx" src="https://github.com/user-attachments/assets/ab8847ac-e8a3-4a02-9a0f-975f8d280e9c" />
+<img width="789" height="662" alt="SCR-20251207-rzum" src="https://github.com/user-attachments/assets/d90d6f1d-eae5-4b2f-997e-f4b99275fd85" />
 
 ## Features
 
