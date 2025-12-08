@@ -137,8 +137,8 @@
 ; Include paths
 (simple_directive
   keyword: _ @_kw
-  (argument_list (string_literal) @string.special.path (#set! priority 110))
-  (#any-of? @_kw "INCBIN"))
+  (argument_list (string_literal) @string.special.path (#set! priority 105))
+  (#match? @_kw "^\\s*[Ii][Nn][Cc][Bb][Ii][Nn]$"))
 
 ; ==============================================================================
 ; Macros
