@@ -44,7 +44,7 @@ local function has_rgbds_makefile(bufnr)
 		return false
 	end
 
-	for p in makefiles do
+	for _, p in pairs(makefiles) do
 		if vim.fs.basename(p) == "hardware.inc" then
 			return true
 		end
