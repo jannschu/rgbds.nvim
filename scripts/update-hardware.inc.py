@@ -3,14 +3,15 @@ from pathlib import Path
 from urllib.request import urlopen
 
 URL = "https://github.com/gbdev/hardware.inc/raw/refs/heads/master/hardware.inc"
+URL_COMPAT = "https://raw.githubusercontent.com/gbdev/hardware.inc/refs/heads/master/hardware_compat.inc"
 
 VAR = re.compile(r"^\s*def\s+([a-z\d_]+)\s", re.MULTILINE | re.IGNORECASE)
 VALID = re.compile(r"^r?[A-Z_][A-Za-z\d_]*$")
 LINE_LIMIT = 255
 
 
-def download_hardware_inc() -> str:
-    with urlopen(URL) as response:
+def download_hardware_inc(url: str) -> str:
+    with urlopen(url) as response:
         return response.read().decode("utf-8")
 
 
@@ -54,8 +55,15 @@ def inject_vars(hardware_inc: str, vars: list[str]) -> str:
 if __name__ == "__main__":
     path = Path(__file__).parent.parent / "tree-sitter-rgbasm" / "identifier" / "queries" / "highlights.scm"
     assert path.exists(), "path does not exist"
-    hardware_inc = download_hardware_inc()
+
+    hardware_inc = download_hardware_inc(URL)
     vars = parse_vars(hardware_inc)
+
+    compat = download_hardware_inc(URL_COMPAT)
+    vars_compat = parse_vars(compat)
+
+    vars = list(sorted(set(vars) | set(vars_compat)))
+
     print(f"Found {len(vars)} variables.")
     content = inject_vars(path.read_text(encoding="utf-8"), vars)
     assert all(v in content for v in vars), "not all vars were injected"
