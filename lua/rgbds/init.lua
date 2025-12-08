@@ -25,6 +25,7 @@ local function register(dir)
 		extension = {
 			gbz80 = "rgbasm",
 			rgbasm = "rgbasm",
+			rgbinc = "rgbasm",
 			asm = detect,
 			s = detect,
 			inc = detect,
