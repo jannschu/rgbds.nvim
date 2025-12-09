@@ -35,7 +35,7 @@ static bool scan_identifier(TSLexer *lexer) {
   }
   char name[MAX_IDENTIFIER_LENGTH + 1];
   size_t len = 0;
-  while (is_identifier_char(lexer->lookahead)) {
+  while (!lexer->eof(lexer) && is_identifier_char(lexer->lookahead)) {
     if (len < MAX_IDENTIFIER_LENGTH) {
       name[len++] = (char)lexer->lookahead;
     }

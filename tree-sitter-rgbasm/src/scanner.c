@@ -128,8 +128,9 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
   int dot = -1;
   int first_interpolation_pos = -1;
 
-  while (interpolation > 0 || is_identifier_char(lexer->lookahead) ||
-         lexer->lookahead == '.' || lexer->lookahead == '{') {
+  while (!lexer->eof(lexer) &&
+         (interpolation > 0 || is_identifier_char(lexer->lookahead) ||
+          lexer->lookahead == '.' || lexer->lookahead == '{')) {
     int32_t c = lexer->lookahead;
     if (name_len < MAX_IDENTIFIER_LENGTH) {
       name[name_len] = c < 256 ? (char)c : 0;
@@ -150,7 +151,7 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
           break;
         }
       }
-      if (c == '\r' || c == '\n' || c == '\0') {
+      if (c == '\r' || c == '\n' || lexer->eof(lexer)) {
         // unterminated interpolation
         return 0;
       }
