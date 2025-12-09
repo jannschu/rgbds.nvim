@@ -125,9 +125,9 @@ PRINT #"\1 \# \<FOO{BAR}>"
 1:6  - 1:25         argument_list
 1:6  - 1:25           string_literal
 1:6  - 1:7              "\""
-1:7  - 1:9              macro_argument `\\1`
+1:7  - 1:9              identifier `\\1`
 1:10 - 1:12             macro_arguments_spread `\\#`
-1:13 - 1:24             macro_argument `\\<FOO{BAR}>`
+1:13 - 1:24             identifier `\\<FOO{BAR}>`
 1:24 - 1:25             "\""
 2:0  - 2:26     directive
 2:0  - 2:26       simple_directive

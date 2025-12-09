@@ -188,7 +188,7 @@ DEF X EQUS "{V}\@ {W}not{Q}" ++ "a"
 1:11 - 1:28           left: string_literal
 1:11 - 1:12             "\""
 1:12 - 1:15             identifier `{V}`
-1:15 - 1:17             wrong_escape `\\@`
+1:15 - 1:17             identifier `\\@`
 1:18 - 1:21             identifier `{W}`
 1:24 - 1:27             identifier `{Q}`
 1:27 - 1:28             "\""

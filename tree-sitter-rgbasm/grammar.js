@@ -739,7 +739,6 @@ module.exports = grammar({
         $.anonymous_label_ref,
         $.constant,
         $.fragment_literal,
-        $.macro_argument,
         $.macro_arguments_spread,
         $.function_call,
         $.variable,
@@ -876,7 +875,6 @@ module.exports = grammar({
           $._string_content_triple,
           seq($._peek_global, $.identifier),
           $.escape,
-          $.macro_argument,
           $.macro_arguments_spread,
           $.wrong_escape,
         )),
@@ -890,7 +888,6 @@ module.exports = grammar({
           $._string_content,
           seq($._peek_global, $.identifier),
           $.escape,
-          $.macro_argument,
           $.macro_arguments_spread,
           $.wrong_escape,
         )),
@@ -910,18 +907,6 @@ module.exports = grammar({
       ),
 
     // ----- Macro arguments -----
-
-    // Macro argument escapes usable inside macro/rept bodies
-    macro_argument: $ =>
-      token(prec(5, seq(
-        '\\',
-        choice(
-          // \1 through \9
-          /[1-9]/,
-          // \<10>, \<-1>, \<identifier>, \<v{d:x}> (accept until closing '>')
-          seq('<', /[^>\r\n]+/, '>')
-        )
-      ))),
 
     macro_arguments_spread: $ =>
       token(prec(5, seq('\\', '#'))),

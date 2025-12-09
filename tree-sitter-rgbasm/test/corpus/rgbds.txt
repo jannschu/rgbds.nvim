@@ -170,7 +170,8 @@ test "デ"
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (macro_argument)
+            (variable
+              (identifier))
             (number_literal))))
       end: (directive_keyword)))
   (directive
@@ -266,7 +267,7 @@ both cpl
             (identifier))
           (equs_keyword)
           (string_literal
-            (macro_argument))))
+            (identifier))))
       (directive
         (simple_directive
           (directive_keyword)))
@@ -379,13 +380,15 @@ test_mod 3, 2
           keyword: (def_keyword)
           name: (variable
             (identifier))
-          value: (macro_argument)))
+          value: (variable
+            (identifier))))
       (directive
         (def_directive
           keyword: (def_keyword)
           name: (variable
             (identifier))
-          value: (macro_argument)))
+          value: (variable
+            (identifier))))
       end: (directive_keyword)))
   (directive
     (macro_invocation
@@ -464,7 +467,8 @@ ENDM
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (macro_argument))))
+            (variable
+              (identifier)))))
       end: (directive_keyword))))
 
 ================================================================================

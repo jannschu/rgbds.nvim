@@ -6,7 +6,7 @@ Format string: x
 
 (input
   (global
-    (interpolation
+    (variable_interpolation
       (format_string)
       (global))))
 
@@ -18,7 +18,7 @@ Format string: X
 
 (input
   (global
-    (interpolation
+    (variable_interpolation
       (format_string)
       (global))))
 
@@ -30,10 +30,10 @@ Format string: exact s padded
 
 (input
   (global
-    (interpolation
+    (variable_interpolation
       (format_string)
       (global
-        (interpolation
+        (variable_interpolation
           (global))))))
 
 ================================================================================
@@ -44,8 +44,8 @@ Format string: plus
 
 (input
   (global
-    (interpolation
+    (variable_interpolation
       (format_string)
       (global
-        (interpolation
+        (variable_interpolation
           (global))))))

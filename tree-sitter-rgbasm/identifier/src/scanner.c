@@ -41,8 +41,9 @@ static bool scan_identifier(TSLexer *lexer) {
     }
     lexer->advance(lexer, false);
   }
+  const int32_t c = lexer->lookahead;
   const bool valid =
-      len > MAX_IDENTIFIER_LENGTH || !is_reserved_word(name, len);
+      len > MAX_IDENTIFIER_LENGTH || c == '\\' || !is_reserved_word(name, len);
   // printf("scanned identifier: %.*s (%s)\n", (int)len, name,
   //        valid ? "ok" : "reserved");
   return valid && lexer->lookahead != ':';

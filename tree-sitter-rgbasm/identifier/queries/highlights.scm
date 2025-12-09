@@ -8,21 +8,24 @@
 ; Strings
 ; ==============================================================================``
 
-((format_string) @string.escape (#set! priority 110))
+((format_string) @string.escape (#set! priority 115))
 
 ; ==============================================================================
 ; Punctuation
 ; ==============================================================================
 
-((raw_marker) @punctuation.delimiter (#set! priority 110))
+((raw_marker) @punctuation.delimiter (#set! priority 115))
 
 (local "." @punctuation.delimiter (#set! priority 110))
 
-(interpolation ["{" "}"] @punctuation.special.interpolatio (#set! priority 110))
+(variable_interpolation ["{" "}"] @punctuation.special.interpolation (#set! priority 115))
 
-(interpolation ":" @punctuation.delimiter (#set! priority 110))
+(variable_interpolation ":" @punctuation.delimiter (#set! priority 110))
 
-((uniqueness_affix) @punctuation.special (#set! priority 110))
+([(macro_num_arg) (macro_uniq)] @punctuation.special (#set! priority 115))
+
+(macro_interpolation
+  ["\\<" ">"] @punctuation.special (#set! priority 115))
 
 ; ==============================================================================
 ; Identifiers
@@ -30,7 +33,7 @@
 
 ((global) @variable (#set! priority 110))
 
-(qualified (global) @module (#set! priority 115))
+(qualified (global) @module (#set! priority 111))
 
 ((local) @label (#set! priority 110))
 

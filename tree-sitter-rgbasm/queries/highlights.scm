@@ -155,8 +155,7 @@
 (macro_invocation
   (variable) @function.macro (#set! priority 120))
 
-; Macro arguments and unique affix
-(macro_argument) @variable.parameter
+; Macro \# spread
 (macro_arguments_spread) @variable.parameter
 
 ; ==============================================================================
@@ -194,7 +193,7 @@
   (escape) @string.escape)
 
 (string_literal
-  [(macro_argument) (macro_arguments_spread)] @punctuation.special)
+  (macro_arguments_spread) @punctuation.special)
 
 ; ==============================================================================
 ; Comments

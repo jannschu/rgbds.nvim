@@ -268,3 +268,58 @@ format_msg "Hello", 123, "World"
         (string_literal)
         (number_literal)
         (string_literal)))))
+
+================================================================================
+Macros: macro num arg in identifiers
+================================================================================
+
+\1_a:
+\<-1>:
+\<2>\@:
+
+---
+
+(source_file
+  (global_label_block
+    (global_symbol
+      (identifier)))
+  (global_label_block
+    (global_symbol
+      (identifier)))
+  (global_label_block
+    (global_symbol
+      (identifier))))
+
+================================================================================
+Macros: macro identifier arg in identifiers
+================================================================================
+
+\<name>:
+\<name\@>:
+
+---
+
+(source_file
+  (global_label_block
+    (global_symbol
+      (identifier)))
+  (global_label_block
+    (global_symbol
+      (identifier))))
+
+================================================================================
+Macros: macro nested arg in identifiers
+================================================================================
+
+\<#foo\<1>>:
+\<#bar\<name\@>>:
+
+---
+
+(source_file
+  (global_label_block
+    (global_symbol
+      (identifier)))
+  (global_label_block
+    (global_symbol
+      (identifier))))

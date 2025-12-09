@@ -8,11 +8,15 @@
       "required": false,
       "types": [
         {
-          "type": "interpolation",
+          "type": "macro_interpolation",
           "named": true
         },
         {
           "type": "raw_marker",
+          "named": true
+        },
+        {
+          "type": "variable_interpolation",
           "named": true
         }
       ]
@@ -47,29 +51,6 @@
     }
   },
   {
-    "type": "interpolation",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "format_string",
-          "named": true
-        },
-        {
-          "type": "global",
-          "named": true
-        },
-        {
-          "type": "uniqueness_affix",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "local",
     "named": true,
     "fields": {},
@@ -78,7 +59,34 @@
       "required": false,
       "types": [
         {
-          "type": "interpolation",
+          "type": "macro_interpolation",
+          "named": true
+        },
+        {
+          "type": "variable_interpolation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "macro_interpolation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "global",
+          "named": true
+        },
+        {
+          "type": "macro_num_arg",
+          "named": true
+        },
+        {
+          "type": "macro_uniq",
           "named": true
         }
       ]
@@ -104,6 +112,25 @@
     }
   },
   {
+    "type": "variable_interpolation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "format_string",
+          "named": true
+        },
+        {
+          "type": "global",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "\n",
     "named": false
   },
@@ -116,6 +143,14 @@
     "named": false
   },
   {
+    "type": ">",
+    "named": false
+  },
+  {
+    "type": "\\<",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true
   },
@@ -124,11 +159,15 @@
     "named": true
   },
   {
-    "type": "raw_marker",
+    "type": "macro_num_arg",
     "named": true
   },
   {
-    "type": "uniqueness_affix",
+    "type": "macro_uniq",
+    "named": true
+  },
+  {
+    "type": "raw_marker",
     "named": true
   },
   {

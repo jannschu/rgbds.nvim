@@ -1,0 +1,28 @@
+\1
+; <- punctuation.special
+
+b\1a
+; <- variable
+;^^ punctuation.special
+;  ^ variable
+
+foo_\<-1>\@
+; <- variable
+;^^^ variable
+;   ^^^^^ punctuation.special
+;        ^^ punctuation.special
+
+mixed_{d:\1}\<#name{bar}>
+; <- variable
+;^^^^^ variable
+;     ^ punctuation.special.interpolation
+;      ^ string.escape
+;       ^ punctuation.delimiter
+;        ^^ punctuation.special
+;          ^ punctuation.special.interpolation
+;           ^^ punctuation.special
+;             ^ punctuation.delimiter
+;              ^^^^ variable
+;                  ^ punctuation.special.interpolation
+;                   ^^^ variable
+;                      ^ punctuation.special.interpolation

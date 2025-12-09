@@ -107,16 +107,13 @@ if\@:
 (source_file
   (global_label_block
     (global_symbol
-      (identifier)
-      (uniqueness_affix))
+      (identifier))
     (local_label_block
       (local_symbol
-        (identifier)
-        (uniqueness_affix)))
+        (identifier)))
     (local_label_block
       (local_symbol
-        (identifier)
-        (uniqueness_affix)))))
+        (identifier)))))
 
 ================================================================================
 Blocks: macro arguments and escapes
@@ -148,48 +145,46 @@ ENDM
           (generic_instruction
             mnemonic: (instruction_name)
             (operand_list
-              (macro_argument)
+              (variable
+                (identifier))
               (paren
-                (macro_argument))))))
+                (variable
+                  (identifier)))))))
       (directive
         (simple_directive
           keyword: (directive_keyword)
           (argument_list
-            (macro_argument)
-            (macro_argument))))
+            (variable
+              (identifier))
+            (variable
+              (identifier)))))
       (global_label_block
         name: (global_symbol
-          (identifier)
-          (uniqueness_affix))
+          (identifier))
         (local_label_block
           name: (qualified_symbol
-            (identifier)
-            (uniqueness_affix))
+            (identifier))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
                 (variable
-                  (identifier)
-                  (uniqueness_affix)))))
+                  (identifier)))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
               (argument_list
                 (qualified_symbol
-                  (identifier)
-                  (uniqueness_affix))))))
+                  (identifier))))))
         (local_label_block
           name: (local_symbol
-            (identifier)
-            (uniqueness_affix))
+            (identifier))
           (instruction_list
             (instruction
               (jr_instruction
                 mnemonic: (instruction_name)
                 (local_symbol
-                  (identifier)
-                  (uniqueness_affix)))))
+                  (identifier)))))
           (directive
             (simple_directive
               keyword: (directive_keyword)
@@ -225,9 +220,12 @@ ENDR
         (simple_directive
           (directive_keyword)
           (argument_list
-            (macro_argument)
-            (macro_argument)
-            (macro_argument))))
+            (variable
+              (identifier))
+            (variable
+              (identifier))
+            (variable
+              (identifier)))))
       (directive
         (simple_directive
           (directive_keyword)))
@@ -235,8 +233,10 @@ ENDR
         (simple_directive
           (directive_keyword)
           (argument_list
-            (macro_argument)
-            (macro_argument))))
+            (variable
+              (identifier))
+            (variable
+              (identifier)))))
       (directive
         (simple_directive
           (directive_keyword)
@@ -247,7 +247,8 @@ ENDR
         (simple_directive
           (directive_keyword)
           (argument_list
-            (macro_argument))))
+            (variable
+              (identifier)))))
       (directive_keyword)))
   (directive
     (rept_block

@@ -3891,10 +3891,6 @@
         },
         {
           "type": "SYMBOL",
-          "name": "macro_argument"
-        },
-        {
-          "type": "SYMBOL",
           "name": "macro_arguments_spread"
         },
         {
@@ -5330,10 +5326,6 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "macro_argument"
-              },
-              {
-                "type": "SYMBOL",
                 "name": "macro_arguments_spread"
               },
               {
@@ -5384,10 +5376,6 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "macro_argument"
-              },
-              {
-                "type": "SYMBOL",
                 "name": "macro_arguments_spread"
               },
               {
@@ -5428,48 +5416,6 @@
             "value": "#\"[^\\n\"]*\""
           }
         ]
-      }
-    },
-    "macro_argument": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 5,
-        "content": {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "\\"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "PATTERN",
-                  "value": "[1-9]"
-                },
-                {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "<"
-                    },
-                    {
-                      "type": "PATTERN",
-                      "value": "[^>\\r\\n]+"
-                    },
-                    {
-                      "type": "STRING",
-                      "value": ">"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
       }
     },
     "macro_arguments_spread": {

@@ -20,17 +20,17 @@ my_module.local_lbl
 
 ; Interpolation
 {my_var}
-; <- punctuation.special.interpolatio
+; <- punctuation.special.interpolation
 ;^^^^^^ variable
-;      ^ punctuation.special.interpolatio
+;      ^ punctuation.special.interpolation
 
 ; Interpolation with format
 {x:my_var}
-; <- punctuation.special.interpolatio
+; <- punctuation.special.interpolation
 ;^ string.escape
 ; ^ punctuation.delimiter
 ;  ^^^^^^ variable
-;        ^ punctuation.special.interpolatio
+;        ^ punctuation.special.interpolation
 
 ; Raw identifier
 #raw
@@ -39,24 +39,24 @@ my_module.local_lbl
 
 ; Complex interpolation
 my_{var}_name
-;  ^ punctuation.special.interpolatio
+;  ^ punctuation.special.interpolation
 ;   ^ variable
-;      ^ punctuation.special.interpolatio
+;      ^ punctuation.special.interpolation
 
 ; Qualified with interpolation
 mod_{part}.loc_{part}
 ; <- module
-;   ^ punctuation.special.interpolatio
+;   ^ punctuation.special.interpolation
 ;    ^^^^ variable
-;        ^ punctuation.special.interpolatio
+;        ^ punctuation.special.interpolation
 ;         ^ punctuation.delimiter
 ;          ^^^^ label
-;              ^ punctuation.special.interpolatio
+;              ^ punctuation.special.interpolation
 ;               ^^^^ variable
-;                   ^ punctuation.special.interpolatio
+;                   ^ punctuation.special.interpolation
 
 ; Interpolation with constant
 {ACCLATCH0_START}
-; <- punctuation.special.interpolatio
+; <- punctuation.special.interpolation
 ;^^^^^^^^^^^^^^^ constant
-;               ^ punctuation.special.interpolatio
+;               ^ punctuation.special.interpolation

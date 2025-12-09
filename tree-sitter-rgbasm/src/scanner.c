@@ -108,14 +108,82 @@ static inline bool swallow_uniqueness_affix(TSLexer *lexer) {
 static inline int min(int a, int b) { return (a < b) ? a : b; }
 
 static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
+                              const bool peek);
+
+static size_t scan_macro_escape(TSLexer *lexer) {
+  if (lexer->eof(lexer) || lexer->lookahead != '\\') {
+    return 0;
+  }
+  advance(lexer); // consume '\'
+
+  // now we need either '<', '@', or a digit, we do not allow #, i.e. macro
+  // argument spread here
+  int32_t c = lexer->lookahead;
+  const bool digit = (c >= '1' && c <= '9'); // does not allow '0'
+  if (lexer->eof(lexer) || (c != '<' && c != '@' && !digit)) {
+    return 0;
+  }
+  advance(lexer);
+  if (digit || c == '@') {
+    return 2;
+  }
+
+  // Now there must be a (signed) digit, or an identifier!
+  // For '-' or digit we proceed, otherwise recursively scan identifier chars.
+  //
+  // While things like '\<1\2>' are allowed, I think, we do not support it due
+  // to no known usage.
+
+  size_t len = 2;
+  c = lexer->lookahead;
+  const bool digit_begin = c == '-' || (c >= '1' && c <= '9');
+  if (lexer->eof(lexer) || !digit_begin) {
+    // scan identifier
+    const size_t identifier = scan_identifier(
+        lexer,
+        (const bool[]){[GLOBAL_IDENTIFIER_BEGIN] = true,
+                       [LOCAL_IDENTIFIER_BEGIN] = true,
+                       [QUALIFIED_LOCAL_IDENTIFIER_BEGIN] = true,
+                       [STRING_CONTENT] = false,
+                       [TRIPLE_STRING_CONTENT] = false},
+        true);
+    if (identifier == 0) {
+      return 0;
+    }
+    len += identifier;
+  } else {
+    // scan number
+    if (c == '-') {
+      advance(lexer);
+      c = lexer->lookahead;
+      len += 1;
+    }
+    char zero_ok = 1;
+    while (!lexer->eof(lexer) && (c >= '0' + zero_ok && c <= '9')) {
+      advance(lexer);
+      len += 1;
+      c = lexer->lookahead;
+      zero_ok = 0;
+    }
+  }
+
+  if (lexer->eof(lexer) || lexer->lookahead != '>') {
+    return 0;
+  }
+  advance(lexer); // consume '>'
+  len += 1;
+
+  return len;
+}
+
+static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
                               const bool peek) {
   const bool in_string =
       valid_symbols[STRING_CONTENT] || valid_symbols[TRIPLE_STRING_CONTENT];
-  if (in_string && lexer->lookahead != '{') {
-    // inside strings we only scan symbols like {...}
+  if (in_string && lexer->lookahead != '{' && lexer->lookahead != '\\') {
+    // inside strings we only scan symbols like {...} and \... (macro escapes)
     return 0;
   }
-  lexer->mark_end(lexer);
   bool raw = lexer->lookahead == '#';
   int len = 0;
   if (raw) {
@@ -130,8 +198,37 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
 
   while (!lexer->eof(lexer) &&
          (interpolation > 0 || is_identifier_char(lexer->lookahead) ||
-          lexer->lookahead == '.' || lexer->lookahead == '{')) {
+          lexer->lookahead == '.' || lexer->lookahead == '{' ||
+          lexer->lookahead == '\\')) {
     int32_t c = lexer->lookahead;
+    if (c == '\\') {
+      // macro escape?
+      if (!peek) {
+        lexer->mark_end(lexer);
+      }
+      const size_t esc_len = scan_macro_escape(lexer);
+      if (esc_len == 0) {
+        break;
+      }
+      if (first_interpolation_pos == -1) {
+        // a macro escape counts as interpolation for our purposes
+        first_interpolation_pos = (int)len;
+      }
+      len += (int)esc_len;
+      if (name_len + 4 < MAX_IDENTIFIER_LENGTH) {
+        // only used for reserved word checking, so we can use a placeholder
+        // which is helpful for debugging
+        name[name_len++] = '\\';
+        if (esc_len > 2) {
+          name[name_len++] = '<';
+          name[name_len++] = '.';
+          name[name_len++] = '>';
+        } else {
+          name[name_len++] = '.';
+        }
+      }
+      continue;
+    }
     if (name_len < MAX_IDENTIFIER_LENGTH) {
       name[name_len] = c < 256 ? (char)c : 0;
       name_len += 1;
@@ -179,8 +276,14 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
   if (!peek) {
     lexer->mark_end(lexer);
   }
-  const bool unique = swallow_uniqueness_affix(lexer);
   const bool interpolated = first_interpolation_pos != -1;
+
+#if DEBUG_SCANNER
+  printf("# Scanned identifier: %.*s (len %d), raw: %d, dot: %d, "
+         "interpolated: %d (first at %d)\n",
+         (int)name_len, name, len, raw, dot, interpolated,
+         first_interpolation_pos);
+#endif
 
   if (dot == 0) {
     // local symbol
@@ -204,7 +307,7 @@ static size_t scan_identifier(TSLexer *lexer, const bool *valid_symbols,
     }
     return false;
   } else {
-    if (!raw && !interpolated && !unique && is_reserved_word(name, name_len)) {
+    if (!raw && !interpolated && is_reserved_word(name, name_len)) {
       if (valid_symbols[LOAD_END_TOKEN]) {
         const size_t match = matches_any(
             name, name_len,
@@ -352,6 +455,7 @@ static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
       valid_symbols[LOCAL_IDENTIFIER_BEGIN] ||
       valid_symbols[QUALIFIED_LOCAL_IDENTIFIER_BEGIN] ||
       valid_symbols[LOAD_END_TOKEN]) {
+    lexer->mark_end(lexer);
     int len = scan_identifier(lexer, valid_symbols, true);
     if (len > 0) {
       state->peeked_identifier_length = len;
@@ -359,10 +463,21 @@ static bool scan(ScannerState *state, TSLexer *lexer, const bool *valid_symbols,
     }
   } else if (valid_symbols[IDENTIFIER_TOKEN]) {
     if (state->peeked_identifier_length > 0) {
+#if DEBUG_SCANNER
+      char buf[512];
+#endif
       // consume previously peeked identifier
       for (int i = 0; i < state->peeked_identifier_length; i++) {
+#if DEBUG_SCANNER
+        buf[i] = (char)lexer->lookahead;
+#endif
         advance(lexer);
       }
+#if DEBUG_SCANNER
+      buf[state->peeked_identifier_length] = '\0';
+      printf("# Consumed previously peeked identifier, len %d: %s\n",
+             state->peeked_identifier_length, buf);
+#endif
       state->peeked_identifier_length = 0;
       lexer->result_symbol = IDENTIFIER_TOKEN;
       return true;

@@ -896,8 +896,7 @@ REDEF n EQU 1
     (def_directive
       keyword: (def_keyword)
       name: (variable
-        (identifier)
-        (uniqueness_affix))
+        (identifier))
       assign_type: (equ_keyword)
       value: (number_literal)))
   (directive
@@ -1013,7 +1012,8 @@ ENDM ;
           name: (variable
             (identifier))
           assign_type: (equ_keyword)
-          value: (macro_argument)))
+          value: (variable
+            (identifier))))
       end: (directive_keyword)))
   (inline_comment))
 

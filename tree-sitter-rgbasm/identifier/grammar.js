@@ -51,18 +51,18 @@ export default grammar({
         $.raw_marker,
         choice(
           /\w[\w#$@]*/,
-          $.interpolation,
+          $._interpolation,
         ),
-        repeat(choice($.interpolation, /[\w#$@]+/)),
+        repeat(choice($._interpolation, /[\w#$@]+/)),
       ),
       seq(
         $._identifier,
-        $.interpolation,
-        repeat(choice($.interpolation, /[\w#$@]+/)),
+        $._interpolation,
+        repeat(choice($._interpolation, /[\w#$@]+/)),
       ),
       seq(
-        $.interpolation,
-        repeat(choice($.interpolation, /[\w#$@]+/)),
+        $._interpolation,
+        repeat(choice($._interpolation, /[\w#$@]+/)),
       ),
     ),
 
@@ -71,7 +71,7 @@ export default grammar({
       repeat1(
         choice(
           /[\w#$@]+/,
-          $.interpolation,
+          $._interpolation,
         ),
       ),
     ),
@@ -113,14 +113,27 @@ export default grammar({
       ),
     )),
 
-    uniqueness_affix: $ => token.immediate('\\@'),
+    _interpolation: $ => choice(
+      $.variable_interpolation,
+      $.macro_interpolation,
+    ),
 
-    interpolation: $ => seq(
+    variable_interpolation: $ => seq(
       "{",
       optional(seq($.format_string, ':')),
       $.global,
-      optional($.uniqueness_affix),
       "}",
     ),
+
+    macro_num_arg: $ => /\\[1-9]|\\<-?[1-9]\d*>/,
+
+    macro_uniq: $ => /\\@/,
+
+    macro_interpolation: $ =>
+      choice(
+        $.macro_num_arg,
+        $.macro_uniq,
+        seq('\\<', $.global, '>'),
+      ),
   }
 });
