@@ -879,7 +879,7 @@
         },
         {
           "type": "PATTERN",
-          "value": "\\s*\\r?\\n"
+          "value": "\\r?\\n"
         }
       ]
     },
@@ -5594,7 +5594,7 @@
     },
     {
       "type": "PATTERN",
-      "value": "[ \\t\\uFEFF\\u2060]+"
+      "value": "[ \\t]+"
     }
   ],
   "conflicts": [

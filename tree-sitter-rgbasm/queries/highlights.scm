@@ -138,7 +138,7 @@
 (simple_directive
   keyword: _ @_kw
   (argument_list (string_literal) @string.special.path (#set! priority 105))
-  (#match? @_kw "^\\s*[Ii][Nn][Cc][Bb][Ii][Nn]$"))
+  (#match? @_kw "^[Ii][Nn][Cc][Bb][Ii][Nn]$"))
 
 ; ==============================================================================
 ; Macros

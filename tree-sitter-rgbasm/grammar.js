@@ -92,7 +92,7 @@ module.exports = grammar({
     $.inline_comment,
     $.block_comment,
     $.line_continuation,
-    /[ \t\uFEFF\u2060]+/,
+    /[ \t]+/,
   ],
 
   supertypes: $ => [
@@ -221,7 +221,7 @@ module.exports = grammar({
       $.anonymous_label,
       seq($.inline_comment, $._eol),
       // Empty line
-      /\s*\r?\n/,
+      /\r?\n/,
     ),
 
     // ----- Section -----
