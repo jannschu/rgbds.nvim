@@ -489,6 +489,13 @@
         ]
       }
     },
+    "uniqueness_affix": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "\\@"
+      }
+    },
     "interpolation": {
       "type": "SEQ",
       "members": [
@@ -520,6 +527,18 @@
         {
           "type": "SYMBOL",
           "name": "global"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "uniqueness_affix"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",

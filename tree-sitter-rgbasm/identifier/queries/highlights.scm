@@ -22,6 +22,8 @@
 
 (interpolation ":" @punctuation.delimiter (#set! priority 110))
 
+((uniqueness_affix) @punctuation.special (#set! priority 110))
+
 ; ==============================================================================
 ; Identifiers
 ; ==============================================================================

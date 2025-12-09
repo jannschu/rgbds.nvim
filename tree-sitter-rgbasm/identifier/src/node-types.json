@@ -61,6 +61,10 @@
         {
           "type": "global",
           "named": true
+        },
+        {
+          "type": "uniqueness_affix",
+          "named": true
         }
       ]
     }
@@ -121,6 +125,10 @@
   },
   {
     "type": "raw_marker",
+    "named": true
+  },
+  {
+    "type": "uniqueness_affix",
     "named": true
   },
   {

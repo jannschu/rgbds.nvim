@@ -113,10 +113,13 @@ export default grammar({
       ),
     )),
 
+    uniqueness_affix: $ => token.immediate('\\@'),
+
     interpolation: $ => seq(
       "{",
       optional(seq($.format_string, ':')),
       $.global,
+      optional($.uniqueness_affix),
       "}",
     ),
   }
